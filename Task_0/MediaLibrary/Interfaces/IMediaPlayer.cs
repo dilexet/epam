@@ -1,7 +1,10 @@
-﻿namespace MediaLibrary.Interfaces
+﻿using MediaLibrary.MediaFiles;
+
+namespace MediaLibrary.Interfaces
 {
-    public interface IMediaPlayer
+    internal interface IMediaPlayer
     {
-        
+        void Play(IPlayList playList);
+        void Play(MediaFile mediaFile);
     }
 }
