@@ -7,7 +7,7 @@ namespace TaxiFleet.Taxi
     internal class CargoTaxi : Car
     {
         public readonly float TrunkCapacity; // объем багажника
-        public readonly float CostOfTrip; // стоимость грузоперевозки на 1 час (расчитывается исходя из объема багажинка)
+        public readonly float CostOfTrip; // стоимость грузоперевозки (расчитывается исходя из объема багажинка и при заказе умножается на кол-во кг)
         public readonly float RentPerHour; // Стоимость аренды на 1 час (расчитывается исходя из цены авто)
         public readonly CategoryTaxi categoryTaxi;
 
@@ -37,7 +37,7 @@ namespace TaxiFleet.Taxi
                 return 7.75f;
             if (trunkCapacity <= 20f)
                 return 9.68f;
-            return 5f;
+            return 15.3f;
         }
     }
 }
