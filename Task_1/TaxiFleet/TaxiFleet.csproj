@@ -39,6 +39,8 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Car.cs" />
+        <Compile Include="Category\CategoryTaxi.cs" />
+        <Compile Include="Category\MockCategoryTaxi.cs" />
         <Compile Include="Enums\BodyTypes.cs" />
         <Compile Include="Enums\CarBrands.cs" />
         <Compile Include="Enums\CarClasses.cs" />
