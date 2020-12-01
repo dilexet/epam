@@ -9,11 +9,12 @@ namespace TaxiFleet.Taxi
     {
         private List<Car> _cars;
         
+        // сделать: отдельный список для пассажирских и грузовых авто
         public TaxiPark(ICollection<Car> cars)
         {
             _cars = new List<Car>(cars);
         }
-
+        
         public IEnumerator GetEnumerator()
         {
             return _cars.GetEnumerator();

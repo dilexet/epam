@@ -18,7 +18,9 @@ namespace TaxiFleet
                     "6523-LV", CarColors.Green, 15000, 2.4f, 220, 2005, TaxiClasses.Compactvan)
             };
             TaxiPark taxiPark = new TaxiPark(cars);
-            taxiPark.TotalRevenueOfTaxiPark();
+            // taxiPark.TotalRevenueOfTaxiPark();
+            Customer person1 = new Customer("Maksim");
+            person1.TaxiOrdering(taxiPark);
         }
     }
 }
