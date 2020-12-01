@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
+using TaxiFleet.Enums;
 using TaxiFleet.Taxi;
 
 namespace TaxiFleet
 {
-    // сделать: при заказе выбор класса такси, вывод суммы к оплате, исходя из растояния(генерить рандомно)
-    // сделать: разбитьь функцию TaxiOrdering на несколько маленьких
     internal class Customer
     {
         private string _name;
@@ -18,27 +17,85 @@ namespace TaxiFleet
 
         public void TaxiOrdering(TaxiPark taxiPark)
         {
+            Random random = new Random();
+            RouteSelection();
+            TaxiClasses taxiClass = TaxiClassSelection();
+            if (taxiClass == TaxiClasses.Cargo)
+            {
+                Console.Write("Cargo volume: ");
+                float.TryParse(Console.ReadLine(), out float volume);
+                
+                CargoTaxi taxi = SearchCargoTaxi(taxiPark);
+                WaitingTaxi(taxi);
+                
+                Console.WriteLine(
+                    $"{_name} is waiting for you {taxi.Brand} {taxi.Model}\n" +
+                    $"{_routeStartAddress} - {_routeEndAddress}\n" +
+                    $"To pay {taxi.CostOfTrip * volume}$\n");
+            }
+            else
+            {
+                PassengerTaxi taxi = SearchPassengerTaxi(taxiPark);
+                WaitingTaxi(taxi);
+                
+                Console.WriteLine(
+                    $"{_name} is waiting for you {taxi.Brand} {taxi.Model}\n" +
+                    $"{_routeStartAddress} - {_routeEndAddress}\n" +
+                    $"To pay {taxi.CostOfTrip * random.Next(1, 40)}$\n");
+            }
+        }
+        private void RouteSelection()
+        {
             Console.Write("Enter your address: ");
             _routeStartAddress = Console.ReadLine();
             Console.Write("Where we go: ");
             _routeEndAddress = Console.ReadLine();
-            
-            Random random = new Random();
-            PassengerTaxi taxi;
-            do
-            {
-                taxi = taxiPark[random.Next(taxiPark.Count - 1)] as PassengerTaxi;
-            } while (taxi == null);
+        }
 
+        private TaxiClasses TaxiClassSelection()
+        {
+            Console.WriteLine($"{(int)TaxiClasses.Economy}. {TaxiClasses.Economy}\n" +
+                              $"{(int)TaxiClasses.Comfort}. {TaxiClasses.Comfort}\n" +
+                              $"{(int)TaxiClasses.Business}. {TaxiClasses.Business}\n" +
+                              $"{(int)TaxiClasses.Minivan}. {TaxiClasses.Minivan}\n" +
+                              $"{(int)TaxiClasses.Compactvan}. {TaxiClasses.Compactvan}\n" +
+                              $"{(int)TaxiClasses.Cargo}. {TaxiClasses.Cargo}\n");
+            var key = Console.ReadKey(true).Key;
+            switch (key)
+            {
+                case ConsoleKey.D1:
+                    return TaxiClasses.Comfort;
+                case ConsoleKey.D2:
+                    return TaxiClasses.Business;
+                case ConsoleKey.D3:
+                    return TaxiClasses.Minivan;
+                case ConsoleKey.D4:
+                    return TaxiClasses.Compactvan;
+                case ConsoleKey.D5:
+                    return TaxiClasses.Cargo;
+                default:
+                    return TaxiClasses.Economy;
+            }
+        }
+
+        private CargoTaxi SearchCargoTaxi(TaxiPark taxiPark)
+        {
+            Random random = new Random();
+            return taxiPark._cargoTaxis[random.Next(taxiPark._cargoTaxis.Count - 1)];
+        }
+        private PassengerTaxi SearchPassengerTaxi(TaxiPark taxiPark)
+        {
+            Random random = new Random();
+            return taxiPark._passengerTaxis[random.Next(taxiPark._passengerTaxis.Count - 1)];
+        }
+
+        private void WaitingTaxi(Car taxi)
+        {
+            Random random = new Random();
             Console.WriteLine(
                 $"In {random.Next(1, 15)} minute {taxi.Brand} {taxi.Model} will arrive, color {taxi.CarColor}, number {taxi.CarRegistrationNumber}");
             Thread.Sleep(5000);
             Console.Clear();
-            Console.WriteLine(
-                $"{_name} is waiting for you {taxi.Brand} {taxi.Model}\n" +
-                $"{_routeStartAddress} - {_routeEndAddress}\n" +
-                $"To pay {taxi.CostOfTrip * random.Next(1, 40)}$\n");
-
         }
     }
 }
