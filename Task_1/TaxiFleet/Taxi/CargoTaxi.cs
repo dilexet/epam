@@ -9,15 +9,15 @@ namespace TaxiFleet.Taxi
         public readonly float TrunkCapacity; // объем багажника
         public readonly float CostOfTrip; // стоимость грузоперевозки на 1 час (расчитывается исходя из объема багажинка)
         public readonly float RentPerHour; // Стоимость аренды на 1 час (расчитывается исходя из цены авто)
-        public readonly TaxiClasses TaxiClass;
+        public readonly CategoryTaxi categoryTaxi;
 
         public CargoTaxi(CarBrands brand, string model, BodyTypes bodyType, string carRegistrationNumber,
             CarColors carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation,
-            TaxiClasses taxiClass, float trunkCapacity) :
+            CategoryTaxi category, float trunkCapacity) :
             base(brand, model, bodyType, carRegistrationNumber, carColor, priceOfCar, fuelConsumption, maxSpeed,
                 yearOfCreation)
         {
-            TaxiClass = taxiClass;
+            categoryTaxi = category;
             TrunkCapacity = trunkCapacity;
             RentPerHour = (float) priceOfCar / 10000;
             CostOfTrip = GetCostOfTrip(trunkCapacity);
@@ -25,7 +25,8 @@ namespace TaxiFleet.Taxi
         public override void PrintInfo()
         {
             base.PrintInfo();
-            Console.Write($"Taxi class: {TaxiClass}\n" +
+            Console.Write($"Taxi class: {categoryTaxi.TaxiClass}\n" +
+                          $"Description: {categoryTaxi.Description}\n" +
                           $"Rent per hour: {RentPerHour}\n" +
                           $"Trunk capacity: {TrunkCapacity}\n" +
                           $"Cost of trip: {CostOfTrip}\n\n");
