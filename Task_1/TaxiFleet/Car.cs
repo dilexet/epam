@@ -14,9 +14,6 @@ namespace TaxiFleet
         public readonly ushort MaxSpeed;
         public readonly ushort YearOfCreation;
         
-        // public readonly BmwModels BmwModel;
-        // public readonly AudiModels AudiModel;
-        // public CarClasses Class { get; }
         public Car(CarBrands brand, string model, BodyTypes bodyType, string carRegistrationNumber, 
             CarColors carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation)
         {
