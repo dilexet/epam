@@ -8,11 +8,20 @@ namespace TaxiFleet.Taxi
     internal class TaxiPark
     {
         private List<Car> _cars;
+        public readonly List<PassengerTaxi> _passengerTaxis = new List<PassengerTaxi>();
+        public readonly List<CargoTaxi> _cargoTaxis = new List<CargoTaxi>();
         
         // сделать: отдельный список для пассажирских и грузовых авто
         public TaxiPark(ICollection<Car> cars)
         {
             _cars = new List<Car>(cars);
+            foreach (var car in _cars)
+            {
+                if (car as PassengerTaxi != null)
+                    _passengerTaxis.Add(car as PassengerTaxi);
+                else
+                    _cargoTaxis.Add(car as CargoTaxi);
+            }
         }
         
         public IEnumerator GetEnumerator()
@@ -47,7 +56,7 @@ namespace TaxiFleet.Taxi
                 car.PrintInfo();
             }
         }
-
+        
         public void Add(Car car)
         {
             _cars.Add(car);
