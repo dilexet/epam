@@ -30,5 +30,22 @@ namespace TaxiFleet
             MaxSpeed = maxSpeed;
             YearOfCreation = yearOfCreation;
         }
+        public override string ToString()
+        {
+            return $"Brand: {Brand}\n" +
+                   $"Model: {Model}\n" +
+                   $"Body type: {BodyType}\n" +
+                   $"Registration number: {CarRegistrationNumber}\n" +
+                   $"Color: {CarColor}\n" +
+                   $"Price of car: {PriceOfCar}\n" +
+                   $"Fuel consumption: {FuelConsumption}\n" +
+                   $"Max speed: {MaxSpeed}\n" +
+                   $"Year of creation: {YearOfCreation}\n";
+        }
+
+        public virtual void PrintInfo()
+        {
+            Console.Write(ToString());
+        }
     }
 }
