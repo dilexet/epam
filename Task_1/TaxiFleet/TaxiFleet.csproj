@@ -38,9 +38,10 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Car.cs" />
-        <Compile Include="Category\CategoryTaxi.cs" />
-        <Compile Include="Category\MockCategoryTaxi.cs" />
+        <Compile Include="Data\Mocks\MockCars.cs" />
+        <Compile Include="Data\Mocks\MockCategoryTaxi.cs" />
+        <Compile Include="Data\Models\Car.cs" />
+        <Compile Include="Data\Models\CategoryTaxi.cs" />
         <Compile Include="Enums\BodyTypes.cs" />
         <Compile Include="Enums\CarBrands.cs" />
         <Compile Include="Enums\CarClasses.cs" />
@@ -52,6 +53,9 @@
         <Compile Include="Taxi\CargoTaxi.cs" />
         <Compile Include="Taxi\PassengerTaxi.cs" />
         <Compile Include="Taxi\TaxiPark.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Category" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
