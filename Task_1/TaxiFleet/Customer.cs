@@ -54,12 +54,12 @@ namespace TaxiFleet
 
         private TaxiClasses TaxiClassSelection()
         {
-            Console.WriteLine($"{(int)TaxiClasses.Economy}. {TaxiClasses.Economy}\n" +
-                              $"{(int)TaxiClasses.Comfort}. {TaxiClasses.Comfort}\n" +
-                              $"{(int)TaxiClasses.Business}. {TaxiClasses.Business}\n" +
-                              $"{(int)TaxiClasses.Minivan}. {TaxiClasses.Minivan}\n" +
-                              $"{(int)TaxiClasses.Compactvan}. {TaxiClasses.Compactvan}\n" +
-                              $"{(int)TaxiClasses.Cargo}. {TaxiClasses.Cargo}\n");
+            var values = Enum.GetValues(typeof(TaxiClasses));
+            foreach (var value in values)
+            {
+                Console.WriteLine($"{(int)value}. {value}");
+            }
+            
             var key = Console.ReadKey(true).Key;
             switch (key)
             {
