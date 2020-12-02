@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TaxiFleet.Enums;
 using TaxiFleet.Taxi;
 
@@ -23,9 +24,16 @@ namespace TaxiFleet
             TaxiPark taxiPark = new TaxiPark(cars);
             //taxiPark.PrintInfo();
             // taxiPark.TotalRevenueOfTaxiPark();
-            Customer person1 = new Customer("Maksim");
-            person1.TaxiOrdering(taxiPark);
+            // Customer person1 = new Customer("Maksim");
+            // person1.TaxiOrdering(taxiPark);
+            taxiPark.SortingByFuelConsumption();
+            var car = taxiPark.SelectSpeedTaxi();
             
+            // Выводит только характеристика Car
+            foreach (var item in car)
+            {
+                Console.WriteLine(item.ToString());
+            }
         }
     }
 }

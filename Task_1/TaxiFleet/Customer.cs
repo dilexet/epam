@@ -81,12 +81,12 @@ namespace TaxiFleet
         private CargoTaxi SearchCargoTaxi(TaxiPark taxiPark)
         {
             Random random = new Random();
-            return taxiPark._cargoTaxis[random.Next(taxiPark._cargoTaxis.Count - 1)];
+            return taxiPark.CargoTaxis[random.Next(taxiPark.CargoTaxis.Count - 1)];
         }
         private PassengerTaxi SearchPassengerTaxi(TaxiPark taxiPark)
         {
             Random random = new Random();
-            return taxiPark._passengerTaxis[random.Next(taxiPark._passengerTaxis.Count - 1)];
+            return taxiPark.PassengerTaxis[random.Next(taxiPark.PassengerTaxis.Count - 1)];
         }
 
         private void WaitingTaxi(Car taxi)

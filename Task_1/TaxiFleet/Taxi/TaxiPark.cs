@@ -8,19 +8,18 @@ namespace TaxiFleet.Taxi
     internal class TaxiPark
     {
         private List<Car> _cars;
-        public readonly List<PassengerTaxi> _passengerTaxis = new List<PassengerTaxi>();
-        public readonly List<CargoTaxi> _cargoTaxis = new List<CargoTaxi>();
+        public readonly List<PassengerTaxi> PassengerTaxis = new List<PassengerTaxi>();
+        public readonly List<CargoTaxi> CargoTaxis = new List<CargoTaxi>();
         
-        // сделать: отдельный список для пассажирских и грузовых авто
         public TaxiPark(ICollection<Car> cars)
         {
             _cars = new List<Car>(cars);
             foreach (var car in _cars)
             {
                 if (car as PassengerTaxi != null)
-                    _passengerTaxis.Add(car as PassengerTaxi);
+                    PassengerTaxis.Add(car as PassengerTaxi);
                 else
-                    _cargoTaxis.Add(car as CargoTaxi);
+                    CargoTaxis.Add(car as CargoTaxi);
             }
         }
         
@@ -89,6 +88,14 @@ namespace TaxiFleet.Taxi
                 orderby item.FuelConsumption
                 select item;
             _cars = sortingByConsumption.ToList();
+        }
+
+        public IEnumerable<Car> SelectSpeedTaxi(int minSpeed = 230, int maxSpeed = 250)
+        {
+            var selectSpeedTaxi = from car in _cars
+                where car.MaxSpeed >= minSpeed && car.MaxSpeed <= maxSpeed
+                select car;
+            return selectSpeedTaxi;
         }
         public void TotalRevenueOfTaxiPark()
         {
