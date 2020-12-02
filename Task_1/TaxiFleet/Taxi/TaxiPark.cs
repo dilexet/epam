@@ -11,7 +11,7 @@ namespace TaxiFleet.Taxi
         public readonly List<PassengerTaxi> PassengerTaxis = new List<PassengerTaxi>();
         public readonly List<CargoTaxi> CargoTaxis = new List<CargoTaxi>();
         
-        public TaxiPark(ICollection<Car> cars)
+        public TaxiPark(IEnumerable<Car> cars)
         {
             _cars = new List<Car>(cars);
             foreach (var car in _cars)
