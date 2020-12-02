@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Media;
 
 namespace MediaLibrary.MediaFiles
 {
@@ -26,6 +27,12 @@ namespace MediaLibrary.MediaFiles
         {
             Console.WriteLine(
                 $"\nPlaying MusicTrack: {Name};\nGenre: {_genre};\nArtist: {_artist};\nAlbum: {_album};\nRelease Year: {_releaseYear};\nLength: {_length};");
+            /*
+            using (var player = new SoundPlayer(Convert.ToString(Location))) // заменить интерфейсом
+            {
+                player.Play();
+            }
+            */
         }
     }
 }
