@@ -18,8 +18,8 @@ namespace TaxiFleet.Taxi
         {
             categoryTaxi = category;
             RentPerHour = (float) priceOfCar / 10000;
-            // NumberOfSeats = GetNumberOfSeats(taxiClass);
-            // CostOfTrip = GetCostOfTrip(taxiClass);
+            NumberOfSeats = GetNumberOfSeats(categoryTaxi.TaxiClass);
+            CostOfTrip = GetCostOfTrip(categoryTaxi.TaxiClass);
         }
 
         public override void PrintInfo()
