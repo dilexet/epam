@@ -2,15 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TaxiFleet.Data.Mocks;
+using TaxiFleet.Data.Models;
 
 namespace TaxiFleet.Taxi
 {
+    // TODO: Разбить класс, вынести некоторую функциональность в отдельный класс
     internal class TaxiPark
     {
         private List<Car> _cars;
         public readonly List<PassengerTaxi> PassengerTaxis = new List<PassengerTaxi>();
         public readonly List<CargoTaxi> CargoTaxis = new List<CargoTaxi>();
-        
+
+        public TaxiPark()
+        {
+            MockCars mockCars = new MockCars();
+            _cars = new List<Car>(mockCars.GetCars);
+        }
         public TaxiPark(IEnumerable<Car> cars)
         {
             _cars = new List<Car>(cars);
@@ -48,13 +56,7 @@ namespace TaxiFleet.Taxi
             }
         }
 
-        public void PrintInfo()
-        {
-            foreach (var car in _cars)
-            {
-                car.PrintInfo();
-            }
-        }
+        
         
         public void Add(Car car)
         {
@@ -119,6 +121,10 @@ namespace TaxiFleet.Taxi
             Console.WriteLine($"The cost of all cars of the taxi fleet: {costAllCars}$\n" +
                               $"Taxi fleet rental income: {rentalIncome}$ per hour\n\n");
         }
-        
+
+        public void Print()
+        {
+            Info.PrintInfo(_cars);
+        }
     }
 }
