@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TaxiFleet.Data.Models;
 using TaxiFleet.Enums;
 using TaxiFleet.Taxi;
 
