@@ -1,4 +1,4 @@
-﻿using System;
+﻿using TaxiFleet.Data.Models;
 using TaxiFleet.Enums;
 
 namespace TaxiFleet.Taxi
@@ -8,7 +8,7 @@ namespace TaxiFleet.Taxi
         public readonly float CostOfTrip; // стоимость поездки за 1 км (расчитывается исходя из класса авто)
         public readonly byte NumberOfSeats; // кол-во пасажирских мест(без водителя) (расчитывается исходя из класса авто)
         public readonly float RentPerHour; // Стоимость аренды на 1 час (расчитывается исходя из цены авто)
-        public readonly CategoryTaxi categoryTaxi;
+        public readonly CategoryTaxi CategoryTaxi;
         
         public PassengerTaxi(CarBrands brand, string model, BodyTypes bodyType, string carRegistrationNumber,
             CarColors carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation,
@@ -16,20 +16,10 @@ namespace TaxiFleet.Taxi
             base(brand, model, bodyType, carRegistrationNumber, carColor, priceOfCar, fuelConsumption, maxSpeed,
                 yearOfCreation)
         {
-            categoryTaxi = category;
+            CategoryTaxi = category;
             RentPerHour = (float) priceOfCar / 10000;
-            NumberOfSeats = GetNumberOfSeats(categoryTaxi.TaxiClass);
-            CostOfTrip = GetCostOfTrip(categoryTaxi.TaxiClass);
-        }
-
-        public override void PrintInfo()
-        {
-            base.PrintInfo();
-            Console.Write($"Taxi class: {categoryTaxi.TaxiClass}\n" +
-                          $"Description: {categoryTaxi.Description}\n" +
-                          $"Rent per hour: {RentPerHour}\n" +
-                          $"Number of seats: {NumberOfSeats}\n" +
-                          $"Cost of trip: {CostOfTrip}\n\n");
+            NumberOfSeats = GetNumberOfSeats(CategoryTaxi.TaxiClass);
+            CostOfTrip = GetCostOfTrip(CategoryTaxi.TaxiClass);
         }
 
         private float GetCostOfTrip(TaxiClasses taxiClass)
@@ -50,7 +40,6 @@ namespace TaxiFleet.Taxi
                     return 3f;
             }
         }
-
         private byte GetNumberOfSeats(TaxiClasses taxiClass)
         {
             if (taxiClass == TaxiClasses.Minivan)
@@ -58,6 +47,24 @@ namespace TaxiFleet.Taxi
             if (taxiClass == TaxiClasses.Compactvan)
                 return 6;
             return 4;
+        }
+
+        public override string ToString()
+        {
+            return $"Brand: {Brand}\n" +
+                   $"Model: {Model}\n" +
+                   $"Body type: {BodyType}\n" +
+                   $"Registration number: {CarRegistrationNumber}\n" +
+                   $"Color: {CarColor}\n" +
+                   $"Price of car: {PriceOfCar}\n" +
+                   $"Fuel consumption: {FuelConsumption}\n" +
+                   $"Max speed: {MaxSpeed}\n" +
+                   $"Year of creation: {YearOfCreation}\n" +
+                   $"Taxi class: {CategoryTaxi.TaxiClass}\n" +
+                   $"Description: {CategoryTaxi.Description}\n" +
+                   $"Rent per hour: {RentPerHour}\n" +
+                   $"Number of seats: {NumberOfSeats}\n" +
+                   $"Cost of trip: {CostOfTrip}\n\n";
         }
     }
 }

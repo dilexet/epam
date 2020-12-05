@@ -1,6 +1,6 @@
-﻿using System;
-using TaxiFleet.Enums;
-namespace TaxiFleet
+﻿using TaxiFleet.Enums;
+
+namespace TaxiFleet.Data.Models
 {
     internal abstract class Car
     {
@@ -14,7 +14,7 @@ namespace TaxiFleet
         public readonly ushort MaxSpeed;
         public readonly ushort YearOfCreation;
         
-        public Car(CarBrands brand, string model, BodyTypes bodyType, string carRegistrationNumber, 
+        protected Car(CarBrands brand, string model, BodyTypes bodyType, string carRegistrationNumber, 
             CarColors carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation)
         {
             Brand = brand;
@@ -26,23 +26,6 @@ namespace TaxiFleet
             FuelConsumption = fuelConsumption;
             MaxSpeed = maxSpeed;
             YearOfCreation = yearOfCreation;
-        }
-        public override string ToString()
-        {
-            return $"Brand: {Brand}\n" +
-                   $"Model: {Model}\n" +
-                   $"Body type: {BodyType}\n" +
-                   $"Registration number: {CarRegistrationNumber}\n" +
-                   $"Color: {CarColor}\n" +
-                   $"Price of car: {PriceOfCar}\n" +
-                   $"Fuel consumption: {FuelConsumption}\n" +
-                   $"Max speed: {MaxSpeed}\n" +
-                   $"Year of creation: {YearOfCreation}\n";
-        }
-
-        public virtual void PrintInfo()
-        {
-            Console.Write(ToString());
         }
     }
 }
