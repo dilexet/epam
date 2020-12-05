@@ -1,7 +1,6 @@
 ﻿using TaxiFleet.Enums;
-using TaxiFleet.Taxi;
 
-namespace TaxiFleet
+namespace TaxiFleet.Data.Models
 {
     internal class CategoryTaxi
     {
