@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Threading;
+using TaxiFleet.Data.Models;
 using TaxiFleet.Enums;
 using TaxiFleet.Taxi;
 
 namespace TaxiFleet
 {
+    // TODO: Вынести в отдельный класс оформление заказа
+    // TODO: Выборку авто в оформлении заказа сделать через LINQ
+    // TODO: Так же в оформлении зазка изменть определение является ли авто пассажирским или грузовым через is/as
     internal class Customer
     {
         private string _name;
