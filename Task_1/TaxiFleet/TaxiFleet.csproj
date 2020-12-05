@@ -48,14 +48,12 @@
         <Compile Include="Enums\CarColors.cs" />
         <Compile Include="Enums\TaxiClasses.cs" />
         <Compile Include="Customer.cs" />
+        <Compile Include="Info.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Taxi\CargoTaxi.cs" />
         <Compile Include="Taxi\PassengerTaxi.cs" />
         <Compile Include="Taxi\TaxiPark.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Category" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
