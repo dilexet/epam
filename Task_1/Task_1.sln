@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet", "TaxiFleet\TaxiFleet.csproj", "{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet.UnitTests", "TaxiFleet.UnitTests\TaxiFleet.UnitTests.csproj", "{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
