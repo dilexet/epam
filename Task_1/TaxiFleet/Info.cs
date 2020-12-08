@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using TaxiFleet.Data.Models;
+using TaxiFleet.Models;
 
 namespace TaxiFleet
 {
-    internal class Info
+    public class Info
     {
-        public static void PrintInfo(IEnumerable<Car> cars)
+        public static void PrintInfo(IEnumerable<CarBase> cars)
         {
             foreach (var car in cars)
             {
