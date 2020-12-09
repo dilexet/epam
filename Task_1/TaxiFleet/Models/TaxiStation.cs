@@ -1,18 +1,15 @@
-﻿
-using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TaxiFleet.Mocks;
 
 namespace TaxiFleet.Models
 {
     public class TaxiStation
     {
         private ICollection<CarBase> _cars;
-        public TaxiStation()
+        public TaxiStation(IEnumerable<CarBase> cars)
         {
-            MockCars mockCars = new MockCars();
-            _cars = new List<CarBase>(mockCars.GetCars);
+            _cars = new List<CarBase>(cars);
         }
         
         public IEnumerable<CarBase> GetCars()
@@ -20,28 +17,6 @@ namespace TaxiFleet.Models
             return _cars;
         }
         
-        public void Add(CarBase car)
-        {
-            _cars.Add(car);
-        }
-
-        public void Clear()
-        {
-            _cars.Clear();
-        }
-
-        public void Remove(CarBase car)
-        {
-            _cars.Remove(car);
-        }
-        
-        public IEnumerable<CarBase> RemoveOldCars(ushort minYear)
-        {
-            var sortedList = from item in _cars
-                where item.YearOfCreation >= minYear
-                select item;
-            return sortedList;
-        }
         public IEnumerable<CarBase> SortingByFuelConsumption()
         {
             var sortingByConsumption = from item in _cars
@@ -64,10 +39,6 @@ namespace TaxiFleet.Models
                 costAllCars += car.PriceOfCar;
             
             return costAllCars;
-        }
-        public void Print()
-        {
-            Info.PrintInfo(_cars);
         }
     }
 }
