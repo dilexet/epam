@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TaxiFleet.Enums;
-using TaxiFleet.Models;
+using TaxiFleet.Library.Enums;
+using TaxiFleet.Library.Models;
 
-namespace TaxiFleet.Mocks
+namespace TaxiFleet.UnitTests.Mocks
 {
     public class MockCategoryTaxi
     {
