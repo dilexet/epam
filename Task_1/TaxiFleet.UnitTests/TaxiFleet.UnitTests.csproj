@@ -42,7 +42,6 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="EqualityComparer.cs" />
         <Compile Include="Mocks\MockCars.cs" />
         <Compile Include="Mocks\MockCategoryTaxi.cs" />
         <Compile Include="TaxiFleetTests.cs" />

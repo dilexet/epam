@@ -1,4 +1,5 @@
-﻿using TaxiFleet.Library.Enums;
+﻿using System;
+using TaxiFleet.Library.Enums;
 
 namespace TaxiFleet.Library.Models
 {
@@ -21,7 +22,6 @@ namespace TaxiFleet.Library.Models
             CostOfTrip = costOfTrip;
         }
         
-
         public override string ToString()
         {
             return $"Brand: {Brand}\n" +

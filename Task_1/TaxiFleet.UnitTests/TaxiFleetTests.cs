@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using TaxiFleet.Enums;
-using TaxiFleet.Mocks;
-using TaxiFleet.Models;
+using TaxiFleet.Library.Enums;
+using TaxiFleet.Library.Models;
+using TaxiFleet.UnitTests.Mocks;
 
 namespace TaxiFleet.UnitTests
 {
@@ -33,29 +33,18 @@ namespace TaxiFleet.UnitTests
         {
             
             // arrange
-            
-            MockCategoryTaxi mockCategoryTaxi = new MockCategoryTaxi();
-            
             MockCars mockCars = new MockCars();
             TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
-            
-            var expected = new List<CarBase>
-            {
-                new PassengerTaxi(CarBrand.Bmw, "X6", CarBody.Crossover,
-                    "8734-KC", CarColor.Black, 24000, 1.8f, 220, 2015,
-                    mockCategoryTaxi.GetCategory(TaxiClass.Comfort), 4, 3.92f),
-                new PassengerTaxi(CarBrand.Audi, "A3", CarBody.Hatchback,
-                    "8361-PB", CarColor.Blue, 30000, 3.6f, 210, 2016,
-                    mockCategoryTaxi.GetCategory(TaxiClass.Business), 4, 8.17f)
-            };
-            
+
             // act
-            
-            var actual = taxiStation.SelectSpeedTaxi(210, 220).ToList();
+            short minSpeed = 210;
+            short maxSpeed = 220;
+            var actual = taxiStation.SelectSpeedTaxi(minSpeed, maxSpeed).ToList();
 
             // assert
-
-            Assert.AreEqual(expected, actual);
+            Assert.IsNotEmpty(actual);
+            foreach (var car in actual)
+                Assert.That(() => car.MaxSpeed >= minSpeed && car.MaxSpeed <= maxSpeed);
         }
         [Test]
         public void SortingByFuelConsumptionTests()
@@ -91,13 +80,11 @@ namespace TaxiFleet.UnitTests
             };
             
             // act
-
-            
             var actual = taxiStation.SortingByFuelConsumption().ToList();
 
             // assert
-
             Assert.AreEqual(expected, actual);
+            
         }
     }
 }

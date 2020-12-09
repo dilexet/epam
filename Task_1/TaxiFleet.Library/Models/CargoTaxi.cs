@@ -1,4 +1,5 @@
-﻿using TaxiFleet.Library.Enums;
+﻿using System;
+using TaxiFleet.Library.Enums;
 
 namespace TaxiFleet.Library.Models
 {
