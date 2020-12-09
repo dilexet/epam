@@ -42,15 +42,16 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="EqualityComparer.cs" />
         <Compile Include="Mocks\MockCars.cs" />
         <Compile Include="Mocks\MockCategoryTaxi.cs" />
         <Compile Include="TaxiFleetTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\TaxiFleet\TaxiFleet.csproj">
-        <Project>{a4a8d743-513d-452b-b6da-9b1c274aa5a1}</Project>
-        <Name>TaxiFleet</Name>
+      <ProjectReference Include="..\TaxiFleet.Library\TaxiFleet.Library.csproj">
+        <Project>{6ee517aa-1c87-4451-ade9-0d2c58a62e5f}</Project>
+        <Name>TaxiFleet.Library</Name>
       </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
