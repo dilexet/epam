@@ -14,12 +14,13 @@ namespace TaxiFleet.UnitTests
         public void TaxiFleetCostTests()
         {
             // arrange
-
+            MockCars mockCars = new MockCars();
+            TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
+            
             double expected = 94000;
 
             // act
-
-            TaxiStation taxiStation = new TaxiStation();
+            
             double actual = taxiStation.TaxiFleetCost();
 
             // assert
@@ -34,6 +35,10 @@ namespace TaxiFleet.UnitTests
             // arrange
             
             MockCategoryTaxi mockCategoryTaxi = new MockCategoryTaxi();
+            
+            MockCars mockCars = new MockCars();
+            TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
+            
             var expected = new List<CarBase>
             {
                 new PassengerTaxi(CarBrand.Bmw, "X6", CarBody.Crossover,
@@ -45,8 +50,7 @@ namespace TaxiFleet.UnitTests
             };
             
             // act
-
-            TaxiStation taxiStation = new TaxiStation();
+            
             var actual = taxiStation.SelectSpeedTaxi(210, 220).ToList();
 
             // assert
@@ -58,8 +62,11 @@ namespace TaxiFleet.UnitTests
         {
             
             // arrange
+            MockCars mockCars = new MockCars();
             
+            TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
             MockCategoryTaxi mockCategoryTaxi = new MockCategoryTaxi();
+            
             var expected = new List<CarBase>
             {
                 new PassengerTaxi(CarBrand.Bmw, "X6", CarBody.Crossover,
@@ -85,7 +92,7 @@ namespace TaxiFleet.UnitTests
             
             // act
 
-            TaxiStation taxiStation = new TaxiStation();
+            
             var actual = taxiStation.SortingByFuelConsumption().ToList();
 
             // assert
