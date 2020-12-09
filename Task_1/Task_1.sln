@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet", "TaxiFleet\TaxiFleet.csproj", "{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet.ConsoleApp", "TaxiFleet.ConsoleApp\TaxiFleet.ConsoleApp.csproj", "{A4A8D743-513D-452B-B6DA-9B1C274AA5A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet.UnitTests", "TaxiFleet.UnitTests\TaxiFleet.UnitTests.csproj", "{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxiFleet.Library", "TaxiFleet.Library\TaxiFleet.Library.csproj", "{6EE517AA-1C87-4451-ADE9-0D2C58A62E5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3A7F6B8-38DE-411B-AC88-B49E7DD84C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EE517AA-1C87-4451-ADE9-0D2C58A62E5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EE517AA-1C87-4451-ADE9-0D2C58A62E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EE517AA-1C87-4451-ADE9-0D2C58A62E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EE517AA-1C87-4451-ADE9-0D2C58A62E5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
