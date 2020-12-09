@@ -42,9 +42,6 @@
         <Compile Include="Enums\CarBrand.cs" />
         <Compile Include="Enums\CarColor.cs" />
         <Compile Include="Enums\TaxiClass.cs" />
-        <Compile Include="Info.cs" />
-        <Compile Include="Mocks\MockCars.cs" />
-        <Compile Include="Mocks\MockCategoryTaxi.cs" />
         <Compile Include="Models\CarBase.cs" />
         <Compile Include="Models\CargoTaxi.cs" />
         <Compile Include="Models\CategoryTaxi.cs" />
