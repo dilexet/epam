@@ -1,5 +1,4 @@
-﻿using System;
-using TaxiFleet.Library.Enums;
+﻿using TaxiFleet.Library.Enums;
 
 namespace TaxiFleet.Library.Models
 {
@@ -28,5 +27,6 @@ namespace TaxiFleet.Library.Models
             MaxSpeed = maxSpeed;
             YearOfCreation = yearOfCreation;
         }
+        
     }
 }
