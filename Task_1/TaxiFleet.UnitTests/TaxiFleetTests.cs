@@ -50,15 +50,19 @@ namespace TaxiFleet.UnitTests
 
             // arrange
             MockCars mockCars = new MockCars();
-            TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
-            FakeMockCars fakeMockCars = new FakeMockCars();
-            var expected = fakeMockCars.GetCars.ToList();
+            TaxiStation taxiStation = new TaxiStation(cars: mockCars.GetCars);
 
             // act
             var actual = taxiStation.SortingByFuelConsumption().ToList();
 
             // assert
-            Assert.That(expected, Is.EqualTo(actual).Using(new EqualityComparer()));
+            Assert.IsNotEmpty(actual);
+            for (int i = 0; i < actual.Count - 1; i++)
+            {
+                var index = i;
+                Assert.That( () => actual[index].FuelConsumption < actual[index + 1].FuelConsumption);
+            }
+            
         }
     }
 }
