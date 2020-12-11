@@ -4,15 +4,15 @@ namespace TaxiFleet.Library.Models
 {
     public abstract class CarBase
     {
-        protected CarBrand Brand { get; }
-        protected string Model { get; }
-        protected CarBody CarBody { get; }
-        protected string CarRegistrationNumber { get; }
-        protected CarColor CarColor { get; }
+        public CarBrand Brand { get; }
+        public string Model { get; }
+        public CarBody CarBody { get; }
+        public string CarRegistrationNumber { get; }
+        public CarColor CarColor { get; }
         public double PriceOfCar { get; }
         public float FuelConsumption { get; }
         public ushort MaxSpeed { get; }
-        protected ushort YearOfCreation { get; }
+        public ushort YearOfCreation { get; }
         
         protected CarBase(CarBrand brand, string model, CarBody carBody, string carRegistrationNumber, 
             CarColor carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation)
