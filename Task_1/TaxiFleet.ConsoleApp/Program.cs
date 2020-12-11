@@ -1,12 +1,12 @@
 ﻿using System;
+using TaxiFleet.Library.Mocks;
 using TaxiFleet.Library.Models;
-using TaxiFleet.UnitTests.Mocks;
 
 namespace TaxiFleet.ConsoleApp
 {
-    public class Program
+    public static class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             MockCars mockCars = new MockCars();
             TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);

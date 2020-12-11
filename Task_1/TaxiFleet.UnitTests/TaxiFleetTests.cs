@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using TaxiFleet.Library.Mocks;
 using TaxiFleet.Library.Models;
-using TaxiFleet.UnitTests.Mocks;
 
 namespace TaxiFleet.UnitTests
 {

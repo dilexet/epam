@@ -5,7 +5,7 @@ namespace TaxiFleet.Library.Models
 {
     public class TaxiStation
     {
-        private ICollection<CarBase> _cars;
+        private readonly ICollection<CarBase> _cars;
         public TaxiStation(IEnumerable<CarBase> cars)
         {
             _cars = new List<CarBase>(cars);

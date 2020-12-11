@@ -46,10 +46,6 @@
         <Project>{6ee517aa-1c87-4451-ade9-0d2c58a62e5f}</Project>
         <Name>TaxiFleet.Library</Name>
       </ProjectReference>
-      <ProjectReference Include="..\TaxiFleet.UnitTests\TaxiFleet.UnitTests.csproj">
-        <Project>{b3a7f6b8-38de-411b-ac88-b49e7dd84c6e}</Project>
-        <Name>TaxiFleet.UnitTests</Name>
-      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

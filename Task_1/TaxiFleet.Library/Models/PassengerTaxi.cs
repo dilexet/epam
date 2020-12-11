@@ -4,10 +4,10 @@ namespace TaxiFleet.Library.Models
 {
     public class PassengerTaxi: CarBase
     {
-        public float CostOfTrip { get; }
-        public byte NumberOfSeats { get; }
-        public float RentPerHour { get; }
-        public CategoryTaxi CategoryTaxi { get; }
+        private float CostOfTrip { get; }
+        private byte NumberOfSeats { get; }
+        private float RentPerHour { get; }
+        private CategoryTaxi CategoryTaxi { get; }
         
         public PassengerTaxi(CarBrand brand, string model, CarBody carBody, string carRegistrationNumber,
             CarColor carColor, double priceOfCar, float fuelConsumption, ushort maxSpeed, ushort yearOfCreation,

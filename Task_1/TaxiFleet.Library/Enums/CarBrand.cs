@@ -4,7 +4,6 @@
     {
         Bmw,
         Audi,
-        Toyota,
         Volkswagen,
         Citroen,
         Peugeot

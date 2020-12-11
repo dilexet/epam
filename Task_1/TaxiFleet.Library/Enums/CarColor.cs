@@ -4,11 +4,8 @@
     {
         Black,
         White,
-        Gray,
         Red,
         Blue,
         Green,
-        Yellow,
-        Purple
     }
 }
