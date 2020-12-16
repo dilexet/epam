@@ -50,7 +50,7 @@ namespace TaxiFleet.UnitTests
 
             // arrange
             MockCars mockCars = new MockCars();
-            TaxiStation taxiStation = new TaxiStation(cars: mockCars.GetCars);
+            TaxiStation taxiStation = new TaxiStation(mockCars.GetCars);
 
             // act
             var actual = taxiStation.SortingByFuelConsumption().ToList();
