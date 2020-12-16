@@ -8,5 +8,13 @@
         {
             _symbol = symbol;
         }
+
+        public string Chars
+        {
+            get
+            {
+                return _symbol.Chars;
+            }
+        }
     }
 }

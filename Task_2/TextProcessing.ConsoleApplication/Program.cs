@@ -18,7 +18,20 @@ namespace TextProcessing.ConsoleApplication
                 text = parser.Parse(streamReader);
             }
 
-            
+            Console.WriteLine();
+            foreach (var sentence in text.GetEnumerator())
+            {
+                Console.WriteLine(sentence);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var word in text.FetchingWordsOfAGivenLength(5))
+            {
+                Console.WriteLine(word.Chars);
+            }
+
+            Console.WriteLine();
         }
     }
 }

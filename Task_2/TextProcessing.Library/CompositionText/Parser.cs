@@ -16,7 +16,7 @@ namespace TextProcessing.Library.CompositionText
             return text;
         }
 
-        private IEnumerable<Sentence> ParseSentence(string source)
+        private ICollection<Sentence> ParseSentence(string source)
         {
             ICollection<Sentence> sentencesList = new List<Sentence>();
             

@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace TextProcessing.Library.CompositionText
 {
     public class Word
     {
-        private Symbol[] _symbols;
+        private readonly Symbol[] _symbols;
 
-        public Word(IEnumerable<Symbol> source)
+        public int SymbolCount
         {
-            _symbols = source.ToArray();
+            get
+            {
+                return _symbols.Length;
+            }
         }
 
         public Word(string chars)
@@ -23,6 +28,19 @@ namespace TextProcessing.Library.CompositionText
                 _symbols = null;
             }
         }
-       
+
+        public string Chars
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var symbol in _symbols)
+                {
+                    sb.Append(symbol.Chars);
+                }
+                return sb.ToString(); 
+            }
+        }
+
     }
 }
