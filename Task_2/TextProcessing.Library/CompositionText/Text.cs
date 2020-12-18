@@ -17,7 +17,7 @@ namespace TextProcessing.Library.CompositionText
         {
             foreach (var sentence in _sentences)
             {
-                yield return sentence.GetSentence();
+                yield return sentence.Value;
             }
         }
 
@@ -28,7 +28,7 @@ namespace TextProcessing.Library.CompositionText
 
         private IEnumerable<Sentence> ReceivingInterrogativeSentences()
         {
-            return _sentences.Where(sentence => sentence.GetSentence().EndsWith("?")).ToList();
+            return _sentences.Where(sentence => sentence.Value.EndsWith("?")).ToList();
         }
 
         private IEnumerable<Word> RemovingDuplicateItems(List<Word> words)
@@ -52,6 +52,34 @@ namespace TextProcessing.Library.CompositionText
             }
 
             return RemovingDuplicateItems(words);
+        }
+
+        // TODO: при удалении слова смещаются, а знаки препиания находятся на прежней позиции, исправить это
+        public IEnumerable<Sentence> DeletingWordsOfGivenLengthBeginningWithConsonant(uint lenght)
+        {
+            var itemSentences = _sentences;
+            
+            foreach (var sentence in itemSentences)
+            {
+                sentence.Words.RemoveAll(item => item.IsWordBeginWithConsonant && item.SymbolCount == lenght);
+            }
+            
+            return itemSentences;
+        }
+
+        public IEnumerable<Sentence> ReplacingStringWithSubstring(uint lenght, string substring)
+        {
+            var itemSentences = _sentences;
+            foreach (var sentence in itemSentences)
+            {
+                for (int i = 0; i < sentence.Words.Count; i++)
+                {
+                    if (sentence.Words[i].SymbolCount == lenght)
+                        sentence.Words[i] = new Word(substring);
+                }
+            }
+
+            return itemSentences;
         }
     }
 }

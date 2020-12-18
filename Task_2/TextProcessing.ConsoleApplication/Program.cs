@@ -26,9 +26,9 @@ namespace TextProcessing.ConsoleApplication
 
             Console.WriteLine();
             Console.WriteLine();
-            foreach (var word in text.FetchingWordsOfAGivenLength(5))
+            foreach (var sentence in text.ReplacingStringWithSubstring(6,"Hello"))
             {
-                Console.WriteLine(word.Chars);
+                Console.WriteLine(sentence.Value);
             }
 
             Console.WriteLine();

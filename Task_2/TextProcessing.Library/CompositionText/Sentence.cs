@@ -10,6 +10,19 @@ namespace TextProcessing.Library.CompositionText
 
         public List<Punctuation> Punctuations { get; }
 
+        public string Value
+        {
+            get
+            {
+                StringBuilder item = new StringBuilder();
+                for (int i = 0; i < Words.Count; i++)
+                {
+                    item.Append(Words[i].Chars + Punctuations[i].Chars);
+                }
+                return item.ToString();
+            }
+        }
+
         public int WordsCount
         {
             get
@@ -22,17 +35,6 @@ namespace TextProcessing.Library.CompositionText
         {
             Words = words;
             Punctuations = punctuations;
-        }
-
-        public string GetSentence()
-        {
-            StringBuilder sentence = new StringBuilder();
-            for (int i = 0; i < Words.Count; i++)
-            {
-                sentence.Append(Words[i].Chars + Punctuations[i].Chars);
-            }
-
-            return sentence.ToString();
         }
 
     }

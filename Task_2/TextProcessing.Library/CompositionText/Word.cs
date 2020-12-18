@@ -17,6 +17,15 @@ namespace TextProcessing.Library.CompositionText
             }
         }
 
+        public bool IsWordBeginWithConsonant
+        {
+            get
+            {
+                if (_symbols[0].IsConconat)
+                    return true;
+                return false;
+            }
+        }
         public Word(string chars)
         {
             if (chars != null)
