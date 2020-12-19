@@ -1,41 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using TextProcessing.Library.Interfaces;
 
 namespace TextProcessing.Library.CompositionText
 {
     public class Sentence
     {
-        public List<Word> Words { get; }
-
-        public List<Punctuation> Punctuations { get; }
-
-        public string Value
+        private readonly ICollection<ISentenceItem> _sentenceItems;
+        public int WordsCount => _sentenceItems.OfType<Word>().Count();
+        public bool IsSentenceInterrogative
         {
             get
             {
-                StringBuilder item = new StringBuilder();
-                for (int i = 0; i < Words.Count; i++)
+                if (_sentenceItems.OfType<Punctuation>().Last().Value == "?")
                 {
-                    item.Append(Words[i].Chars + Punctuations[i].Chars);
+                    return true;
                 }
-                return item.ToString();
+                return false;
             }
         }
-
-        public int WordsCount
+        public Sentence(IEnumerable<ISentenceItem> sentenceItems)
         {
-            get
+            _sentenceItems = sentenceItems.ToList();
+        }
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var sentenceItem in _sentenceItems)
             {
-                return Words.Count;
+                stringBuilder.Append(sentenceItem.Value);
             }
+            return stringBuilder.ToString();
         }
 
-        public Sentence(List<Word> words, List<Punctuation> punctuations)
+        public IEnumerable<ISentenceItem> GetSentenceItems()
         {
-            Words = words;
-            Punctuations = punctuations;
+            return _sentenceItems;
         }
-
     }
 }
