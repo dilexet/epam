@@ -1,85 +1,69 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using TextProcessing.Library.CompositionText;
+using TextProcessing.Library.Interfaces;
 
-namespace TextProcessing.Library.CompositionText
+namespace TextProcessing.Library
 {
-    public class Parser
+    public class Parser : IParser
     {
-
-        public Text Parse(StreamReader streamReader)
+        public Text Parse(FileStream fileStream)
         {
-            string allText = RemoveExtraSymbol(streamReader.ReadToEnd());
-
-            Text text = new Text(ParseSentence(allText));
-
-            return text;
+            var array = new byte[fileStream.Length];
+            fileStream.Read(array, 0, array.Length);
+            string text = System.Text.Encoding.Default.GetString(array);
+            
+            if(string.IsNullOrEmpty(text))
+                throw new NullReferenceException("File is empty");
+            var source = Regex.Matches(RemoveExtraSymbol(text), @"(\w+)|([\W_-[\s]]+)|(\s)");
+            return new Text(ParseSentence(source));
         }
-
-        private ICollection<Sentence> ParseSentence(string source)
+        private ICollection<Sentence> ParseSentence(MatchCollection source)
         {
             ICollection<Sentence> sentencesList = new List<Sentence>();
-
-            string[] sentences = Regex.Split(source, @"(?<=[\.!\?\?!\...])\s+");
-
-            foreach (var sentence in sentences)
+            ICollection<ISentenceItem> sentenceItems = new List<ISentenceItem>();
+            
+            foreach (Match item in source)
             {
-                if (!string.IsNullOrEmpty(sentence))
-                    sentencesList.Add(new Sentence(ParseWord(sentence), ParsePunctuation(sentence)));
+                if (IsWord(item.Value))
+                {
+                    sentenceItems.Add(new Word(item.Value));
+                }
+                else if (IsWordSeparator(new Symbol(item.Value)))
+                {
+                    sentenceItems.Add(new Punctuation(new Symbol(item.Value)));
+                }
+                else if (IsSentenceSeparator(new Symbol(item.Value)))
+                {
+                    sentenceItems.Add(new Punctuation(new Symbol(item.Value)));
+                    sentencesList.Add(new Sentence(sentenceItems));
+                    sentenceItems.Clear();
+                }
             }
-
             return sentencesList;
         }
-
-        private List<Word> ParseWord(string sentence)
+        private bool IsWord(string word)
         {
-            List<Word> wordsList = new List<Word>();
-            string[] words = Regex.Split(sentence, @"[^а-яА-яa-zA-z0-9]");
-            foreach (var word in words)
-            {
-                if (!string.IsNullOrEmpty(word))
-                    wordsList.Add(new Word(word));
-            }
-
-            return wordsList;
+            return Regex.IsMatch(word, @"(\w+)");
         }
-        private List<Punctuation> ParsePunctuation(string sentence)
+        private bool IsWordSeparator(Symbol separator)
         {
-            List<Punctuation> punctuationsList = new List<Punctuation>();
-            string buffer = "";
-            for (int i = 0; i < sentence.Length; i++)
-            {
-                if (sentence[i] == ' ' || 
-                    sentence[i] == '\n' ||
-                    sentence[i] == '\t' ||
-                    sentence[i] == '.' || 
-                    sentence[i] == ',' || 
-                    sentence[i] == '?' || 
-                    sentence[i] == '!' || 
-                    sentence[i] == ':' || 
-                    sentence[i] == '-' || 
-                    sentence[i] == ';')
-                {
-                    buffer += sentence[i];
-                }
-                else if(!string.IsNullOrEmpty(buffer))
-                {
-                    punctuationsList.Add(new Punctuation(new Symbol(buffer)));
-                    buffer = "";
-                }
-            }
-
-            if (!string.IsNullOrEmpty(buffer))
-                punctuationsList.Add(new Punctuation(new Symbol(buffer)));
-
-            return punctuationsList;
+            SeparatorContainer separatorContainer = new SeparatorContainer();
+            return separatorContainer.WordSeparators().Contains(separator.Chars);
+        }
+        private bool IsSentenceSeparator(Symbol separator)
+        {
+            SeparatorContainer separatorContainer = new SeparatorContainer();
+            return separatorContainer.SentenceSeparators().Contains(separator.Chars);
         }
         private string RemoveExtraSymbol(string currentString)
         {
-            if (currentString == null)
-                return null;
-            currentString = Regex.Replace(currentString, "[ ]+", " ");
-            currentString = Regex.Replace(currentString, "[\t]+", " ");
+            if (string.IsNullOrEmpty(currentString))
+                throw new ArgumentNullException();
+            currentString = Regex.Replace(currentString, "[ ]|[\t]+", " ");
             currentString = Regex.Replace(currentString, @"(?:\n|\r|\r\n){2,}", "\n");
             return currentString;
         }
