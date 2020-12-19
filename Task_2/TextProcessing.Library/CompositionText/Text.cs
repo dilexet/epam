@@ -1,84 +1,90 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace TextProcessing.Library.CompositionText
 {
     public class Text
     {
-        private ICollection<Sentence> _sentences;
-
-        public Text(ICollection<Sentence> sentences)
+        private readonly IEnumerable<Sentence> _sentences;
+        public Text(IEnumerable<Sentence> sentences)
         {
             _sentences = sentences;
         }
-
-        public IEnumerable<string> GetEnumerator()
+        public override string ToString()
         {
+            StringBuilder builder = new StringBuilder();
             foreach (var sentence in _sentences)
             {
-                yield return sentence.Value;
+                builder.Append(sentence);
             }
+            return builder.ToString();
         }
-
         public IEnumerable<Sentence> SortByTheNumberOfWordsInASentence()
         {
-            return _sentences.OrderBy(item => item.WordsCount).ToList();
-        }
-
-        private IEnumerable<Sentence> ReceivingInterrogativeSentences()
-        {
-            return _sentences.Where(sentence => sentence.Value.EndsWith("?")).ToList();
-        }
-
-        private IEnumerable<Word> RemovingDuplicateItems(List<Word> words)
-        {
-            for (int i = 0; i < words.Count; i++)
-            {
-                for (int j = i + 1; j < words.Count; j++)
-                {
-                    if (words[i].Chars == words[j].Chars)
-                        words.Remove(words[j]);
-                }
-            }
-            return words;
+            return _sentences.OrderBy(item => item.WordsCount);
         }
         public IEnumerable<Word> FetchingWordsOfAGivenLength(uint length)
         {
             List<Word> words = new List<Word>();
-            foreach (var sentence in ReceivingInterrogativeSentences())
+            foreach (var sentence in ReceiveInterrogativeSentences())
             {
-                words = sentence.Words.Where(word => word.SymbolCount == length).ToList();
+                words = sentence.GetSentenceItems().OfType<Word>().Where(item => item.SymbolCount == length).ToList();
             }
 
             return RemovingDuplicateItems(words);
         }
-
-        // TODO: при удалении слова смещаются, а знаки препиания находятся на прежней позиции, исправить это
-        public IEnumerable<Sentence> DeletingWordsOfGivenLengthBeginningWithConsonant(uint lenght)
+        private IEnumerable<Sentence> ReceiveInterrogativeSentences()
         {
-            var itemSentences = _sentences;
-            
-            foreach (var sentence in itemSentences)
-            {
-                sentence.Words.RemoveAll(item => item.IsWordBeginWithConsonant && item.SymbolCount == lenght);
-            }
-            
-            return itemSentences;
+            return _sentences.Where(sentence => sentence.IsSentenceInterrogative);
         }
-
-        public IEnumerable<Sentence> ReplacingStringWithSubstring(uint lenght, string substring)
+        private IEnumerable<Word> RemovingDuplicateItems(ICollection<Word> words)
         {
-            var itemSentences = _sentences;
-            foreach (var sentence in itemSentences)
+            var wordsList = words.ToList();
+            for (int i = 0; i < wordsList.Count; i++)
             {
-                for (int i = 0; i < sentence.Words.Count; i++)
+                for (int j = i + 1; j < wordsList.Count; j++)
                 {
-                    if (sentence.Words[i].SymbolCount == lenght)
-                        sentence.Words[i] = new Word(substring);
+                    if (wordsList[i].Value == wordsList[j].Value)
+                    {
+                        words.Remove(wordsList[j]);
+                    }
                 }
             }
+            return words;
+        }
+        public IEnumerable<Sentence> DeleteWordsBeginWithConsonant(uint lenght)
+        {
+            var itemSentences = _sentences.ToList();
+            
+            foreach (var sentence in itemSentences)
+            {
+                var words = sentence.GetSentenceItems().OfType<Word>()
+                    .Where(item => item.SymbolCount == lenght && item.IsWordBeginWithConsonant).ToList();
+                for (int i = 0; i < words.Count(); i++)
+                {
+                    sentence.GetSentenceItems().ToList().Remove(words[i]);
+                }
+            }
+            return itemSentences;
+        }
+        public IEnumerable<Sentence> ReplaceStringWithSubstring(uint lenght, string substring)
+        {
+            var itemSentences = _sentences.ToList();
+            foreach (var sentence in itemSentences)
+            {
+                for (int i = 0; i < sentence.WordsCount; i++)
+                {
+                    var words = sentence.GetSentenceItems().OfType<Word>()
+                        .Where(item => item.SymbolCount == lenght).ToList();
 
+                    foreach (var word in words)
+                    {
+                        int index = sentence.GetSentenceItems().ToList().IndexOf(word);
+                        sentence.GetSentenceItems().ToList()[index] = new Word(substring);
+                    }
+                }
+            }
             return itemSentences;
         }
     }
