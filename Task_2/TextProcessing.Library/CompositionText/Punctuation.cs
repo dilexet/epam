@@ -1,20 +1,14 @@
-﻿namespace TextProcessing.Library.CompositionText
-{
-    public class Punctuation
-    {
-        private Symbol _symbol;
+﻿using TextProcessing.Library.Interfaces;
 
+namespace TextProcessing.Library.CompositionText
+{
+    public class Punctuation : ISentenceItem
+    {
+        private readonly Symbol _symbol;
         public Punctuation(Symbol symbol)
         {
             _symbol = symbol;
         }
-
-        public string Chars
-        {
-            get
-            {
-                return _symbol.Chars;
-            }
-        }
+        public string Value => _symbol.Chars;
     }
 }
