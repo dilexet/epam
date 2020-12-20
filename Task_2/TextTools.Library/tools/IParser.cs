@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using TextProcessing.Library.CompositionText;
+using TextModel.Library;
 
-namespace TextProcessing.Library.Interfaces
+namespace TextTools.Library.tools
 {
     public interface IParser
     {

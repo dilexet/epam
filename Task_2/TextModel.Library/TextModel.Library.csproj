@@ -7,8 +7,8 @@
         <ProjectGuid>{3ED9DB81-28D8-4ACD-B2B2-FF0F03854FD7}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>TextProcessing.Library</RootNamespace>
-        <AssemblyName>TextProcessing.Library</AssemblyName>
+        <RootNamespace>TextModel.Library</RootNamespace>
+        <AssemblyName>TextModel.Library</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -39,19 +39,14 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="CompositionText\Punctuation.cs" />
-        <Compile Include="CompositionText\Sentence.cs" />
-        <Compile Include="CompositionText\Symbol.cs" />
-        <Compile Include="CompositionText\Text.cs" />
-        <Compile Include="CompositionText\Word.cs" />
-        <Compile Include="Interfaces\IParser.cs" />
-        <Compile Include="Interfaces\ISentenceItem.cs" />
-        <Compile Include="Interfaces\ITextStreamReader.cs" />
-        <Compile Include="Interfaces\ITextStreamWriter.cs" />
-        <Compile Include="Parser.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="SeparatorContainer.cs" />
-        <Compile Include="TextStream.cs" />
+        <Compile Include="src\Text.cs" />
+        <Compile Include="src\TextElements\Sentence.cs" />
+        <Compile Include="src\TextElements\SentenceElements\ISentenceItem.cs" />
+        <Compile Include="src\TextElements\SentenceElements\Punctuation.cs" />
+        <Compile Include="src\TextElements\SentenceElements\SeparatorContainer.cs" />
+        <Compile Include="src\TextElements\SentenceElements\Symbol.cs" />
+        <Compile Include="src\TextElements\SentenceElements\Word.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

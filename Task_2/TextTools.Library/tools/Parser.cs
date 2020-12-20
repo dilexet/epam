@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Configuration;
 using System.Text.RegularExpressions;
-using TextProcessing.Library.CompositionText;
-using TextProcessing.Library.Interfaces;
+using TextModel.Library;
+using TextModel.Library.TextElements;
+using TextModel.Library.TextElements.SentenceElements;
 
-namespace TextProcessing.Library
+namespace TextTools.Library.tools
 {
     public class Parser : IParser
     {
@@ -17,9 +18,11 @@ namespace TextProcessing.Library
             var array = new byte[fileStream.Length];
             fileStream.Read(array, 0, array.Length);
             string text = Encoding.UTF8.GetString(array);
-            
-            if(string.IsNullOrEmpty(text))
+
+            if (string.IsNullOrEmpty(text))
+            {
                 throw new NullReferenceException("File is empty");
+            }
             
             
             return new Text(ParseSentence(RemoveExtraSymbol(text)));

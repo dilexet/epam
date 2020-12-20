@@ -1,6 +1,4 @@
-﻿using TextProcessing.Library.Interfaces;
-
-namespace TextProcessing.Library.CompositionText
+﻿namespace TextModel.Library.TextElements.SentenceElements
 {
     public class Punctuation : ISentenceItem
     {

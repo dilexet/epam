@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TextModel.Library.TextElements;
+using TextModel.Library.TextElements.SentenceElements;
 
-namespace TextProcessing.Library.CompositionText
+namespace TextModel.Library
 {
     public class Text
     {
@@ -12,7 +13,7 @@ namespace TextProcessing.Library.CompositionText
         {
             _sentences = sentences;
         }
-        public IEnumerable<Sentence> GetSentenceItems()
+        public IEnumerable<Sentence> GetSentence()
         {
             return _sentences;
         }

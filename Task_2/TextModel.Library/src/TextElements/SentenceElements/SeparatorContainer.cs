@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TextProcessing.Library
+namespace TextModel.Library.TextElements.SentenceElements
 {
     public class SeparatorContainer
     {

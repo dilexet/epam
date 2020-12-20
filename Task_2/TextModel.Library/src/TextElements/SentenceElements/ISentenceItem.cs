@@ -1,4 +1,4 @@
-﻿namespace TextProcessing.Library.Interfaces
+﻿namespace TextModel.Library.TextElements.SentenceElements
 {
     public interface ISentenceItem
     {

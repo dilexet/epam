@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TextProcessing.Library.Interfaces;
+using TextModel.Library.TextElements.SentenceElements;
 
-namespace TextProcessing.Library.CompositionText
+namespace TextModel.Library.TextElements
 {
     public class Sentence
     {
