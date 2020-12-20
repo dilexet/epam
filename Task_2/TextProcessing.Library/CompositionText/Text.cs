@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,10 @@ namespace TextProcessing.Library.CompositionText
         public Text(IEnumerable<Sentence> sentences)
         {
             _sentences = sentences;
+        }
+        public IEnumerable<Sentence> GetSentenceItems()
+        {
+            return _sentences;
         }
         public override string ToString()
         {
