@@ -5,7 +5,7 @@ namespace TextProcessing.Library
 {
     public class SeparatorContainer
     {
-        private readonly string[] _wordSeparators = {",", ";", "\"", "'", "\r", "\n", " ", "—", "-", ":"};
+        private readonly string[] _wordSeparators = {",", ";", "\"", "'", "\r", "\n", " ", "—", ":"};
         private readonly string[] _sentenceSeparators = {".", "!", "?", "?!", "!?", "..."};
         public IEnumerable<string> SentenceSeparators()
         {
