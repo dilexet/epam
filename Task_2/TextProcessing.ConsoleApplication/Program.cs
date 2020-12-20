@@ -50,11 +50,7 @@ namespace TextProcessing.ConsoleApplication
 
             Console.WriteLine();
             Console.WriteLine();
-            foreach (var sentence in text.SortByTheNumberOfWordsInASentence())
-            {
-                 Console.WriteLine(sentence);
-            }
-
+           
             Console.WriteLine();
         }
     }
