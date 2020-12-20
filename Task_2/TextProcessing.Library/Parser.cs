@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Configuration;
 using System.Text.RegularExpressions;
 using TextProcessing.Library.CompositionText;
 using TextProcessing.Library.Interfaces;
@@ -15,32 +16,29 @@ namespace TextProcessing.Library
         {
             var array = new byte[fileStream.Length];
             fileStream.Read(array, 0, array.Length);
-            string text = System.Text.Encoding.Default.GetString(array);
+            string text = Encoding.UTF8.GetString(array);
             
             if(string.IsNullOrEmpty(text))
                 throw new NullReferenceException("File is empty");
             
             
-            return new Text(ParseSentence(text));
+            return new Text(ParseSentence(RemoveExtraSymbol(text)));
         }
         private ICollection<Sentence> ParseSentence(string text)
         {
             ICollection<Sentence> sentencesList = new List<Sentence>();
             ICollection<ISentenceItem> sentenceItems = new List<ISentenceItem>();
-            
-            SeparatorContainer separatorContainer = new SeparatorContainer();
-            
+
             int bufferlength = 10000;
             StringBuilder buffer = new StringBuilder(bufferlength);
             StringBuilder bufferSentenceSeparator = new StringBuilder(bufferlength);
-            StringBuilder bufferWordSeparator = new StringBuilder(bufferlength);
+
             buffer.Clear();
             bufferSentenceSeparator.Clear();
-            var separatorSentence = separatorContainer.SentenceSeparators().ToArray();
             
             foreach (var symbol in text)
             {
-                if (IsLetter(new Symbol(symbol)))
+                if (IsWordSymbol(new Symbol(symbol)))
                 {
                     if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
                     {
@@ -65,12 +63,9 @@ namespace TextProcessing.Library
                     {
                         sentenceItems.Add(new Word(buffer.ToString()));
                         buffer.Clear();
-                    }
-                    
+                    } 
                     sentenceItems.Add(new Punctuation(new Symbol(symbol)));
-                    
                 }
-                
                 else if(IsSentenceSeparator(new Symbol(symbol)))
                 {
                     bufferSentenceSeparator.Append(symbol);
@@ -81,16 +76,22 @@ namespace TextProcessing.Library
                     }
                 }
             }
+
+            if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
+            {
+                sentenceItems.Add(new Punctuation(new Symbol(bufferSentenceSeparator.ToString())));
+                sentencesList.Add(new Sentence(sentenceItems));
+            }
             return sentencesList;
         }
-        private bool IsWord(string word)
+        private bool IsWordSymbol(Symbol symbol)
         {
-            return Regex.IsMatch(word, @"(\w+)"); // как работает?
-        }
-
-        private bool IsLetter(Symbol letter)
-        {
-            return Regex.IsMatch(letter.Chars, @"\w");
+            return Regex.IsMatch(
+                       symbol.Chars, 
+                       ConfigurationManager.AppSettings.Get("IsLetter")) ||
+                   Regex.IsMatch(
+                       symbol.Chars, 
+                       "-");
         }
         private bool IsWordSeparator(Symbol separator)
         {
@@ -101,6 +102,20 @@ namespace TextProcessing.Library
         {
             SeparatorContainer separatorContainer = new SeparatorContainer();
             return separatorContainer.SentenceSeparators().Contains(separator.Chars);
+        }
+        private string RemoveExtraSymbol(string currentString)
+        {
+            if (string.IsNullOrEmpty(currentString))
+                throw new ArgumentNullException();
+            currentString = Regex.Replace(
+                currentString, 
+                ConfigurationManager.AppSettings.Get("patternRemoveExtraTab"), 
+                " ");
+            currentString = Regex.Replace(
+                currentString, 
+                ConfigurationManager.AppSettings.Get("patternRemoveExtraNewLine"), 
+                "\r\n");
+            return currentString;
         }
     }
 }
