@@ -39,7 +39,7 @@ namespace TextModel.Library.TextElements.SentenceElements
             {
                 return false;
             }
-            return Equals(Value.ToLower(), other.Value.ToLower());
+            return Equals(Value, other.Value);
         }
 
         public override int GetHashCode()
@@ -49,8 +49,7 @@ namespace TextModel.Library.TextElements.SentenceElements
 
         public int CompareTo(object obj)
         {
-            Word wordOther = obj as Word;
-            if (wordOther != null)
+            if (obj is Word wordOther)
             {
                 return String.Compare(Value, wordOther.Value, StringComparison.Ordinal);
             }

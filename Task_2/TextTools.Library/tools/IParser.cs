@@ -5,6 +5,6 @@ namespace TextTools.Library.tools
 {
     public interface IParser
     {
-        Text Parse(FileStream fileStream);
+        Text Parse(Stream stream);
     }
 }

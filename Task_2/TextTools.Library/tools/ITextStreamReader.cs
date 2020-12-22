@@ -4,6 +4,6 @@ namespace TextTools.Library.tools
 {
     public interface ITextStreamReader
     {
-        Text TextReader(string path, IParser parser);
+        Text TextReader(string path);
     }
 }

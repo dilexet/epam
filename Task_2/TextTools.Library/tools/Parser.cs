@@ -13,18 +13,26 @@ namespace TextTools.Library.tools
 {
     public class Parser : IParser
     {
-        public Text Parse(FileStream fileStream)
+        private readonly string _patternIsLetter;
+        private readonly string _patternRemoveExtraTab;
+        private readonly string _patternRemoveExtraNewLine;
+        public Parser()
         {
-            var array = new byte[fileStream.Length];
-            fileStream.Read(array, 0, array.Length);
+            var sAttr = ConfigurationManager.AppSettings;
+            _patternIsLetter = sAttr.Get("patternIsLetter");
+            _patternRemoveExtraTab = sAttr.Get("patternRemoveExtraTab");
+            _patternRemoveExtraNewLine = sAttr.Get("patternRemoveExtraNewLine");
+        }
+        public Text Parse(Stream stream)
+        {
+            var array = new byte[stream.Length];
+            stream.Read(array, 0, array.Length);
             string text = Encoding.UTF8.GetString(array);
 
             if (string.IsNullOrEmpty(text))
             {
                 throw new NullReferenceException("File is empty");
             }
-            
-            
             return new Text(ParseSentence(RemoveExtraSymbol(text)));
         }
         private ICollection<Sentence> ParseSentence(string text)
@@ -91,7 +99,7 @@ namespace TextTools.Library.tools
         {
             return Regex.IsMatch(
                        symbol.Chars, 
-                       ConfigurationManager.AppSettings.Get("IsLetter")) ||
+                       _patternIsLetter) ||
                    Regex.IsMatch(
                        symbol.Chars, 
                        "-");
@@ -112,11 +120,11 @@ namespace TextTools.Library.tools
                 throw new ArgumentNullException();
             currentString = Regex.Replace(
                 currentString, 
-                ConfigurationManager.AppSettings.Get("patternRemoveExtraTab"), 
+                _patternRemoveExtraTab, 
                 " ");
             currentString = Regex.Replace(
-                currentString, 
-                ConfigurationManager.AppSettings.Get("patternRemoveExtraNewLine"), 
+                currentString,
+                _patternRemoveExtraNewLine,
                 "\r\n");
             return currentString;
         }

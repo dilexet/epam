@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{17FDCA1A-D483-4042-AAA5-EBF48CCCDD33}</ProjectGuid>
-        <OutputType>Library</OutputType>
+        <ProjectGuid>{E82C0FDD-9EFF-443B-AF6F-734FF3E0D1AB}</ProjectGuid>
+        <OutputType>Exe</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>TextConcordance.Library</RootNamespace>
-        <AssemblyName>TextConcordance.Library</AssemblyName>
+        <RootNamespace>TextProcess</RootNamespace>
+        <AssemblyName>TextProcess</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -33,20 +33,22 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System" />
-        <Reference Include="System.Configuration" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Concordance.cs" />
+        <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\TextModel.Library\TextModel.Library.csproj">
-        <Project>{3ed9db81-28d8-4acd-b2b2-ff0f03854fd7}</Project>
-        <Name>TextModel.Library</Name>
+      <ProjectReference Include="..\UserInterface\UserInterface.csproj">
+        <Project>{a2032623-73d2-4fbb-afb8-8c520f8524d2}</Project>
+        <Name>UserInterface</Name>
       </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="App.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

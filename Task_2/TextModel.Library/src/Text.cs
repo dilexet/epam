@@ -26,11 +26,13 @@ namespace TextModel.Library
             }
             return builder.ToString();
         }
-        public IEnumerable<Sentence> SortByTheNumberOfWordsInASentence()
+        // Task 1
+        public IEnumerable<Sentence> SortByWordCount()
         {
             return _sentences.OrderBy(item => item.WordsCount);
         }
-        public IEnumerable<Word> FetchingWordsOfAGivenLength(uint length)
+        // Task 2
+        public IEnumerable<Word> GetWordsGivenLength(uint length)
         {
             List<Word> words = new List<Word>();
             foreach (var sentence in ReceiveInterrogativeSentences())
@@ -38,60 +40,53 @@ namespace TextModel.Library
                 words = sentence.GetSentenceItems().OfType<Word>().Where(item => item.SymbolCount == length).ToList();
             }
 
-            return RemovingDuplicateItems(words);
+            return words.Distinct();
         }
-        private IEnumerable<Sentence> ReceiveInterrogativeSentences()
-        {
-            return _sentences.Where(sentence => sentence.IsSentenceInterrogative);
-        }
-        private IEnumerable<Word> RemovingDuplicateItems(ICollection<Word> words)
-        {
-            var wordsList = words.ToList();
-            for (int i = 0; i < wordsList.Count; i++)
-            {
-                for (int j = i + 1; j < wordsList.Count; j++)
-                {
-                    if (wordsList[i].Value == wordsList[j].Value)
-                    {
-                        words.Remove(wordsList[j]);
-                    }
-                }
-            }
-            return words;
-        }
-        public IEnumerable<Sentence> DeleteWordsBeginWithConsonant(uint lenght)
+        // Task 3
+        public IEnumerable<Sentence> DeleteWordsBeginConsonant(uint lenght)
         {
             var itemSentences = _sentences.ToList();
             
-            foreach (var sentence in itemSentences)
+            for (int j = 0; j < itemSentences.Count; j++) 
             {
-                var words = sentence.GetSentenceItems().OfType<Word>()
+                var words = itemSentences[j].GetSentenceItems().OfType<Word>()
                     .Where(item => item.SymbolCount == lenght && item.IsWordBeginWithConsonant).ToList();
                 for (int i = 0; i < words.Count(); i++)
                 {
-                    sentence.GetSentenceItems().ToList().Remove(words[i]);
+                    var item = itemSentences[j].GetSentenceItems().ToList();
+                    item.Remove(words[i]);
+                    itemSentences[j] = new Sentence(item);
                 }
             }
             return itemSentences;
         }
+        // Task 4
+        // TODO: Нужно ли предоставлять пользователю выбор в каком предложении делать замену?!
         public IEnumerable<Sentence> ReplaceStringWithSubstring(uint lenght, string substring)
         {
             var itemSentences = _sentences.ToList();
-            foreach (var sentence in itemSentences)
+            for (int j = 0; j < itemSentences.Count; j++)
             {
-                for (int i = 0; i < sentence.WordsCount; i++)
+                for (int i = 0; i < itemSentences[j].WordsCount; i++)
                 {
-                    var words = sentence.GetSentenceItems().OfType<Word>()
+                    var words = itemSentences[j].GetSentenceItems().OfType<Word>()
                         .Where(item => item.SymbolCount == lenght).ToList();
 
                     foreach (var word in words)
                     {
-                        int index = sentence.GetSentenceItems().ToList().IndexOf(word);
-                        sentence.GetSentenceItems().ToList()[index] = new Word(substring);
+                        int index = itemSentences[j].GetSentenceItems().ToList().IndexOf(word);
+                        var itemSentence = itemSentences[j].GetSentenceItems().ToList();
+                        itemSentence[index] = new Word(substring);
+                        itemSentences[j] = new Sentence(itemSentence);
                     }
                 }
             }
+
             return itemSentences;
+        }
+        private IEnumerable<Sentence> ReceiveInterrogativeSentences()
+        {
+            return _sentences.Where(sentence => sentence.IsSentenceInterrogative);
         }
     }
 }

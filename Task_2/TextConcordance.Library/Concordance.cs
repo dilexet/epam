@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,19 +8,22 @@ using TextModel.Library.TextElements.SentenceElements;
 
 namespace TextConcordance.Library
 {
-    //    Я ЭТО СДЕЛЛААААААААААААААААААААЛ!!!!!!!!!!
     public class Concordance
     {
         private readonly ICollection<Word> _wordsSortCollection;
         private readonly ICollection<string> _pagesCollection;
         private readonly uint _numberOfLinesPerPage;
         private readonly Text _text;
+        private readonly string _patternNewLine;
+        
         public Concordance(Text text, uint numberOfLinesPerPage)
         {
             _text = text;
             _numberOfLinesPerPage = numberOfLinesPerPage;
+            _patternNewLine = ConfigurationManager.AppSettings.Get("patternNewLine");
             _pagesCollection = SplitTextIntoPages();
             _wordsSortCollection = GetWordCollection(text);
+            
         }
         public string GetConcordance()
         {
@@ -68,7 +72,7 @@ namespace TextConcordance.Library
             {
                 if (Regex.IsMatch(line, word, RegexOptions.IgnoreCase)) 
                 {
-                    pageNumber += page + "\t";
+                    pageNumber += page + " ";
                 }
 
                 page++;
@@ -102,7 +106,7 @@ namespace TextConcordance.Library
             lines.Clear();
             ICollection<string> pages = new List<string>();
             int numberLine = 0;
-            foreach (var line in Regex.Split(_text.ToString(), @"\r\n")) 
+            foreach (var line in Regex.Split(_text.ToString(), _patternNewLine)) 
             {
                 if (numberLine >= _numberOfLinesPerPage)
                 {

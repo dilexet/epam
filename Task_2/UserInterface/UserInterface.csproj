@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{2450232E-0C56-47DB-A410-F46651E4E964}</ProjectGuid>
-        <OutputType>Exe</OutputType>
+        <ProjectGuid>{A2032623-73D2-4FBB-AFB8-8C520F8524D2}</ProjectGuid>
+        <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>TextProcess.ConsoleApplication</RootNamespace>
-        <AssemblyName>TextProcess.ConsoleApplication</AssemblyName>
+        <RootNamespace>UserInterface</RootNamespace>
+        <AssemblyName>UserInterface</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -39,7 +39,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Program.cs" />
+        <Compile Include="Cli.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -55,9 +55,6 @@
         <Project>{a4b71b86-5b43-4569-94ad-b9dc58eddd36}</Project>
         <Name>TextTools.Library</Name>
       </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="App.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

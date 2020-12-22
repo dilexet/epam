@@ -42,7 +42,6 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="tools\IParser.cs" />
         <Compile Include="tools\ITextStreamReader.cs" />
-        <Compile Include="tools\ITextStreamWriter.cs" />
         <Compile Include="tools\Parser.cs" />
         <Compile Include="tools\TextStream.cs" />
     </ItemGroup>
