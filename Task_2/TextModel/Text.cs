@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TextModel.Library.TextElements;
-using TextModel.Library.TextElements.SentenceElements;
+using TextModel.TextElements;
+using TextModel.TextElements.SentenceElements;
 
-namespace TextModel.Library
+namespace TextModel
 {
     public class Text
     {
         private readonly IEnumerable<Sentence> _sentences;
-        public Text(IEnumerable<Sentence> sentences)
+        public Text(ICollection<Sentence> sentences)
         {
             _sentences = sentences;
         }

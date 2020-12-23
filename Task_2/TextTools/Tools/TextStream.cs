@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
-using TextModel.Library;
+using TextModel;
 
-namespace TextTools.Library.tools
+namespace TextTools.tools
 {
     public class TextStream : ITextStreamReader
     {
         private readonly IParser _parser;
-        public TextStream()
+        public TextStream(IParser parser)
         {
-            _parser = new Parser();
+            _parser = parser;
         }
         public Text TextReader(string path)
         {
@@ -26,8 +26,7 @@ namespace TextTools.Library.tools
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                throw new Exception(e.Message);
             }
         }
     }

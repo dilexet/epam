@@ -3,10 +3,10 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using TextModel.Library;
-using TextModel.Library.TextElements.SentenceElements;
+using TextModel;
+using TextModel.TextElements.SentenceElements;
 
-namespace TextConcordance.Library
+namespace TextConcordance
 {
     public class Concordance
     {
@@ -16,11 +16,11 @@ namespace TextConcordance.Library
         private readonly Text _text;
         private readonly string _patternNewLine;
         
-        public Concordance(Text text, uint numberOfLinesPerPage)
+        public Concordance(Text text, uint numberOfLinesPerPage, string patternNewLine)
         {
             _text = text;
             _numberOfLinesPerPage = numberOfLinesPerPage;
-            _patternNewLine = ConfigurationManager.AppSettings.Get("patternNewLine");
+            _patternNewLine = patternNewLine;
             _pagesCollection = SplitTextIntoPages();
             _wordsSortCollection = GetWordCollection(text);
             

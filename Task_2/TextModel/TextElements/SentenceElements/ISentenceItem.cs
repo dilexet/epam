@@ -1,4 +1,4 @@
-﻿namespace TextModel.Library.TextElements.SentenceElements
+﻿namespace TextModel.TextElements.SentenceElements
 {
     public interface ISentenceItem
     {

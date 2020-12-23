@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using TextModel.Library;
+using TextModel;
 
-namespace TextTools.Library.tools
+namespace TextTools.tools
 {
     public interface IParser
     {

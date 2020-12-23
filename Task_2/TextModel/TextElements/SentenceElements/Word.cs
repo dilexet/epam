@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace TextModel.Library.TextElements.SentenceElements
+namespace TextModel.TextElements.SentenceElements
 {
     public class Word : ISentenceItem, IComparable
     {

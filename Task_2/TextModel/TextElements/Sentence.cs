@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TextModel.Library.TextElements.SentenceElements;
+using TextModel.TextElements.SentenceElements;
 
-namespace TextModel.Library.TextElements
+namespace TextModel.TextElements
 {
     public class Sentence
     {
@@ -20,9 +20,9 @@ namespace TextModel.Library.TextElements
                 return false;
             }
         }
-        public Sentence(IEnumerable<ISentenceItem> sentenceItems)
+        public Sentence(ICollection<ISentenceItem> sentenceItems)
         {
-            _sentenceItems = sentenceItems.ToList();
+            _sentenceItems = sentenceItems;
         }
         public override string ToString()
         {

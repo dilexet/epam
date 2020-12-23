@@ -2,44 +2,42 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using TextModel.Library;
-using TextModel.Library.TextElements;
-using TextModel.Library.TextElements.SentenceElements;
+using TextModel;
+using TextModel.TextElements;
+using TextModel.TextElements.SentenceElements;
 
-namespace TextTools.Library.tools
+namespace TextTools.tools
 {
     public class Parser : IParser
     {
         private readonly string _patternIsLetter;
         private readonly string _patternRemoveExtraTab;
         private readonly string _patternRemoveExtraNewLine;
-        public Parser()
+        public Parser(string patternIsLetter, string patternRemoveExtraTab, string patternRemoveExtraNewLine)
         {
-            var sAttr = ConfigurationManager.AppSettings;
-            _patternIsLetter = sAttr.Get("patternIsLetter");
-            _patternRemoveExtraTab = sAttr.Get("patternRemoveExtraTab");
-            _patternRemoveExtraNewLine = sAttr.Get("patternRemoveExtraNewLine");
+            _patternIsLetter = patternIsLetter;
+            _patternRemoveExtraTab = patternRemoveExtraTab;
+            _patternRemoveExtraNewLine = patternRemoveExtraNewLine;
         }
         public Text Parse(Stream stream)
         {
-            var array = new byte[stream.Length];
-            stream.Read(array, 0, array.Length);
-            string text = Encoding.UTF8.GetString(array);
+            StreamReader streamReader = new StreamReader(stream);
+            string text = streamReader.ReadToEnd();
 
             if (string.IsNullOrEmpty(text))
             {
                 throw new NullReferenceException("File is empty");
             }
+
             return new Text(ParseSentence(RemoveExtraSymbol(text)));
         }
         private ICollection<Sentence> ParseSentence(string text)
         {
             ICollection<Sentence> sentencesList = new List<Sentence>();
             ICollection<ISentenceItem> sentenceItems = new List<ISentenceItem>();
-
+            SeparatorHelper separatorHelper = new SeparatorHelper();
             int bufferlength = 10000;
             StringBuilder buffer = new StringBuilder(bufferlength);
             StringBuilder bufferSentenceSeparator = new StringBuilder(bufferlength);
@@ -61,7 +59,7 @@ namespace TextTools.Library.tools
                     buffer.Append(symbol);
                 }
                 
-                else if (IsWordSeparator(new Symbol(symbol))) 
+                else if (separatorHelper.IsWordSeparators(new Symbol(symbol))) 
                 {
                     if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
                     {
@@ -77,7 +75,7 @@ namespace TextTools.Library.tools
                     } 
                     sentenceItems.Add(new Punctuation(new Symbol(symbol)));
                 }
-                else if(IsSentenceSeparator(new Symbol(symbol)))
+                else if(separatorHelper.IsSentenceSeparators(new Symbol(symbol)))
                 {
                     bufferSentenceSeparator.Append(symbol);
                     if (!string.IsNullOrEmpty(buffer.ToString()))
@@ -103,16 +101,6 @@ namespace TextTools.Library.tools
                    Regex.IsMatch(
                        symbol.Chars, 
                        "-");
-        }
-        private bool IsWordSeparator(Symbol separator)
-        {
-            SeparatorContainer separatorContainer = new SeparatorContainer();
-            return separatorContainer.WordSeparators().Contains(separator.Chars);
-        }
-        private bool IsSentenceSeparator(Symbol separator)
-        {
-            SeparatorContainer separatorContainer = new SeparatorContainer();
-            return separatorContainer.SentenceSeparators().Contains(separator.Chars);
         }
         private string RemoveExtraSymbol(string currentString)
         {
