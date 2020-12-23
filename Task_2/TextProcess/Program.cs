@@ -10,11 +10,11 @@ namespace TextProcess
         {
             var sAttr = ConfigurationManager.AppSettings;
             Cli cli = new Cli(
-                new []{ "-m", "GetWordsGivenLength"}, 
+                args,
                 new TextStream(new Parser(
-                sAttr.Get("patternIsLetter"),
-                sAttr.Get("patternRemoveExtraTab"),
-                sAttr.Get("patternRemoveExtraNewLine"))));
+                    sAttr.Get("patternIsLetter"),
+                    sAttr.Get("patternRemoveExtraTab"),
+                    sAttr.Get("patternRemoveExtraNewLine"))));
             cli.Run();
             
         }
