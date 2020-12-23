@@ -15,7 +15,7 @@ namespace UserInterface
         [Option(
             'm',
             "methodName",
-            Required = false,
+            Required = true,
             HelpText = "Input method name"
             )]
         public string MethodName { get; set; }
