@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 
 namespace TextModel.TextElements.SentenceElements
 {
@@ -22,8 +21,11 @@ namespace TextModel.TextElements.SentenceElements
         public Word(string chars)
         {
             _symbols = chars?.Select(x => new Symbol(x)).ToArray();
+            Value = chars;
         }
 
+        public string Value { get; }
+        
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
@@ -51,22 +53,12 @@ namespace TextModel.TextElements.SentenceElements
         {
             if (obj is Word wordOther)
             {
-                return String.Compare(Value, wordOther.Value, StringComparison.Ordinal);
+                
+                return String.CompareOrdinal(Value, wordOther.Value);
             }
             throw new ArgumentNullException();
         }
 
-        public string Value
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (var symbol in _symbols)
-                {
-                    sb.Append(symbol.Chars);
-                }
-                return sb.ToString(); 
-            }
-        }
+       
     }
 }

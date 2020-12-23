@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,11 +11,11 @@ namespace TextConcordance
     {
         private readonly ICollection<Word> _wordsSortCollection;
         private readonly ICollection<string> _pagesCollection;
-        private readonly uint _numberOfLinesPerPage;
+        private readonly int _numberOfLinesPerPage;
         private readonly Text _text;
         private readonly string _patternNewLine;
         
-        public Concordance(Text text, uint numberOfLinesPerPage, string patternNewLine)
+        public Concordance(Text text, int numberOfLinesPerPage, string patternNewLine)
         {
             _text = text;
             _numberOfLinesPerPage = numberOfLinesPerPage;

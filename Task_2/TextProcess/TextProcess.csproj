@@ -33,6 +33,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System" />
+        <Reference Include="System.Configuration" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
@@ -42,6 +43,18 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\TextConcordance\TextConcordance.csproj">
+        <Project>{17fdca1a-d483-4042-aaa5-ebf48cccdd33}</Project>
+        <Name>TextConcordance</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\TextModel\TextModel.csproj">
+        <Project>{3ed9db81-28d8-4acd-b2b2-ff0f03854fd7}</Project>
+        <Name>TextModel</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\TextTools\TextTools.csproj">
+        <Project>{a4b71b86-5b43-4569-94ad-b9dc58eddd36}</Project>
+        <Name>TextTools</Name>
+      </ProjectReference>
       <ProjectReference Include="..\UserInterface\UserInterface.csproj">
         <Project>{a2032623-73d2-4fbb-afb8-8c520f8524d2}</Project>
         <Name>UserInterface</Name>

@@ -22,7 +22,7 @@ namespace TextModel.TextElements
         }
         public Sentence(ICollection<ISentenceItem> sentenceItems)
         {
-            _sentenceItems = sentenceItems;
+            _sentenceItems = sentenceItems.ToList();
         }
         public override string ToString()
         {

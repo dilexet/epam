@@ -1,125 +1,145 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Text;
-using TextConcordance.Library;
-using TextModel.Library;
-using TextTools.Library.tools;
+using CommandLine;
+using TextConcordance;
+using TextModel;
+using TextTools.tools;
 
 namespace UserInterface
 {
     public class Cli
     {
+        
+        [Option(
+            'm',
+            "methodName",
+            Required = true,
+            HelpText = "Input method name"
+            )]
+        public string MethodName { get; set; }
+        //
+        [Option(
+            'l',
+            "lenght",
+            Required = false,
+            HelpText = "Input number of characters in a word (method parameter)",
+            Default = 5
+        )]
+        public int Lenght { get; set; }
+        //
+        [Option(
+            's',
+            "substring",
+            Required = false,
+            HelpText = "Input substring (method parameter)",
+            Default = "Hello"
+        )]
+        public string Substring { get; set; }
+        //
+        [Option(
+            'n',
+            "numberOfLinesPerPage",
+            Required = false,
+            HelpText = "Input the number of lines per page (method parameter)",
+            Default = 1
+        )]
+        public int NumberOfLinesPerPage { get; set; }
+        //
+        [Option(
+            'r',
+            "pathRead",
+            Required = false,
+            HelpText = "Input the file path to read",
+            Default = "C:\\Users\\dilexet\\Documents\\epam\\Task_2\\TextProcess\\file_1.txt"
+            )]
+        public string PathRead { get; set; }
+        //
+        [Option(
+            'w',
+            "pathWrite",
+            Required = false,
+            HelpText = @"Input the file path to write",
+            Default = "C:\\Users\\dilexet\\Documents\\epam\\Task_2\\TextProcess\\file_2.txt"
+            
+        )]
+        public string PathWrite { get; set; }
+        
+        
         private readonly string[] _args;
-        private readonly int _lenght;
-        private readonly SortedDictionary<string, string> _appSettings;
-        private readonly ITextStreamReader _textStreamReader;
-        private readonly string _pathRead;
-        private readonly string _pathWrite;
         private Text _text;
-        public Cli(string[] args)
+        private readonly ITextStreamReader _textStreamReader;
+        public Cli(string[] args, ITextStreamReader textStreamReader)
         {
             _args = args;
-            _lenght = _args.Length;
-            _pathRead = ConfigurationManager.AppSettings.Get("readFile");
-            _pathWrite = ConfigurationManager.AppSettings.Get("writeFile");
-            _textStreamReader = new TextStream();
-            
-            var item = ConfigurationManager.AppSettings;
-            _appSettings = new SortedDictionary<string, string>();
-            
-            for (int i = 0; i < item.Count; i++)
-            {
-                if (item.GetKey(i).Contains("--"))
-                {
-                    _appSettings.Add(item.GetKey(i), item[i]);
-                }
-            }
+            _textStreamReader = textStreamReader;
         }
 
+        public Cli()
+        {
+            
+        }
         public void Run()
         {
-            if (!_appSettings.ContainsKey(_args[0]) || _args == null)
-            {
-                throw new Exception("Error: command does not exist");
-            }
-            if (_lenght == 1 && _args[0] == "--help")
-            {
-                Help();
-                return;
-            }
-
-            if (_lenght == 2 && _args[0] == "--help")
-            {
-                MethodHelp();
-                return;
-            }
-            
-            _text = _textStreamReader.TextReader(_pathRead);
-            
             int bufferLenght = 10000;
             StringBuilder stringBuilder = new StringBuilder(bufferLenght);
             stringBuilder.Clear();
-            switch (_args[0])
+            CommandLine.Parser.Default.ParseArguments<Cli>(_args).WithParsed(option =>
             {
-                case "--SortByWordCount":
+                // TODO: удалить при релизе
+                Console.WriteLine("_________________TEST_______________START____________");
+                _text = _textStreamReader.TextReader(option.PathRead);
+                
+                // Tasks
+                if (option.MethodName == "SortByWordCount")
+                {
                     foreach (var item in _text.SortByWordCount())
                     {
                         stringBuilder.Append(item);
                     }
-                    break;
-                case "--GetWordsGivenLength":
-                    if (_lenght != 2 || !uint.TryParse(_args[1], out uint length1))
-                    {
-                        throw new Exception();
-                    }
-                    foreach (var item in _text.GetWordsGivenLength(length1))
+                }
+                else if (option.MethodName == "GetWordsGivenLength")
+                {
+                    foreach (var item in _text.GetWordsGivenLength(option.Lenght))
                     {
                         stringBuilder.Append(item.Value + "\r\n");
                     }
-                    break;
-                case "--DeleteWordsBeginConsonant":
-                    if (_lenght != 2 || !uint.TryParse(_args[1], out uint length2))
-                    {
-                        throw new Exception();
-                    }
-                    foreach (var item in _text.DeleteWordsBeginConsonant(length2))
+                }
+                else if (option.MethodName == "DeleteWordsBeginConsonant")
+                {
+                    foreach (var item in _text.DeleteWordsBeginConsonant(option.Lenght))
                     {
                         stringBuilder.Append(item);
                     }
-                    break;
-                case "--ReplaceStringWithSubstring":
-                    if (_lenght != 3 || !uint.TryParse(_args[1], out uint length3))
-                    {
-                        throw new Exception();
-                    }
-                    foreach (var item in _text.ReplaceStringWithSubstring(length3, _args[2]))
+                }
+                else if (option.MethodName == "ReplaceStringWithSubstring")
+                {
+                    foreach (var item in _text.ReplaceStringWithSubstring(option.Lenght, option.Substring))
                     {
                         stringBuilder.Append(item);
                     }
-                    break;
-                case "--GetConcordance":
-                    if (_lenght != 2 || !uint.TryParse(_args[1], out uint numberOfLinesPerPage))
-                    {
-                        throw new Exception();
-                    }
-                    Concordance concordance = new Concordance(_text, numberOfLinesPerPage);
+                }
+                else if (option.MethodName == "Concordance")
+                {
+                    Concordance concordance = new Concordance(
+                        _text,
+                        option.NumberOfLinesPerPage,
+                        ConfigurationManager.AppSettings.Get("patternNewLine"));
                     stringBuilder.Append(concordance.GetConcordance());
-                    break;
-                default:
-                    throw new Exception();
-            }
-            StreamWrite(_pathWrite, stringBuilder.ToString());
+                }
+                
+                StreamWrite(option.PathWrite, stringBuilder.ToString());
+                // TODO: удалить при релизе
+                Console.WriteLine("_________________TEST_______________END____________");
+            });
         }
-
         private void StreamWrite(string path, string data)
         {
             if (string.IsNullOrEmpty(path))
             {
                 throw new NullReferenceException("The file path is incorrect");
             }
-
             try
             {
                 using (FileStream fileStream = new FileStream(path, FileMode.Create))
@@ -132,38 +152,6 @@ namespace UserInterface
             {
                 Console.WriteLine(e.Message);
                 throw;
-            }
-        }
-        private void Help()
-        {
-            Console.WriteLine("\nНапишите \"--help <--Название метода>\" чтобы узнать подробности о нём");
-            foreach (var appSetting  in _appSettings)
-            {
-                Console.WriteLine($"\n{appSetting.Key}\t{appSetting.Value}");
-            }
-        }
-
-        private void MethodHelp()
-        {
-            switch (_args[1])
-            {
-                case "--SortByWordCount":
-                    Console.WriteLine($"\n{_args[1]}");
-                    break;
-                case "--GetWordsGivenLength":
-                    Console.WriteLine($"\n{_args[1]} <length>");
-                    break;
-                case "--DeleteWordsBeginConsonant":
-                    Console.WriteLine($"\n{_args[1]} <length>");
-                    break;
-                case "--ReplaceStringWithSubstring":
-                    Console.WriteLine($"\n{_args[1]} <length> <substring>");
-                    break;
-                case "--GetConcordance":
-                    Console.WriteLine($"\n{_args[1]} <numberOfLinesPerPage>");
-                    break;
-                default:
-                    throw new Exception();
             }
         }
     }

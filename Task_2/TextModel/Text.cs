@@ -32,7 +32,7 @@ namespace TextModel
             return _sentences.OrderBy(item => item.WordsCount);
         }
         // Task 2
-        public IEnumerable<Word> GetWordsGivenLength(uint length)
+        public IEnumerable<Word> GetWordsGivenLength(int length)
         {
             List<Word> words = new List<Word>();
             foreach (var sentence in ReceiveInterrogativeSentences())
@@ -43,7 +43,7 @@ namespace TextModel
             return words.Distinct();
         }
         // Task 3
-        public IEnumerable<Sentence> DeleteWordsBeginConsonant(uint lenght)
+        public IEnumerable<Sentence> DeleteWordsBeginConsonant(int lenght)
         {
             var itemSentences = _sentences.ToList();
             
@@ -62,7 +62,7 @@ namespace TextModel
         }
         // Task 4
         // TODO: Нужно ли предоставлять пользователю выбор в каком предложении делать замену?!
-        public IEnumerable<Sentence> ReplaceStringWithSubstring(uint lenght, string substring)
+        public IEnumerable<Sentence> ReplaceStringWithSubstring(int lenght, string substring)
         {
             var itemSentences = _sentences.ToList();
             for (int j = 0; j < itemSentences.Count; j++)

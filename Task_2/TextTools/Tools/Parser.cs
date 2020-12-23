@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -64,6 +63,7 @@ namespace TextTools.tools
                     if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
                     {
                         sentenceItems.Add(new Punctuation(new Symbol(bufferSentenceSeparator.ToString())));
+                        
                         sentencesList.Add(new Sentence(sentenceItems));
                         sentenceItems.Clear();
                         bufferSentenceSeparator.Clear();
