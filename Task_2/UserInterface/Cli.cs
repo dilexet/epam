@@ -66,22 +66,6 @@ namespace UserInterface
         )]
         public string PathWrite { get; set; }
 
-        [Option(
-            'h',
-            "help",
-            Required = false,
-            HelpText = "Help for TextProcess.exe"
-            )]
-        public static string HelpInfo =>
-            "Use following parameters:\n" +
-            "\t-m:\t[optional]Input method name.\n" +
-            "\t-l:\t[optional]Input number of characters in a word (method parameter).\n" +
-            "\t-s:\t[optional]Input substring (method parameter).\n" +
-            "\t-n:\t[optional]Input the number of lines per page (method parameter).\n" +
-            "\t-r:\t[optional]Input the file path to read.\n" +
-            "\t-w:\t[optional]Input the file path to write.\n" +
-            "\t-h:\tHelp for this application.\n";
-
         private readonly string[] _args;
         private Text _text;
         private readonly ITextStreamReader _textStreamReader;
