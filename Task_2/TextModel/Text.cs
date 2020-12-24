@@ -61,7 +61,6 @@ namespace TextModel
             return itemSentences;
         }
         // Task 4
-        // TODO: Нужно ли предоставлять пользователю выбор в каком предложении делать замену?!
         public IEnumerable<Sentence> ReplaceStringWithSubstring(int lenght, string substring)
         {
             var itemSentences = _sentences.ToList();

@@ -53,8 +53,7 @@ namespace TextModel.TextElements.SentenceElements
         {
             if (obj is Word wordOther)
             {
-                
-                return String.CompareOrdinal(Value, wordOther.Value);
+                return String.Compare(Value, wordOther.Value, StringComparison.OrdinalIgnoreCase);
             }
             throw new ArgumentNullException();
         }

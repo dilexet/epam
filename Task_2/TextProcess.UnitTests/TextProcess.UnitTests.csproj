@@ -4,11 +4,12 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{A2032623-73D2-4FBB-AFB8-8C520F8524D2}</ProjectGuid>
+        <ProjectGuid>{C6D2B8EB-CFD1-44BA-80DB-E7AD695E3A8F}</ProjectGuid>
+        <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>UserInterface</RootNamespace>
-        <AssemblyName>UserInterface</AssemblyName>
+        <RootNamespace>TextProcess.UnitTests</RootNamespace>
+        <AssemblyName>TextProcess.UnitTests</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -32,23 +33,17 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="CommandLine, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379">
-          <HintPath>..\packages\CommandLineParser.2.9.0-preview1\lib\net461\CommandLine.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="CommandLineParser.Net, Version=3.1.40.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\packages\CommandLineParser.Net.3.1.40.812\lib\net452\CommandLineParser.Net.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Configuration" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+            <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Cli.cs" />
-        <Compile Include="Options.cs" />
+        <Compile Include="TextProcessTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -60,13 +55,14 @@
         <Project>{3ed9db81-28d8-4acd-b2b2-ff0f03854fd7}</Project>
         <Name>TextModel</Name>
       </ProjectReference>
+      <ProjectReference Include="..\TextProcess\TextProcess.csproj">
+        <Project>{e82c0fdd-9eff-443b-af6f-734ff3e0d1ab}</Project>
+        <Name>TextProcess</Name>
+      </ProjectReference>
       <ProjectReference Include="..\TextTools\TextTools.csproj">
         <Project>{a4b71b86-5b43-4569-94ad-b9dc58eddd36}</Project>
         <Name>TextTools</Name>
       </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
