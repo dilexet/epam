@@ -118,7 +118,8 @@ namespace TextProcess.UnitTests
                 for (int j = 0; j < actualWord.Count; j++)
                 {
                     int index = j;
-                    Assert.That(() => expectedWord[index].SymbolCount == lenght && actualWord[index].Value == substring);
+                    Assert.That(() => (expectedWord[index].SymbolCount == lenght && actualWord[index].Value == substring) ||
+                                      (expectedWord[index].SymbolCount != lenght && actualWord[index].Value != substring));
                 }
             }
         }
