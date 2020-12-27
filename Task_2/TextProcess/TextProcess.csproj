@@ -46,7 +46,11 @@
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="UI\Cli.cs" />
-        <Compile Include="UI\Options.cs" />
+        <Compile Include="UI\Options\ConcordanceOptions.cs" />
+        <Compile Include="UI\Options\DeleteWordsBeginConsonantOptions.cs" />
+        <Compile Include="UI\Options\GetWordsGivenLengthOptions.cs" />
+        <Compile Include="UI\Options\ReplaceStringWithSubstringOptions.cs" />
+        <Compile Include="UI\Options\SortByWordCountOptions.cs" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\TextConcordance\TextConcordance.csproj">

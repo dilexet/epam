@@ -8,6 +8,7 @@ using TextConcordance;
 using TextModel;
 using TextModel.TextElements;
 using TextModel.TextElements.SentenceElements;
+using TextProcess.UI.Options;
 using TextTools.tools;
 using Parser = TextTools.tools.Parser;
 
