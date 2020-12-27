@@ -1,33 +1,39 @@
 ﻿using System;
 using System.IO;
-using TextModel;
 
 namespace TextTools.tools
 {
     public class TextStream : ITextStreamReader
     {
-        private readonly IParser _parser;
-        public TextStream(IParser parser)
+        private readonly string _path;
+        
+        private FileStream _stream;
+        
+        public TextStream(string path)
         {
-            _parser = parser;
+            _path = path;
         }
-        public Text TextReader(string path)
+        
+        public FileStream TextReader()
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(_path))
             {
                 throw new NullReferenceException("The file path is incorrect");
             }
             try
             {
-                using (FileStream fileStream = File.OpenRead(path))
-                {
-                    return _parser.Parse(fileStream);
-                }
+                _stream = File.OpenRead(_path);
+                return _stream;
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public void Dispose()
+        {
+            _stream.Dispose();
         }
     }
 }

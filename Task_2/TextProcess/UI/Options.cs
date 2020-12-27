@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace UserInterface
+namespace TextProcess.UI
 {
     public class Options
     {
@@ -43,8 +43,7 @@ namespace UserInterface
             'r',
             "pathRead",
             Required = false,
-            HelpText = "Input the file path to read",
-            Default = "C:\\Users\\dilexet\\Documents\\epam\\Task_2\\TextProcess\\file_1.txt"
+            HelpText = "Input the file path to read"
         )]
         public string PathRead { get; set; }
         
@@ -52,9 +51,7 @@ namespace UserInterface
             'w',
             "pathWrite",
             Required = false,
-            HelpText = "Input the file path to write",
-            Default = "C:\\Users\\dilexet\\Documents\\epam\\Task_2\\TextProcess\\file_2.txt"
-            
+            HelpText = "Input the file path to write"
         )]
         public string PathWrite { get; set; }
     }

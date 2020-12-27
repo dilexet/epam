@@ -1,9 +1,10 @@
-﻿using TextModel;
+﻿using System;
+using System.IO;
 
 namespace TextTools.tools
 {
-    public interface ITextStreamReader
+    public interface ITextStreamReader : IDisposable
     {
-        Text TextReader(string path);
+        FileStream TextReader();
     }
 }

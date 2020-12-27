@@ -1,6 +1,5 @@
-﻿using System.Configuration;
-using TextTools.tools;
-using UserInterface;
+﻿using System;
+using TextProcess.UI;
 
 namespace TextProcess
 {
@@ -8,14 +7,15 @@ namespace TextProcess
     {
         public static void Main(string[] args)
         {
-            var sAttr = ConfigurationManager.AppSettings;
-            Cli cli = new Cli(
-                args,
-                new TextStream(new Parser(
-                    sAttr.Get("patternIsLetter"),
-                    sAttr.Get("patternRemoveExtraTab"),
-                    sAttr.Get("patternRemoveExtraNewLine"))));
-            cli.Run();
+            try
+            {
+                Cli cli = new Cli(args);
+                cli.Run();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
             
         }
     }

@@ -9,21 +9,18 @@ namespace TextProcess.UnitTests
     [TestFixture]
     public class Tests
     {
-        // Task 1
         [Test]
         public void SortByWordCountTests()
         {
             // arrange
-
-            ITextStreamReader textStreamReader = new TextStream(
-                new Parser(
-                    @"\w",
-                @"[ ]+|[\t]+",
-                @"[\r\n]+"));
-            
             var path = @"C:\Users\dilexet\Documents\epam\Task_2\TextProcess\file_1.txt";
-            Text text = textStreamReader.TextReader(path);
-            
+            ITextStreamReader textStreamReader = new TextStream(path);
+            IParser parser = new Parser(
+                @"\w",
+                @"[ ]+|[\t]+",
+                @"[\r\n]+");
+            Text text = parser.Parse(textStreamReader.TextReader());
+            textStreamReader.Dispose();
             // act
             var actual = text.SortByWordCount().ToList();
            
@@ -36,18 +33,19 @@ namespace TextProcess.UnitTests
             }
            
         }
-        // Task 2
+        
         [Test]
         public void GetWordsGivenLengthTests()
         {
-            ITextStreamReader textStreamReader = new TextStream(
-                new Parser(
-                    @"\w",
-                    @"[ ]+|[\t]+",
-                    @"[\r\n]+"));
-            
+            // arrange
             var path = @"C:\Users\dilexet\Documents\epam\Task_2\TextProcess\file_1.txt";
-            Text text = textStreamReader.TextReader(path);
+            ITextStreamReader textStreamReader = new TextStream(path);
+            IParser parser = new Parser(
+                @"\w",
+                @"[ ]+|[\t]+",
+                @"[\r\n]+");
+            Text text = parser.Parse(textStreamReader.TextReader());
+            textStreamReader.Dispose();
             int lenght = 5;
             
             // act
@@ -60,18 +58,19 @@ namespace TextProcess.UnitTests
                 Assert.That(() => word.SymbolCount == lenght);
             }
         }
-        // Task 3
+        
         [Test]
         public void DeleteWordsBeginConsonantTests()
         {
-            ITextStreamReader textStreamReader = new TextStream(
-                new Parser(
-                    @"\w",
-                    @"[ ]+|[\t]+",
-                    @"[\r\n]+"));
-            
+            // arrange
             var path = @"C:\Users\dilexet\Documents\epam\Task_2\TextProcess\file_1.txt";
-            Text text = textStreamReader.TextReader(path);
+            ITextStreamReader textStreamReader = new TextStream(path);
+            IParser parser = new Parser(
+                @"\w",
+                @"[ ]+|[\t]+",
+                @"[\r\n]+");
+            Text text = parser.Parse(textStreamReader.TextReader());
+            textStreamReader.Dispose();
             int lenght = 5;
             
             // act
@@ -89,21 +88,23 @@ namespace TextProcess.UnitTests
             }
             
         }
-        // Task 4 не работает
+        
         [Test]
         public void ReplaceStringWithSubstringTests()
         {
-            ITextStreamReader textStreamReader = new TextStream(
-                new Parser(
-                    @"\w",
-                    @"[ ]+|[\t]+",
-                    @"[\r\n]+"));
-            
+            // arrange
             var path = @"C:\Users\dilexet\Documents\epam\Task_2\TextProcess\file_1.txt";
-            Text text = textStreamReader.TextReader(path);
+            ITextStreamReader textStreamReader = new TextStream(path);
+            IParser parser = new Parser(
+                @"\w",
+                @"[ ]+|[\t]+",
+                @"[\r\n]+");
+            Text text = parser.Parse(textStreamReader.TextReader());
+            textStreamReader.Dispose();
             int lenght = 5;
             string substring = "Hello";
             var expected = text.GetSentence().ToList();
+            
             // act
             var actual = text.ReplaceStringWithSubstring(lenght, substring).ToList();
            

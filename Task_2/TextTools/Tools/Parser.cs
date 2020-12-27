@@ -12,26 +12,31 @@ namespace TextTools.tools
     public class Parser : IParser
     {
         private readonly string _patternIsLetter;
+        
         private readonly string _patternRemoveExtraTab;
+        
         private readonly string _patternRemoveExtraNewLine;
+        
         public Parser(string patternIsLetter, string patternRemoveExtraTab, string patternRemoveExtraNewLine)
         {
             _patternIsLetter = patternIsLetter;
             _patternRemoveExtraTab = patternRemoveExtraTab;
             _patternRemoveExtraNewLine = patternRemoveExtraNewLine;
         }
+        
         public Text Parse(Stream stream)
         {
             StreamReader streamReader = new StreamReader(stream);
             string text = streamReader.ReadToEnd();
-
+            
             if (string.IsNullOrEmpty(text))
             {
-                throw new NullReferenceException("File is empty");
+                throw new  InvalidOperationException("File is empty");
             }
 
             return new Text(ParseSentence(RemoveExtraSymbol(text)));
         }
+        
         private ICollection<Sentence> ParseSentence(string text)
         {
             ICollection<Sentence> sentencesList = new List<Sentence>();
@@ -93,6 +98,7 @@ namespace TextTools.tools
             }
             return sentencesList;
         }
+        
         private bool IsWordSymbol(Symbol symbol)
         {
             return Regex.IsMatch(
@@ -102,6 +108,7 @@ namespace TextTools.tools
                        symbol.Chars, 
                        "-");
         }
+        
         private string RemoveExtraSymbol(string currentString)
         {
             if (string.IsNullOrEmpty(currentString))

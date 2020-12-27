@@ -6,7 +6,9 @@ namespace TextModel.TextElements.SentenceElements
     public class Word : ISentenceItem, IComparable
     {
         private readonly Symbol[] _symbols;
+        
         public int SymbolCount => _symbols.Length;
+        
         public bool IsWordBeginWithConsonant
         {
             get
@@ -18,6 +20,7 @@ namespace TextModel.TextElements.SentenceElements
                 return false;
             }
         }
+        
         public Word(string chars)
         {
             _symbols = chars?.Select(x => new Symbol(x)).ToArray();
@@ -35,6 +38,7 @@ namespace TextModel.TextElements.SentenceElements
 
             return Equals(obj as Word);
         }
+        
         private bool Equals(Word other)
         {
             if (other == null) 
@@ -57,7 +61,5 @@ namespace TextModel.TextElements.SentenceElements
             }
             throw new ArgumentNullException();
         }
-
-       
     }
 }

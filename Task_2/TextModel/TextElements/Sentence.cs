@@ -8,7 +8,9 @@ namespace TextModel.TextElements
     public class Sentence
     {
         private readonly ICollection<ISentenceItem> _sentenceItems;
+        
         public int WordsCount => _sentenceItems.OfType<Word>().Count();
+        
         public bool IsSentenceInterrogative
         {
             get
@@ -20,10 +22,12 @@ namespace TextModel.TextElements
                 return false;
             }
         }
+        
         public Sentence(ICollection<ISentenceItem> sentenceItems)
         {
             _sentenceItems = sentenceItems.ToList();
         }
+        
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

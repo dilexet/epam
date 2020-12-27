@@ -9,14 +9,17 @@ namespace TextModel
     public class Text
     {
         private readonly IEnumerable<Sentence> _sentences;
+        
         public Text(ICollection<Sentence> sentences)
         {
             _sentences = sentences;
         }
+        
         public IEnumerable<Sentence> GetSentence()
         {
             return _sentences;
         }
+        
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -26,12 +29,12 @@ namespace TextModel
             }
             return builder.ToString();
         }
-        // Task 1
+
         public IEnumerable<Sentence> SortByWordCount()
         {
             return _sentences.OrderBy(item => item.WordsCount);
         }
-        // Task 2
+
         public IEnumerable<Word> GetWordsGivenLength(int length)
         {
             List<Word> words = new List<Word>();
@@ -42,7 +45,7 @@ namespace TextModel
 
             return words.Distinct();
         }
-        // Task 3
+
         public IEnumerable<Sentence> DeleteWordsBeginConsonant(int lenght)
         {
             var itemSentences = _sentences.ToList();
@@ -60,7 +63,7 @@ namespace TextModel
             }
             return itemSentences;
         }
-        // Task 4
+
         public IEnumerable<Sentence> ReplaceStringWithSubstring(int lenght, string substring)
         {
             var itemSentences = _sentences.ToList();
@@ -80,9 +83,9 @@ namespace TextModel
                     }
                 }
             }
-
             return itemSentences;
         }
+        
         private IEnumerable<Sentence> ReceiveInterrogativeSentences()
         {
             return _sentences.Where(sentence => sentence.IsSentenceInterrogative);

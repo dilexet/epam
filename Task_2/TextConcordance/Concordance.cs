@@ -10,9 +10,13 @@ namespace TextConcordance
     public class Concordance
     {
         private readonly ICollection<Word> _wordsSortCollection;
+        
         private readonly ICollection<string> _pagesCollection;
+        
         private readonly int _numberOfLinesPerPage;
+        
         private readonly Text _text;
+        
         private readonly string _patternNewLine;
         
         public Concordance(Text text, int numberOfLinesPerPage, string patternNewLine)
@@ -22,8 +26,8 @@ namespace TextConcordance
             _patternNewLine = patternNewLine;
             _pagesCollection = SplitTextIntoPages();
             _wordsSortCollection = GetWordCollection(text);
-            
         }
+        
         public string GetConcordance()
         {
             int bufferlength = 10000;
@@ -52,6 +56,7 @@ namespace TextConcordance
             }
             return stringBuilder.ToString();
         }
+        
         private int NumberOccurrencesOfWordInText(string word)
         {
             int count = 0;
@@ -60,9 +65,9 @@ namespace TextConcordance
                 count += sentence.GetSentenceItems().OfType<Word>()
                     .Count(item => item.Value.ToLower() == word.ToLower());
             }
-
             return count;
         }
+        
         private string GetPageNumber(string word)
         {
             string pageNumber = "";
@@ -78,6 +83,7 @@ namespace TextConcordance
             }
             return pageNumber;
         }
+        
         private ICollection<Word> GetWordCollection(Text text)
         {
             ICollection<Word> words = new List<Word>();
@@ -88,9 +94,9 @@ namespace TextConcordance
                     words.Add(new Word(word.Value.ToLower()));
                 }
             }
-            
             return SortListWord(words);
         }
+        
         private ICollection<Word> SortListWord(ICollection<Word> words)
         {
             var items = words.Distinct().ToList();
