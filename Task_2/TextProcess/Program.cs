@@ -16,7 +16,7 @@ namespace TextProcess
             {
                 throw new Exception(e.Message);
             }
-            
+
         }
     }
 }

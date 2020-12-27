@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -22,60 +21,64 @@ namespace TextProcess.UI
         {
             _args = args;
         }
-        
+
         public void Run()
         {
             var sAttr = ConfigurationManager.AppSettings;
-            
-            IParser parser = new Parser(
-                sAttr.Get("patternIsLetter"), 
-                sAttr.Get("patternRemoveExtraTab"), 
-                sAttr.Get("patternRemoveExtraNewLine"));
 
-            string data;
-            CommandLine.Parser.Default.ParseArguments<Options>(_args).WithParsed(option =>
+            IParser parser = new Parser(
+                sAttr.Get("patternIsLetter"),
+                sAttr.Get("patternRemoveExtraTab"),
+                sAttr.Get("patternRemoveExtraNewLine"));
+            string pathWrite = "";
+            string data = CommandLine.Parser.Default.ParseArguments
+            <SortByWordCountOptions,
+                GetWordsGivenLengthOptions,
+                DeleteWordsBeginConsonantOptions,
+                ReplaceStringWithSubstringOptions,
+                ConcordanceOptions>(_args).
+                MapResult(
+                    (SortByWordCountOptions options) =>
+                {
+                    Text text = GetText(options.PathRead, parser);
+                    pathWrite = options.PathWrite;
+                    return GetStringSentence(text.SortByWordCount());
+                },
+                (GetWordsGivenLengthOptions options) =>
+                {
+                    Text text = GetText(options.PathRead, parser);
+                    pathWrite = options.PathWrite;
+                    return GetStringWord(text.GetWordsGivenLength(options.Lenght));
+                },
+                (DeleteWordsBeginConsonantOptions options) =>
+                {
+                    Text text = GetText(options.PathRead, parser);
+                    pathWrite = options.PathWrite;
+                    return GetStringSentence(text.DeleteWordsBeginConsonant(options.Lenght));
+                },
+                (ReplaceStringWithSubstringOptions options) =>
+                {
+                    Text text = GetText(options.PathRead, parser);
+                    pathWrite = options.PathWrite;
+                    return GetStringSentence(text.ReplaceStringWithSubstring(options.Lenght, options.Substring));
+                },
+                (ConcordanceOptions options) =>
+                {
+                    Text text = GetText(options.PathRead, parser);
+                    Concordance concordance = new Concordance(
+                        text,
+                        options.NumberOfLinesPerPage,
+                        ConfigurationManager.AppSettings.Get("patternNewLine"));
+                    pathWrite = options.PathWrite;
+                    return concordance.GetConcordance();
+                }, 
+                errs => throw new Exception("The method was entered incorrectly"));
+            if (string.IsNullOrEmpty(pathWrite))
             {
-                // TODO: удалить при релизе
-                Console.WriteLine("_________________TEST_______________START____________");
-                if (string.IsNullOrEmpty(option.PathRead))
-                {
-                    option.PathRead = ConfigurationManager.AppSettings.Get("readFile");
-                }
-                ITextStreamReader textStreamReader = new TextStream(option.PathRead);
-                Text text = parser.Parse(textStreamReader.TextReader());
-                textStreamReader.Dispose();
-                switch (option.MethodName)
-                {
-                    case "SortByWordCount":
-                        data = GetStringSentence(text.SortByWordCount());
-                        break;
-                    case "GetWordsGivenLength":
-                        data = GetStringWord(text.GetWordsGivenLength(option.Lenght));
-                        break;
-                    case "DeleteWordsBeginConsonant":
-                        data = GetStringSentence(text.DeleteWordsBeginConsonant(option.Lenght));
-                        break;
-                    case "ReplaceStringWithSubstring":
-                        data = GetStringSentence(text.ReplaceStringWithSubstring(option.Lenght, option.Substring));
-                        break;
-                    case "Concordance":
-                        Concordance concordance = new Concordance(
-                            text,
-                            option.NumberOfLinesPerPage,
-                            ConfigurationManager.AppSettings.Get("patternNewLine"));
-                        data = concordance.GetConcordance();
-                        break;
-                    default:
-                        throw new Exception("The method was entered incorrectly");
-                }
-                if (string.IsNullOrEmpty(option.PathWrite))
-                {
-                    option.PathWrite = ConfigurationManager.AppSettings.Get("writeFile");
-                }
-                StreamWrite(option.PathWrite, data);
-                // TODO: удалить при релизе
-                Console.WriteLine("_________________TEST_______________END____________");
-            });
+                pathWrite = ConfigurationManager.AppSettings.Get("writeFile");
+            }
+
+            StreamWrite(pathWrite, data);
         }
 
         private string GetStringSentence(IEnumerable<Sentence> sentences)
@@ -98,6 +101,19 @@ namespace TextProcess.UI
                 stringBuilder.Append(item.Value + "\r\n");
             }
             return stringBuilder.ToString();
+        }
+
+        private Text GetText(string path, IParser parser)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = ConfigurationManager.AppSettings.Get("readFile");
+            }
+
+            ITextStreamReader textStreamReader = new TextStream(path);
+            Text text = parser.Parse(textStreamReader.TextReader());
+            textStreamReader.Dispose();
+            return text;
         }
         private void StreamWrite(string path, string data)
         {
