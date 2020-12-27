@@ -46,24 +46,40 @@ namespace TextProcess.UI
                 },
                 (GetWordsGivenLengthOptions options) =>
                 {
+                    if (options.Lenght <= 0)
+                    {
+                        throw new ArgumentOutOfRangeException($"Lenght");
+                    }
                     Text text = GetText(options.PathRead, parser);
                     pathWrite = options.PathWrite;
                     return GetStringWord(text.GetWordsGivenLength(options.Lenght));
                 },
                 (DeleteWordsBeginConsonantOptions options) =>
                 {
+                    if (options.Lenght <= 0)
+                    {
+                        throw new ArgumentOutOfRangeException($"Lenght");
+                    }
                     Text text = GetText(options.PathRead, parser);
                     pathWrite = options.PathWrite;
                     return GetStringSentence(text.DeleteWordsBeginConsonant(options.Lenght));
                 },
                 (ReplaceStringWithSubstringOptions options) =>
                 {
+                    if (options.Lenght <= 0)
+                    {
+                        throw new ArgumentOutOfRangeException($"Lenght");
+                    }
                     Text text = GetText(options.PathRead, parser);
                     pathWrite = options.PathWrite;
                     return GetStringSentence(text.ReplaceStringWithSubstring(options.Lenght, options.Substring));
                 },
                 (ConcordanceOptions options) =>
                 {
+                    if (options.NumberOfLinesPerPage <= 0)
+                    {
+                        throw new ArgumentOutOfRangeException($"NumberOfLinesPerPage");
+                    }
                     Text text = GetText(options.PathRead, parser);
                     Concordance concordance = new Concordance(
                         text,
@@ -115,6 +131,7 @@ namespace TextProcess.UI
             textStreamReader.Dispose();
             return text;
         }
+        
         private void StreamWrite(string path, string data)
         {
             if (string.IsNullOrEmpty(path))
@@ -131,8 +148,7 @@ namespace TextProcess.UI
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                throw new Exception(e.Message);
             }
         }
     }

@@ -35,7 +35,6 @@ namespace TextModel.TextElements.SentenceElements
             {
                 return false;
             }
-
             return Equals(obj as Word);
         }
         
@@ -57,7 +56,7 @@ namespace TextModel.TextElements.SentenceElements
         {
             if (obj is Word wordOther)
             {
-                return String.Compare(Value, wordOther.Value, StringComparison.OrdinalIgnoreCase);
+                return String.Compare(Value, wordOther.Value, StringComparison.Ordinal);
             }
             throw new ArgumentNullException();
         }

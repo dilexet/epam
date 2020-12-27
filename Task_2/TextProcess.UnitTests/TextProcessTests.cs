@@ -21,6 +21,7 @@ namespace TextProcess.UnitTests
                 @"[\r\n]+");
             Text text = parser.Parse(textStreamReader.TextReader());
             textStreamReader.Dispose();
+            
             // act
             var actual = text.SortByWordCount().ToList();
            

@@ -35,7 +35,6 @@ namespace TextConcordance
             const char dot = '.';
             const int countDot = 50;
             string capitalLetter = "";
-                    
             foreach (var word in _wordsSortCollection)
             {
                 if (capitalLetter.ToLower() != word.Value[0].ToString())
@@ -44,14 +43,12 @@ namespace TextConcordance
                     stringBuilder.Append($"{capitalLetter}\r\n");
                 }
                 stringBuilder.Append(word.Value);
-
                 for (int i = 0; i < countDot - word.SymbolCount; i++)
                 {
                     stringBuilder.Append(dot);
                 }
                 stringBuilder.Append(NumberOccurrencesOfWordInText(word.Value));
                 stringBuilder.Append($": {GetPageNumber(word.Value)}");
-                
                 stringBuilder.Append("\r\n");
             }
             return stringBuilder.ToString();
@@ -74,11 +71,10 @@ namespace TextConcordance
             int page = 1;
             foreach (var line in _pagesCollection)
             {
-                if (Regex.IsMatch(line, word, RegexOptions.IgnoreCase)) 
+                if (Regex.IsMatch(line, $@"((\W+)({word})(\W*))|((\W*)({word})(\W+))", RegexOptions.IgnoreCase)) 
                 {
                     pageNumber += page + " ";
                 }
-
                 page++;
             }
             return pageNumber;
@@ -122,7 +118,6 @@ namespace TextConcordance
                 lines.Append(line);
                 numberLine++;
             }
-
             if (!string.IsNullOrEmpty(lines.ToString()))
             {
                 pages.Add(lines.ToString());

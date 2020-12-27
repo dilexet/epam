@@ -28,12 +28,10 @@ namespace TextTools.tools
         {
             StreamReader streamReader = new StreamReader(stream);
             string text = streamReader.ReadToEnd();
-            
             if (string.IsNullOrEmpty(text))
             {
                 throw new  InvalidOperationException("File is empty");
             }
-
             return new Text(ParseSentence(RemoveExtraSymbol(text)));
         }
         
@@ -45,10 +43,8 @@ namespace TextTools.tools
             int bufferlength = 10000;
             StringBuilder buffer = new StringBuilder(bufferlength);
             StringBuilder bufferSentenceSeparator = new StringBuilder(bufferlength);
-
             buffer.Clear();
             bufferSentenceSeparator.Clear();
-            
             foreach (var symbol in text)
             {
                 if (IsWordSymbol(new Symbol(symbol)))
@@ -62,7 +58,6 @@ namespace TextTools.tools
                     }
                     buffer.Append(symbol);
                 }
-                
                 else if (separatorHelper.IsWordSeparators(new Symbol(symbol))) 
                 {
                     if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
@@ -90,7 +85,6 @@ namespace TextTools.tools
                     }
                 }
             }
-
             if (!string.IsNullOrEmpty(bufferSentenceSeparator.ToString()))
             {
                 sentenceItems.Add(new Punctuation(new Symbol(bufferSentenceSeparator.ToString())));

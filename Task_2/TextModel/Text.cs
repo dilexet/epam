@@ -42,14 +42,12 @@ namespace TextModel
             {
                 words = sentence.GetSentenceItems().OfType<Word>().Where(item => item.SymbolCount == length).ToList();
             }
-
             return words.Distinct();
         }
 
         public IEnumerable<Sentence> DeleteWordsBeginConsonant(int lenght)
         {
             var itemSentences = _sentences.ToList();
-            
             for (int j = 0; j < itemSentences.Count; j++) 
             {
                 var words = itemSentences[j].GetSentenceItems().OfType<Word>()
@@ -73,7 +71,6 @@ namespace TextModel
                 {
                     var words = itemSentences[j].GetSentenceItems().OfType<Word>()
                         .Where(item => item.SymbolCount == lenght).ToList();
-
                     foreach (var word in words)
                     {
                         int index = itemSentences[j].GetSentenceItems().ToList().IndexOf(word);

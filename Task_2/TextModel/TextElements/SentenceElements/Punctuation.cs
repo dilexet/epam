@@ -10,7 +10,5 @@
         {
             _symbol = symbol;
         }
-        
-        
     }
 }

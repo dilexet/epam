@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
@@ -60,10 +60,6 @@
       <ProjectReference Include="..\TextTools\TextTools.csproj">
         <Project>{a4b71b86-5b43-4569-94ad-b9dc58eddd36}</Project>
         <Name>TextTools</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\UserInterface\UserInterface.csproj">
-        <Project>{a2032623-73d2-4fbb-afb8-8c520f8524d2}</Project>
-        <Name>UserInterface</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>
