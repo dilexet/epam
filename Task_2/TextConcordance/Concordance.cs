@@ -32,6 +32,7 @@ namespace TextConcordance
         {
             int bufferlength = 10000;
             StringBuilder stringBuilder = new StringBuilder(bufferlength);
+            stringBuilder.Clear();
             const char dot = '.';
             const int countDot = 50;
             string capitalLetter = "";
