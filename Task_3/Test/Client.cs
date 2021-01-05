@@ -1,19 +1,25 @@
-﻿using System;
-using System.Runtime.Remoting.Lifetime;
-
-namespace Test
+﻿namespace Test
 {
     public class Client
     {
-        private Guid _id;
-        private string _fullName;
-        // TODO: добавить нечто вроде контракта
+        public string FullName { get; }
+        public Terminal Terminal { get; set; }
+        public float Money { get; private set; }
         
-
+        // TODO: добавить нечто вроде контракта
         public Client(string fullName)
         {
-            _id = Guid.NewGuid();
-            _fullName = fullName;
+            FullName = fullName;
+        }
+
+        public void PutMoney(float money)
+        {
+            Money += money;
+        }
+
+        public void WithdrawMoney(float money)
+        {
+            Money -= money;
         }
     }
 }

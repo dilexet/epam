@@ -42,6 +42,8 @@
         <Compile Include="Client.cs" />
         <Compile Include="Contract.cs" />
         <Compile Include="Enums\PortState.cs" />
+        <Compile Include="Enums\TariffType.cs" />
+        <Compile Include="Interfaces\IContract.cs" />
         <Compile Include="Port.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,29 +1,35 @@
-﻿using System;
-
-namespace Test
+﻿namespace Test
 {
     public class Terminal
     {
-        private Guid _id;
-        private string _terminalNumber;
+        public string TerminalNumber { get; }
+        private Port _port;
 
-        public Terminal(string terminalNumber)
+        public Terminal(string terminalNumber, Port port)
         {
-            _id = Guid.NewGuid();
-            _terminalNumber = terminalNumber;
+            TerminalNumber = terminalNumber;
+            _port = port;
         }
 
-        private void Call()
+        public void ConnectToPort()
+        {
+            _port.Connect();
+        }
+        public void DisconnectFromPort()
+        {
+            _port.Disconnect();
+        }
+        public void Call()
         {
             
         }
 
-        private void Drop()
+        public void Drop()
         {
             
         }
 
-        private void Answer()
+        public void Answer()
         {
             
         }

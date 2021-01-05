@@ -1,20 +1,22 @@
 ﻿using System;
-
+using Test.Enums;
+using Test.Interfaces;
 
 namespace Test
 {
-    public class Contract
+    public class Contract: IContract
     {
-        public Guid Id { get; set; }
+        public Client Client { get; set; }
+        public TariffType TariffType { get; set; }
         public DateTime ContractStartDate { get; set; }
         public Nullable<DateTime> ContractCloseDate { get; set; }
-        public Client Client { get; set; }
-        public TariffPlan TariffPlan { get; set; }
-        public Terminal Terminal { get; set; }
 
-        public Contract()
+        public Contract(Client client, TariffType tariffType)
         {
-            
+            Client = client;
+            TariffType = tariffType;
+            ContractStartDate = DateTime.Now;
+            ContractCloseDate = null;
         }
     }
 }

@@ -4,6 +4,7 @@
     {
         Free,
         Busy,
-        Off
+        Off,
+        On
     }
 }
