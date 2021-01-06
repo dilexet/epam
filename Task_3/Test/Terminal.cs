@@ -42,9 +42,9 @@ namespace Test
             AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalNumber, targetNumberTerminal));
         }
 
-        public void Drop(string targetNumberTerminal)
+        public void Drop()
         {
-            DropEvent?.Invoke(this, new DropEventsArgs(TerminalNumber, targetNumberTerminal));
+            DropEvent?.Invoke(this, new DropEventsArgs(TerminalNumber));
         }
 
         

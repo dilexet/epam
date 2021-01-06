@@ -1,4 +1,6 @@
-﻿using Test.Enums;
+﻿using System.Data.SqlClient;
+using System.Threading;
+using Test.Enums;
 using Test.Interfaces;
 
 namespace Test
@@ -23,7 +25,10 @@ namespace Test
             // TODO: добавить подключение к порту
             // client.Terminal.ConnectToPort() - примерно так
             client1.Terminal.Call(client2.Terminal.TerminalNumber);
-            // Таким же образом будут работать методы Drop and Answer
+            Thread.Sleep(2000);
+            client2.Terminal.Drop();
+            client2.Terminal.Call(client3.Terminal.TerminalNumber);
+            client3.Terminal.Answer(client2.Terminal.TerminalNumber);
         }
     }
 }

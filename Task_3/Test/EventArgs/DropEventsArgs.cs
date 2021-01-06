@@ -6,10 +6,9 @@
         private readonly string _targetNumberTerminal;
         // TODO: Возможно понадобиться Enum [состояние вызова] или PortState
         
-        public DropEventsArgs(string yourNumberTerminal, string targetNumberTerminal)
+        public DropEventsArgs(string yourNumberTerminal)
         {
             _yourNumberTerminal = yourNumberTerminal;
-            _targetNumberTerminal = targetNumberTerminal;
         }
     }
 }
