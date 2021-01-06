@@ -43,6 +43,9 @@
         <Compile Include="Contract.cs" />
         <Compile Include="Enums\PortState.cs" />
         <Compile Include="Enums\TariffType.cs" />
+        <Compile Include="EventArgs\AnswerEventArgs.cs" />
+        <Compile Include="EventArgs\CallEventArgs.cs" />
+        <Compile Include="EventArgs\DropEventsArgs.cs" />
         <Compile Include="Interfaces\IContract.cs" />
         <Compile Include="Port.cs" />
         <Compile Include="Program.cs" />

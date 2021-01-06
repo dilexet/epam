@@ -5,7 +5,7 @@ namespace Test
 {
     class Program
     {
-        // TODO: реализовать контракт
+        
         static void Main()
         {
             Station station = new Station();
@@ -19,8 +19,11 @@ namespace Test
             IContract contract1 = station.ConcludeContract(ref client1, TariffType.Standart);
             IContract contract2 = station.ConcludeContract(ref client2, TariffType.Pro);
             IContract contract3 = station.ConcludeContract(ref client3, TariffType.Standart);
-           
-            client1.Terminal.Call();
+
+            // TODO: добавить подключение к порту
+            // client.Terminal.ConnectToPort() - примерно так
+            client1.Terminal.Call(client2.Terminal.TerminalNumber);
+            // Таким же образом будут работать методы Drop and Answer
         }
     }
 }
