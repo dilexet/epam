@@ -1,6 +1,6 @@
 ﻿namespace Test.EventArgs
 {
-    public class DropEventArgs : System.EventArgs, ICallEventsArgs
+    public class DropEventArgs : System.EventArgs
     {
         public string YourNumberTerminal { get; }
         

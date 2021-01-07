@@ -28,7 +28,15 @@ namespace Test
             
             terminal2.DisconnectFromPort();
             
-            terminal1.CallTo(terminal2.TerminalNumber);
+            terminal2.CallTo(terminal3.TerminalNumber); // оба порта должны быть free
+            terminal3.AnswerToCall(terminal2.TerminalNumber); // 2 и 3 порты должны быть busy
+
+            terminal1.CallTo(terminal2.TerminalNumber); // так как порт 2 busy, а порт 1 free, звонок должен сброситься
+            
+            terminal3.DropCall(); // терминал 3 сбрасывает звонок, и порты 2 и 3 становяться free
+            
+            terminal1.CallTo(terminal2.TerminalNumber); // терминал 1 снова звонит терминал 2, порт 2 free значит терминал 1 дозвониться
+            terminal2.AnswerToCall(terminal1.TerminalNumber); // терминал 2 отвечает на звонок, и порты 1 и 2 становяться busy
         }
     }
 }

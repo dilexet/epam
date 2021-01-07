@@ -49,7 +49,6 @@
         <Compile Include="EventArgs\AnswerEventArgs.cs" />
         <Compile Include="EventArgs\CallEventArgs.cs" />
         <Compile Include="EventArgs\DropEventArgs.cs" />
-        <Compile Include="EventArgs\ICallEventsArgs.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

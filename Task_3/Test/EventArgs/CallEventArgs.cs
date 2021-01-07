@@ -1,6 +1,6 @@
 ﻿namespace Test.EventArgs
 {
-    public class CallEventArgs : System.EventArgs, ICallEventsArgs
+    public class CallEventArgs : System.EventArgs
     {
         public string YourNumberTerminal { get; }
         public string TargetNumberTerminal { get; }

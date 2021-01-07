@@ -27,8 +27,8 @@ namespace Test.ATE
             Terminal terminal = new Terminal(terminalNumber, port);
             
             terminal.CallEvent += Call;
-            terminal.AnswerEvent += Call;
-            terminal.DropEvent += Call;
+            terminal.AnswerEvent += Answer;
+            terminal.DropEvent += Drop;
             
             _allPorts.Add(terminalNumber, port);
             
@@ -46,22 +46,19 @@ namespace Test.ATE
             return terminalNumber;
         }
 
-        private void Call(object sender, ICallEventsArgs e)
+        private void Call(object sender, CallEventArgs e)
         {
-            if (e is CallEventArgs)
-            {
-                Console.WriteLine("Call");
-            }
+            
+        }
 
-            if (e is AnswerEventArgs)
-            {
-                Console.WriteLine("Answer");
-            }
+        private void Answer(object sender, AnswerEventArgs e)
+        {
+            
+        }
 
-            if (e is DropEventArgs)
-            {
-                Console.WriteLine("Drop");
-            }
+        private void Drop(object sender, DropEventArgs e)
+        {
+            
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Test.EventArgs
 {
-    public class AnswerEventArgs : System.EventArgs, ICallEventsArgs
+    public class AnswerEventArgs : System.EventArgs
     {
         public string YourNumberTerminal { get; }
         public string TargetNumberTerminal { get; }
