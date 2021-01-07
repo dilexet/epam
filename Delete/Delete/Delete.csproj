@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{4DE6B4EB-2B98-4667-88BB-5CB3572B6A0D}</ProjectGuid>
+        <ProjectGuid>{37117547-9F29-4F1C-8E94-B33D58FD3DEF}</ProjectGuid>
         <OutputType>Exe</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Test</RootNamespace>
-        <AssemblyName>Test</AssemblyName>
+        <RootNamespace>Delete</RootNamespace>
+        <AssemblyName>Delete</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -38,23 +38,33 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="ATE\Port.cs" />
-        <Compile Include="ATE\Station.cs" />
-        <Compile Include="ATE\Terminal.cs" />
-        <Compile Include="Billing\BillingSystem.cs" />
-        <Compile Include="Billing\Client.cs" />
-        <Compile Include="Billing\Contract.cs" />
+        <Compile Include="Args\AnswerEventArgs.cs" />
+        <Compile Include="Args\CallEventArgs.cs" />
+        <Compile Include="Args\EndCallEventArgs.cs" />
+        <Compile Include="Args\ICallingEventArgs.cs" />
+        <Compile Include="AutomaticTelephoneExchange\ATE.cs" />
+        <Compile Include="AutomaticTelephoneExchange\CallInformation.cs" />
+        <Compile Include="AutomaticTelephoneExchange\Port.cs" />
+        <Compile Include="AutomaticTelephoneExchange\Terminal.cs" />
+        <Compile Include="BillingSystem\BillingSystem.cs" />
+        <Compile Include="BillingSystem\Contract.cs" />
+        <Compile Include="BillingSystem\Report.cs" />
+        <Compile Include="BillingSystem\ReportRecord.cs" />
+        <Compile Include="BillingSystem\ReportRender.cs" />
+        <Compile Include="BillingSystem\Subscriber.cs" />
+        <Compile Include="BillingSystem\Tariff.cs" />
+        <Compile Include="Enums\CallState.cs" />
+        <Compile Include="Enums\CallType.cs" />
         <Compile Include="Enums\PortState.cs" />
         <Compile Include="Enums\TariffType.cs" />
-        <Compile Include="EventArgs\AnswerEventArgs.cs" />
-        <Compile Include="EventArgs\CallEventArgs.cs" />
-        <Compile Include="EventArgs\DropEventArgs.cs" />
-        <Compile Include="EventArgs\ICallEventsArgs.cs" />
+        <Compile Include="Enums\TypeSort.cs" />
+        <Compile Include="Interfaces\IATE.cs" />
+        <Compile Include="Interfaces\IBillingSystem.cs" />
+        <Compile Include="Interfaces\IContract.cs" />
+        <Compile Include="Interfaces\IreportRender.cs" />
+        <Compile Include="Interfaces\IStorage.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Interfaces" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

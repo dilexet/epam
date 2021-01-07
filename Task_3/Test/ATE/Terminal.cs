@@ -1,52 +1,49 @@
 ﻿using Test.EventArgs;
 
-namespace Test
+namespace Test.ATE
 {
     public class Terminal
     {
         public string TerminalNumber { get; }
-        private readonly Port _port;
-
+        public Port TerminalPort { get; }
+        
         public delegate void CallHandler(object sender, CallEventArgs e);
         public event CallHandler CallEvent;
 
         public delegate void AnswerHandler(object sender, AnswerEventArgs e);
         public event AnswerHandler AnswerEvent;
         
-        public delegate void DropHandler(object sender, DropEventsArgs e);
+        public delegate void DropHandler(object sender, DropEventArgs e);
         public event DropHandler DropEvent;
-        
         public Terminal(string terminalNumber, Port port)
         {
             TerminalNumber = terminalNumber;
-            _port = port;
+            TerminalPort = port;
         }
 
         public void ConnectToPort()
         {
-            _port.Connect();
+            TerminalPort.Connect();
         }
-        
+
         public void DisconnectFromPort()
         {
-            _port.Disconnect();
+            TerminalPort.Disconnect();
         }
-        
-        public void Call(string targetNumberTerminal)
+
+        public void CallTo(string targetNumberTerminal)
         {
             CallEvent?.Invoke(this, new CallEventArgs(TerminalNumber, targetNumberTerminal));
         }
         
-        public void Answer(string targetNumberTerminal)
+        public void AnswerToCall(string targetNumberTerminal)
         {
             AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalNumber, targetNumberTerminal));
         }
 
-        public void Drop()
+        public void DropCall()
         {
-            DropEvent?.Invoke(this, new DropEventsArgs(TerminalNumber));
+            DropEvent?.Invoke(this, new DropEventArgs(TerminalNumber));
         }
-
-        
     }
 }
