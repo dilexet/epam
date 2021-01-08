@@ -15,6 +15,13 @@ namespace Test.ATE
         
         public delegate void DropHandler(object sender, DropEventArgs e);
         public event DropHandler DropEvent;
+
+        public delegate void ConnectHandler(Terminal terminal);
+        public event ConnectHandler ConnectEvent;
+        
+        public delegate void DisconnectHandler(Terminal terminal);
+        public event DisconnectHandler DisconnectEvent;
+        
         public Terminal(string terminalNumber, Port port)
         {
             TerminalNumber = terminalNumber;
@@ -23,12 +30,12 @@ namespace Test.ATE
 
         public void ConnectToPort()
         {
-            TerminalPort.Connect();
+            ConnectEvent?.Invoke(this);
         }
 
         public void DisconnectFromPort()
         {
-            TerminalPort.Disconnect();
+            DisconnectEvent?.Invoke(this);
         }
 
         public void CallTo(string targetNumberTerminal)

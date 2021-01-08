@@ -38,6 +38,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ATE\CallInformation.cs" />
         <Compile Include="ATE\Port.cs" />
         <Compile Include="ATE\Station.cs" />
         <Compile Include="ATE\Terminal.cs" />

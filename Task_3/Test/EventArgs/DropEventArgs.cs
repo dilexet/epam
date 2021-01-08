@@ -2,11 +2,11 @@
 {
     public class DropEventArgs : System.EventArgs
     {
-        public string YourNumberTerminal { get; }
+        public string CallerNumberTerminal { get; }
         
-        public DropEventArgs(string yourNumberTerminal)
+        public DropEventArgs(string callerNumberTerminal)
         {
-            YourNumberTerminal = yourNumberTerminal;
+            CallerNumberTerminal = callerNumberTerminal;
         }
     }
 }

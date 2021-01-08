@@ -4,14 +4,15 @@ namespace Test.EventArgs
 {
     public class AnswerEventArgs : System.EventArgs
     {
-        public string YourNumberTerminal { get; }
+        public string CallerNumberTerminal { get; }
         public string TargetNumberTerminal { get; }
-        public PortState State { get; set; }
+        // public PortState State { get; set; }
         
-        public AnswerEventArgs(string yourNumberTerminal, string targetNumberTerminal)
+        public AnswerEventArgs(string callerNumberTerminal, string targetNumberTerminal)
         {
-            YourNumberTerminal = yourNumberTerminal;
+            CallerNumberTerminal = callerNumberTerminal;
             TargetNumberTerminal = targetNumberTerminal;
+            // State = state;
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Test
             Contract contract2 = station.ConcludeContract(client2, TariffType.Standart);
             Contract contract3 = station.ConcludeContract(client3, TariffType.Standart);
 
-            Terminal terminal1 = station.GetNewTerminal();
-            Terminal terminal2 = station.GetNewTerminal();
-            Terminal terminal3 = station.GetNewTerminal();
+            Terminal terminal1 = station.GetNewTerminal(contract1);
+            Terminal terminal2 = station.GetNewTerminal(contract2);
+            Terminal terminal3 = station.GetNewTerminal(contract3);
             
             terminal1.ConnectToPort();
             terminal2.ConnectToPort();
@@ -29,14 +29,13 @@ namespace Test
             terminal2.DisconnectFromPort();
             
             terminal2.CallTo(terminal3.TerminalNumber); // оба порта должны быть free
-            terminal3.AnswerToCall(terminal2.TerminalNumber); // 2 и 3 порты должны быть busy
-
+            
             terminal1.CallTo(terminal2.TerminalNumber); // так как порт 2 busy, а порт 1 free, звонок должен сброситься
             
             terminal3.DropCall(); // терминал 3 сбрасывает звонок, и порты 2 и 3 становяться free
             
             terminal1.CallTo(terminal2.TerminalNumber); // терминал 1 снова звонит терминал 2, порт 2 free значит терминал 1 дозвониться
-            terminal2.AnswerToCall(terminal1.TerminalNumber); // терминал 2 отвечает на звонок, и порты 1 и 2 становяться busy
+          
         }
     }
 }
