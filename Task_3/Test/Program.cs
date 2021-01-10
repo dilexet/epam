@@ -11,6 +11,8 @@ namespace Test
         {
             Station station = new Station();
 
+            BillingSystem billingSystem = new BillingSystem(station.Calls, station.Clients);
+            
             Client client1 = new Client("Пётр Первый");
             Client client2 = new Client("Иван Грозный");
             Client client3 = new Client("Екатерина Вторая");
@@ -28,7 +30,18 @@ namespace Test
             terminal3.ConnectToPort();
 
             terminal1.CallTo(terminal3.TerminalNumber);
+            Thread.Sleep(3000);
+            terminal1.DropCall();
+            
+            terminal2.CallTo(terminal1.TerminalNumber);
+            Thread.Sleep(3500);
             terminal2.DropCall();
+
+            var report = billingSystem.CreateReport(terminal1.TerminalNumber);
+            foreach (var item in report.GerRecords())
+            {
+                
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Test.Billing;
@@ -9,18 +10,18 @@ namespace Test.ATE
 {
     public class Station
     {
-        public IDictionary<string, Tuple<Terminal, Contract>> AllUsers { get; }
+        public IDictionary<string, Tuple<Terminal, Contract>> Clients { get; }
+        public ICollection<CallInformation> Calls { get; }
 
-        private ICollection<CallInformation> _calls;
         public Station()
         {
-            AllUsers = new Dictionary<string, Tuple<Terminal, Contract>>();
-            _calls = new List<CallInformation>();
+            Clients = new Dictionary<string, Tuple<Terminal, Contract>>();
+            Calls = new List<CallInformation>();
         }
 
         public Contract ConcludeContract(Client client, TariffType tariffType)
         {
-            return new Contract(client, tariffType);
+            return new Contract(client, tariffType);;
         }
 
         public Terminal GetNewTerminal(Contract contract)
@@ -36,7 +37,7 @@ namespace Test.ATE
             terminal.ConnectEvent += ConnectToPort;
             terminal.DisconnectEvent += DisconnectToPort;
 
-            AllUsers.Add(terminalNumber, new Tuple<Terminal, Contract>(terminal, contract));
+            Clients.Add(terminalNumber, new Tuple<Terminal, Contract>(terminal, contract));
             
             return terminal;
         }
@@ -48,7 +49,7 @@ namespace Test.ATE
             do
             {
                 terminalNumber = $"+375 (27) {random.Next(1000000, 9999999)}";
-            } while (AllUsers.ContainsKey(terminalNumber));
+            } while (Clients.ContainsKey(terminalNumber));
 
             return terminalNumber;
         }
@@ -56,24 +57,24 @@ namespace Test.ATE
         private void ConnectToPort(Terminal terminal)
         {
             terminal.TerminalPort.Connect();
-            if (AllUsers.ContainsKey(terminal.TerminalNumber))
+            if (Clients.ContainsKey(terminal.TerminalNumber))
             {
-                AllUsers[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Free;
+                Clients[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Free;
             }
         }
         private void DisconnectToPort(Terminal terminal)
         {
             terminal.TerminalPort.Disconnect();
-            if (AllUsers.ContainsKey(terminal.TerminalNumber))
+            if (Clients.ContainsKey(terminal.TerminalNumber))
             {
-                AllUsers[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Off;
+                Clients[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Off;
             }
         }
 
         private void Call(object sender, CallEventArgs e)
         {
-            Terminal caller = AllUsers[e.CallerNumberTerminal].Item1;
-            Terminal target = AllUsers[e.TargetNumberTerminal].Item1;
+            Terminal caller = Clients[e.CallerNumberTerminal].Item1;
+            Terminal target = Clients[e.TargetNumberTerminal].Item1;
 
             if (caller != null && target != null)
             {
@@ -92,15 +93,16 @@ namespace Test.ATE
                     Console.WriteLine("Вызываемый аобонент свободен, ожидаем ответа...");
                     Console.WriteLine(
                         $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
-                    _calls.Add(new CallInformation(e.CallerNumberTerminal, e.TargetNumberTerminal, DateTime.Now));
                     Console.WriteLine("Ответить? y/n");
                     char k = Console.ReadKey(true).KeyChar;
                     switch (k)
                     {
                         case 'y':
                             target.AnswerToCall(e.CallerNumberTerminal);
+                            Calls.Add(new CallInformation(e.CallerNumberTerminal, e.TargetNumberTerminal, DateTime.Now, CallState.Answered));
                             break;
                         case 'n':
+                            Calls.Add(new CallInformation(e.CallerNumberTerminal, e.TargetNumberTerminal, DateTime.Now, CallState.Rejected));
                             target.DropCall();
                             break;
                     }
@@ -111,21 +113,22 @@ namespace Test.ATE
         private void Answer(object sender, AnswerEventArgs e)
         {
             Console.WriteLine($"Абонент {e.TargetNumberTerminal} ответил на звонок от {e.CallerNumberTerminal}");
-            AllUsers[e.CallerNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
-            AllUsers[e.TargetNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
-            
+            Clients[e.CallerNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
+            Clients[e.TargetNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
         }
 
         private void Drop(object sender, DropEventArgs e)
         {
-            var callInformation = _calls.FirstOrDefault(call =>
+            var callInformation = Calls.FirstOrDefault(call =>
                 call.CallerNumber == e.CallerNumberTerminal || call.TargetNumber == e.CallerNumberTerminal);
-            
-            if (callInformation != null)
+
+            if (callInformation != null && callInformation.EndCall == new DateTime()) 
             {
-                int index = _calls.ToList().IndexOf(callInformation);
+                int index = Calls.ToList().IndexOf(callInformation);
                 Console.WriteLine($"Абонент {e.CallerNumberTerminal} сбросил вызов");
-                _calls.ToList()[index].EndCall = DateTime.Now;
+                Calls.ToList()[index].EndCall = DateTime.Now;
+                Calls.ToList()[index].Cost =
+                    (Calls.ToList()[index].EndCall - Calls.ToList()[index].BeginCall).Seconds * 0.3f;
             }
             
         }
