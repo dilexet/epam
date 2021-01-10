@@ -5,7 +5,7 @@ namespace Test.ATE
     public class Terminal
     {
         public string TerminalNumber { get; }
-        public Port TerminalPort { get; }
+        public Port TerminalPort { get; set; }
         
         public delegate void CallHandler(object sender, CallEventArgs e);
         public event CallHandler CallEvent;
@@ -43,9 +43,9 @@ namespace Test.ATE
             CallEvent?.Invoke(this, new CallEventArgs(TerminalNumber, targetNumberTerminal));
         }
         
-        public void AnswerToCall(string targetNumberTerminal)
+        public void AnswerToCall(string callerNumberTerminal)
         {
-            AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalNumber, targetNumberTerminal));
+            AnswerEvent?.Invoke(this, new AnswerEventArgs(callerNumberTerminal, TerminalNumber));
         }
 
         public void DropCall()

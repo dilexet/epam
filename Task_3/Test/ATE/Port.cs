@@ -4,7 +4,7 @@ namespace Test.ATE
 {
     public class Port
     {
-        public PortState State { get; private set; }
+        public PortState State { get; set; }
 
         public Port()
         {

@@ -1,4 +1,5 @@
-﻿using Test.ATE;
+﻿using System.Threading;
+using Test.ATE;
 using Test.Billing;
 using Test.Enums;
 
@@ -25,17 +26,9 @@ namespace Test
             terminal1.ConnectToPort();
             terminal2.ConnectToPort();
             terminal3.ConnectToPort();
-            
-            terminal2.DisconnectFromPort();
-            
-            terminal2.CallTo(terminal3.TerminalNumber); // оба порта должны быть free
-            
-            terminal1.CallTo(terminal2.TerminalNumber); // так как порт 2 busy, а порт 1 free, звонок должен сброситься
-            
-            terminal3.DropCall(); // терминал 3 сбрасывает звонок, и порты 2 и 3 становяться free
-            
-            terminal1.CallTo(terminal2.TerminalNumber); // терминал 1 снова звонит терминал 2, порт 2 free значит терминал 1 дозвониться
-          
+
+            terminal1.CallTo(terminal3.TerminalNumber);
+            terminal2.DropCall();
         }
     }
 }

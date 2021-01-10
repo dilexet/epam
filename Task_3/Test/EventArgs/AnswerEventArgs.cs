@@ -1,6 +1,4 @@
-﻿using Test.Enums;
-
-namespace Test.EventArgs
+﻿namespace Test.EventArgs
 {
     public class AnswerEventArgs : System.EventArgs
     {

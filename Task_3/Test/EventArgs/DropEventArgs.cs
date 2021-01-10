@@ -1,4 +1,6 @@
-﻿namespace Test.EventArgs
+﻿using System;
+
+namespace Test.EventArgs
 {
     public class DropEventArgs : System.EventArgs
     {

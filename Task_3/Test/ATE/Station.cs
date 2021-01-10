@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Test.Billing;
 using Test.Enums;
 using Test.EventArgs;
@@ -8,16 +9,12 @@ namespace Test.ATE
 {
     public class Station
     {
-        private IDictionary<string, Tuple<Terminal, Contract>> _freePorts;
-        private IDictionary<string, Tuple<Terminal, Contract>> _offPorts;
-        private IDictionary<string, Tuple<Terminal, Contract>> _busyPorts;
+        public IDictionary<string, Tuple<Terminal, Contract>> AllUsers { get; }
 
         private ICollection<CallInformation> _calls;
         public Station()
         {
-            _freePorts = new Dictionary<string, Tuple<Terminal, Contract>>();
-            _offPorts = new Dictionary<string, Tuple<Terminal, Contract>>();
-            _busyPorts = new Dictionary<string, Tuple<Terminal, Contract>>();
+            AllUsers = new Dictionary<string, Tuple<Terminal, Contract>>();
             _calls = new List<CallInformation>();
         }
 
@@ -39,7 +36,7 @@ namespace Test.ATE
             terminal.ConnectEvent += ConnectToPort;
             terminal.DisconnectEvent += DisconnectToPort;
 
-            _offPorts.Add(terminalNumber, new Tuple<Terminal, Contract>(terminal, contract));
+            AllUsers.Add(terminalNumber, new Tuple<Terminal, Contract>(terminal, contract));
             
             return terminal;
         }
@@ -51,7 +48,7 @@ namespace Test.ATE
             do
             {
                 terminalNumber = $"+375 (27) {random.Next(1000000, 9999999)}";
-            } while (_offPorts.ContainsKey(terminalNumber));
+            } while (AllUsers.ContainsKey(terminalNumber));
 
             return terminalNumber;
         }
@@ -59,72 +56,77 @@ namespace Test.ATE
         private void ConnectToPort(Terminal terminal)
         {
             terminal.TerminalPort.Connect();
-            if (_offPorts.ContainsKey(terminal.TerminalNumber))
+            if (AllUsers.ContainsKey(terminal.TerminalNumber))
             {
-                _freePorts.Add(terminal.TerminalNumber,
-                    new Tuple<Terminal, Contract>(_offPorts[terminal.TerminalNumber].Item1,
-                        _offPorts[terminal.TerminalNumber].Item2));
-                _offPorts.Remove(terminal.TerminalNumber);
+                AllUsers[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Free;
             }
         }
         private void DisconnectToPort(Terminal terminal)
         {
             terminal.TerminalPort.Disconnect();
-            if (_freePorts.ContainsKey(terminal.TerminalNumber))
+            if (AllUsers.ContainsKey(terminal.TerminalNumber))
             {
-                _offPorts.Add(terminal.TerminalNumber,
-                    new Tuple<Terminal, Contract>(_freePorts[terminal.TerminalNumber].Item1,
-                        _freePorts[terminal.TerminalNumber].Item2));
-                _freePorts.Remove(terminal.TerminalNumber);
+                AllUsers[terminal.TerminalNumber].Item1.TerminalPort.State = PortState.Off;
             }
         }
-        
+
         private void Call(object sender, CallEventArgs e)
         {
-            if (_busyPorts.ContainsKey(e.TargetNumberTerminal) || _offPorts.ContainsKey(e.TargetNumberTerminal))
+            Terminal caller = AllUsers[e.CallerNumberTerminal].Item1;
+            Terminal target = AllUsers[e.TargetNumberTerminal].Item1;
+
+            if (caller != null && target != null)
             {
-                Console.WriteLine("Вызываемый абонент занят или отключен");
-                if (sender is Terminal terminal)
+                if (target.TerminalPort.State != PortState.Free)
                 {
-                    terminal.DropCall();
+                    Console.WriteLine("Вызываемый абонент занят или отключен");
+                    target.DropCall();
                 }
-            }
-            else if (_freePorts.ContainsKey(e.CallerNumberTerminal) && _freePorts.ContainsKey(e.TargetNumberTerminal))
-            {
-                Console.WriteLine("Вызываемый аобонент свободен, ожидаем ответа...");
-                Console.WriteLine(
-                    $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
-                Console.WriteLine("Ответить? Y/N");
-                char k = Console.ReadKey().KeyChar;
-                if (k == 'Y' || k == 'y')
+                else if (caller.TerminalPort.State != PortState.Free)
                 {
-                    Answer(sender, new AnswerEventArgs(e.CallerNumberTerminal, e.TargetNumberTerminal));
+                    Console.WriteLine("Ваш терминал отключен или занят");
+                    caller.DropCall();
                 }
-                else if (k == 'N' || k == 'n')
+                else
                 {
-                    Drop(sender, new DropEventArgs(e.CallerNumberTerminal));
+                    Console.WriteLine("Вызываемый аобонент свободен, ожидаем ответа...");
+                    Console.WriteLine(
+                        $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
+                    _calls.Add(new CallInformation(e.CallerNumberTerminal, e.TargetNumberTerminal, DateTime.Now));
+                    Console.WriteLine("Ответить? y/n");
+                    char k = Console.ReadKey(true).KeyChar;
+                    switch (k)
+                    {
+                        case 'y':
+                            target.AnswerToCall(e.CallerNumberTerminal);
+                            break;
+                        case 'n':
+                            target.DropCall();
+                            break;
+                    }
                 }
             }
         }
 
         private void Answer(object sender, AnswerEventArgs e)
         {
-            if (_freePorts.ContainsKey(e.CallerNumberTerminal) && _freePorts.ContainsKey(e.TargetNumberTerminal))
-            {
-                _busyPorts.Add(e.CallerNumberTerminal,
-                        new Tuple<Terminal, Contract>(_freePorts[e.CallerNumberTerminal].Item1,
-                            _freePorts[e.CallerNumberTerminal].Item2));
-                _busyPorts.Add(e.TargetNumberTerminal,
-                    new Tuple<Terminal, Contract>(_freePorts[e.TargetNumberTerminal].Item1,
-                        _freePorts[e.TargetNumberTerminal].Item2));
-                
-                _freePorts.Remove(e.CallerNumberTerminal);
-                _freePorts.Remove(e.TargetNumberTerminal);
-            }
+            Console.WriteLine($"Абонент {e.TargetNumberTerminal} ответил на звонок от {e.CallerNumberTerminal}");
+            AllUsers[e.CallerNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
+            AllUsers[e.TargetNumberTerminal].Item1.TerminalPort.State = PortState.Busy;
+            
         }
 
         private void Drop(object sender, DropEventArgs e)
         {
+            var callInformation = _calls.FirstOrDefault(call =>
+                call.CallerNumber == e.CallerNumberTerminal || call.TargetNumber == e.CallerNumberTerminal);
+            
+            if (callInformation != null)
+            {
+                int index = _calls.ToList().IndexOf(callInformation);
+                Console.WriteLine($"Абонент {e.CallerNumberTerminal} сбросил вызов");
+                _calls.ToList()[index].EndCall = DateTime.Now;
+            }
             
         }
     }
