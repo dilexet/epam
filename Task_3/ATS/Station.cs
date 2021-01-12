@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ATS.Enums;
@@ -11,19 +12,20 @@ namespace ATS
 {
     public class Station
     {
-        public ICollection<Contract> Contracts { get; }
-        private readonly Billing _billing;
-        public Station(Billing billing)
+        private readonly ICollection<Contract> _contracts;
+        private readonly ICollection<ActiveCall> _activeCalls;
+        public Station()
         {
-            Contracts = new List<Contract>();
-            _billing = billing;
+            _contracts = new List<Contract>();
+            _activeCalls = new List<ActiveCall>();
         }
 
-        public void ConcludeContract(Client client, TariffType tariffType)
+        public Contract ConcludeContract(Client client, TariffType tariffType)
         {
             var contract = new Contract(client, tariffType);
-            contract.Client.Terminal = GetNewTerminal();
-            Contracts.Add(contract);
+            contract.Terminal = GetNewTerminal();
+            _contracts.Add(contract);
+            return contract;
         }
 
         private Terminal GetNewTerminal()
@@ -48,72 +50,65 @@ namespace ATS
             do
             {
                 number = $"{random.Next(1000, 9999)}{random.Next(1000, 9999)}";
-            } while (Contracts.FirstOrDefault(contract => contract.Client.Terminal.TerminalNumber == number) != null);
+            } while (_contracts.FirstOrDefault(contract => contract.Terminal.TerminalNumber == number) != null);
             return number;
         }
         
-
+        // TODO: додумать как использовать состояние звонка ОЖИДАНИЕ, если звонок на ожидании то ни caller-у ни target-у никто не сможет довзониться
         private void CallHandler(object sender, CallEventArgs e)
         {
-            var caller = Contracts.First(contract => 
-                contract.Client.Terminal.TerminalNumber == e.CallerNumberTerminal);
-            var target = Contracts.First(contract => 
-                contract.Client.Terminal.TerminalNumber == e.TargetNumberTerminal);
+            var caller = _contracts.First(contract => 
+                contract.Terminal.TerminalNumber == e.CallerNumberTerminal);
+            var target = _contracts.First(contract => 
+                contract.Terminal.TerminalNumber == e.TargetNumberTerminal);
 
             if (caller != null && target != null)
             {
-                if (target.Client.Terminal.TerminalPort.State != PortState.Free)
+                if (target.Terminal.TerminalPort.State != PortState.Free)
                 {
                     Console.WriteLine("Вызываемый абонент занят или отключен");
-                    target.Client.Terminal.DropCall();
+                    caller.Terminal.DropCall();
+                    //TODO: куда-то должны передаваться два контракта, активный звонок, и CallType
                 }
                 else
                 {
                     Console.WriteLine(
                         $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
-                    Console.WriteLine("Ответить? y/n");
-                    char k = Console.ReadKey(true).KeyChar;
-                    CallInformation callInformation = new CallInformation(e.CallerNumberTerminal, e.TargetNumberTerminal, DateTime.Now);
-                    switch (k)
-                    {
-                        case 'y':
-                            target.Client.Terminal.AnswerToCall(e.CallerNumberTerminal);
-                            callInformation.CallState = CallState.Answered;
-                            break;
-                        case 'n':
-                            target.Client.Terminal.DropCall();
-                            callInformation.CallState = CallState.Rejected;
-                            break;
-                    }
-
-                    _billing.Calls.Add(callInformation);
+                    target.Terminal.IncomingCall();
+                  
+                    // TODO: стоимость звонка расчитывать иходя из тарифа
+                    _activeCalls.Add(new ActiveCall(e.CallerNumberTerminal, e.TargetNumberTerminal, 3));
                 }
             }
         }
 
         private void AnswerHandler(object sender, AnswerEventArgs e)
         {
-            Console.WriteLine($"Абонент {e.TargetNumberTerminal} ответил на звонок от {e.CallerNumberTerminal}");
+            var activeCall = _activeCalls.FirstOrDefault(call =>
+                call.CallerNumber == e.TargetNumberTerminal || call.TargetNumber == e.TargetNumberTerminal);
+            if (activeCall != null)
+            {
+                activeCall.CallState = CallState.Answered;
+                Console.WriteLine($"Абонент {activeCall.TargetNumber} ответил на звонок от {activeCall.CallerNumber}");
+            }
         }
         
         private void DropHandler(object sender, DropEventArgs e)
         {
-            var callInformation = _billing.Calls.FirstOrDefault(call =>
+            var activeCall = _activeCalls.FirstOrDefault(call =>
                 call.CallerNumber == e.CallerNumberTerminal || call.TargetNumber == e.CallerNumberTerminal);
 
-            if (callInformation != null && callInformation.EndCall == new DateTime()) 
+            if (activeCall != null)
             {
-                Console.WriteLine($"Абонент {e.CallerNumberTerminal} сбросил вызов");
-                var caller = Contracts.First(contract =>
-                    contract.Client.Terminal.TerminalNumber != e.CallerNumberTerminal && (
-                        contract.Client.Terminal.TerminalNumber == callInformation.CallerNumber ||
-                        contract.Client.Terminal.TerminalNumber == callInformation.TargetNumber));
-                caller.Client.Terminal.EndCall();
+                string callerNumber = activeCall.CallerNumber;
+                string targetNumber = activeCall.TargetNumber;
+
+                var caller = _contracts.First(contract => contract.Terminal.TerminalNumber == callerNumber);
+                var target = _contracts.First(contract => contract.Terminal.TerminalNumber == targetNumber);
                
-                int index = _billing.Calls.ToList().IndexOf(callInformation);
-                _billing.Calls.ToList()[index].EndCall = DateTime.Now;
-                _billing.Calls.ToList()[index].Cost =
-                    (_billing.Calls.ToList()[index].EndCall - _billing.Calls.ToList()[index].BeginCall).Seconds * 0.3f;
+                caller.Terminal.EndCall();
+                //TODO: куда-то должны передаваться два контракта, активный звонок, и CallType
+                _activeCalls.Remove(activeCall);
             }
         }
     }

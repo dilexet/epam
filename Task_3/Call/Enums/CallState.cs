@@ -3,6 +3,7 @@
     public enum CallState
     {
         Answered,
-        Rejected
+        Rejected,
+        Expected
     }
 }

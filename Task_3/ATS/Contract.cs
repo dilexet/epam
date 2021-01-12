@@ -8,14 +8,13 @@ namespace ATS
         public Client Client { get; }
         public TariffType TariffType { get; }
         public DateTime ContractStartDate { get; }
-        public DateTime? ContractCloseDate { get; }
+        public Terminal Terminal { get; set; }
 
         public Contract(Client client, TariffType tariffType)
         {
             Client = client;
             TariffType = tariffType;
             ContractStartDate = DateTime.Now;
-            ContractCloseDate = null;
         }
     }
 }

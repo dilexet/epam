@@ -11,30 +11,35 @@ namespace Test
         {
             Billing billing = new Billing();
             
-            Station station = new Station(billing);
-            
+            Station station = new Station();
             
             Client client1 = new Client("Пётр Первый");
             Client client2 = new Client("Иван Грозный");
             Client client3 = new Client("Екатерина Вторая");
+
+            Contract contract1 = station.ConcludeContract(client1, TariffType.Standart);
+            Contract contract2 = station.ConcludeContract(client2, TariffType.Standart);
+            Contract contract3 = station.ConcludeContract(client3, TariffType.Standart);
+
+            Terminal terminal1 = contract1.Terminal;
+            Terminal terminal2 = contract2.Terminal;
+            Terminal terminal3 = contract3.Terminal;
             
-            station.ConcludeContract(client1, TariffType.Standart);
-            station.ConcludeContract(client2, TariffType.Standart);
-            station.ConcludeContract(client3, TariffType.Standart);
+            terminal1.ConnectToPort();
+            terminal2.ConnectToPort();
+            terminal3.ConnectToPort();
 
-            client1.Terminal.ConnectToPort();
-            client2.Terminal.ConnectToPort();
-            client3.Terminal.ConnectToPort();
-
-            client1.Terminal.CallTo(client3.Terminal.TerminalNumber);
+            terminal1.CallTo(terminal3.TerminalNumber);
+            terminal2.CallTo(terminal3.TerminalNumber);
+            terminal1.AnswerToCall();
             Thread.Sleep(2000);
-            client1.Terminal.DropCall();
+            terminal1.DropCall();
             
-            client3.Terminal.CallTo(client2.Terminal.TerminalNumber);
+            
             Thread.Sleep(3000);
-            client2.Terminal.DropCall();
+            terminal2.DropCall();
             
-            client2.Terminal.DisconnectFromPort();
+            terminal2.DisconnectFromPort();
         }
     }
 }

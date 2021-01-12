@@ -41,10 +41,10 @@ namespace ATS
             CallEvent?.Invoke(this, new CallEventArgs(TerminalNumber, targetNumberTerminal));
         }
         
-        public virtual void AnswerToCall(string callerNumberTerminal)
+        public virtual void AnswerToCall()
         {
             TerminalPort.Call();
-            AnswerEvent?.Invoke(this, new AnswerEventArgs(callerNumberTerminal, TerminalNumber));
+            AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalNumber));
         }
 
         public virtual void DropCall()
@@ -53,6 +53,10 @@ namespace ATS
             DropEvent?.Invoke(this, new DropEventArgs(TerminalNumber));
         }
 
+        public void IncomingCall()
+        {
+            TerminalPort.Call();
+        }
         public void EndCall()
         {
             TerminalPort.EndCall();

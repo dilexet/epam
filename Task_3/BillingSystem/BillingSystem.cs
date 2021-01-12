@@ -7,11 +7,11 @@ namespace BillingSystem
     public class Billing
     {
         public event CallReportHandler CallReportEvent;
-        public ICollection<CallInformation> Calls { get; }
+        public ICollection<ActiveCall> Calls { get; }
 
         public Billing()
         {
-            Calls = new List<CallInformation>();
+            Calls = new List<ActiveCall>();
         }
 
         protected virtual void OnCallReportEvent()
