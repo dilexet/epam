@@ -1,4 +1,4 @@
-﻿namespace Test.Enums
+﻿namespace Call.Enums
 {
     public enum CallState
     {

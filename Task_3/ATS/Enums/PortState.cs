@@ -1,4 +1,4 @@
-﻿namespace Test.Enums
+﻿namespace ATS.Enums
 {
     public enum PortState
     {

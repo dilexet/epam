@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Test.Billing
+namespace BillingSystem
 {
     public class Report
     {
@@ -22,7 +20,7 @@ namespace Test.Billing
             return _records;
         }
 
-        public ICollection<Record> SortByDate()
+        /*public ICollection<Record> SortByDate()
         {
             
         }
@@ -33,6 +31,6 @@ namespace Test.Billing
         public ICollection<Record> SortByClient()
         {
             
-        }
+        }*/
     }
 }

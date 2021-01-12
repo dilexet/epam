@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{8A071467-636D-459F-BAF0-44619FDB923C}</ProjectGuid>
+        <ProjectGuid>{042D7950-90C4-4697-9E0B-74B079AED927}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>ATS</RootNamespace>
-        <AssemblyName>ATS</AssemblyName>
+        <RootNamespace>BillingSystem</RootNamespace>
+        <AssemblyName>BillingSystem</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -32,22 +32,11 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-      <Compile Include="Client.cs" />
-      <Compile Include="Contract.cs" />
-      <Compile Include="Enums\PortState.cs" />
-      <Compile Include="Enums\TariffType.cs" />
-      <Compile Include="EventArgs\AnswerEventArgs.cs" />
-      <Compile Include="EventArgs\CallEventArgs.cs" />
-      <Compile Include="EventArgs\DropEventArgs.cs" />
-      <Compile Include="Port.cs" />
-      <Compile Include="Station.cs" />
-      <Compile Include="Terminal.cs" />
+      <Compile Include="BillingSystem.cs" />
+      <Compile Include="Record.cs" />
+      <Compile Include="Report.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\BillingSystem\BillingSystem.csproj">
-        <Project>{042d7950-90c4-4697-9e0b-74b079aed927}</Project>
-        <Name>BillingSystem</Name>
-      </ProjectReference>
       <ProjectReference Include="..\Call\Call.csproj">
         <Project>{155106d8-8210-4ed6-ba45-7a0b23c5e89c}</Project>
         <Name>Call</Name>

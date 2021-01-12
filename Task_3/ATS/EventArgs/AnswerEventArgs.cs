@@ -1,4 +1,4 @@
-﻿namespace Test.EventArgs
+﻿namespace ATS.EventArgs
 {
     public class AnswerEventArgs : System.EventArgs
     {

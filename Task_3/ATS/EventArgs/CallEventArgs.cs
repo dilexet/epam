@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Test.EventArgs
+﻿namespace ATS.EventArgs
 {
     public class CallEventArgs : System.EventArgs
     {

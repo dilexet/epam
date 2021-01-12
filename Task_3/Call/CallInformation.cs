@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using Test.Enums;
+using Call.Enums;
 
-namespace Test.ATE
+namespace Call
 {
     public class CallInformation
     {
-        public CallInformation(string callerNumber, string targetNumber, DateTime beginCall, CallState callState)
+        public CallInformation(string callerNumber, string targetNumber, DateTime beginCall)
         {
             CallerNumber = callerNumber;
             TargetNumber = targetNumber;
             BeginCall = beginCall;
-            CallState = callState;
         }
         public string CallerNumber { get; }
         public string TargetNumber { get; }
         public DateTime BeginCall { get; }
         public DateTime EndCall { get; set; }
-        public CallState CallState { get; }
+        public CallState CallState { get; set; }
         public float Cost { get; set; }
     }
 }
