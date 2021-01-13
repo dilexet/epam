@@ -1,5 +1,6 @@
 ﻿using System;
 using AutomaticTelephoneStation.ATS;
+using AutomaticTelephoneStation.ATS.Enums;
 using AutomaticTelephoneStation.Enums;
 
 namespace AutomaticTelephoneStation.BillingSystem.Report

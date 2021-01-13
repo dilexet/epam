@@ -1,4 +1,4 @@
-﻿namespace AutomaticTelephoneStation.EventArgs
+﻿namespace AutomaticTelephoneStation.ATS.EventArgs
 {
     public class AnswerEventArgs : System.EventArgs
     {

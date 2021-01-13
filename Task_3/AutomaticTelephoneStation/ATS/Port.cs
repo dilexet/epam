@@ -1,4 +1,4 @@
-﻿using AutomaticTelephoneStation.Enums;
+﻿using AutomaticTelephoneStation.ATS.Enums;
 
 namespace AutomaticTelephoneStation.ATS
 {

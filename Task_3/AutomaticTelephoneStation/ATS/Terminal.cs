@@ -1,4 +1,4 @@
-﻿using AutomaticTelephoneStation.EventArgs;
+﻿using AutomaticTelephoneStation.ATS.EventArgs;
 
 namespace AutomaticTelephoneStation.ATS
 {
