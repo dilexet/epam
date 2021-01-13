@@ -1,7 +1,7 @@
 ﻿using System;
-using Call.Enums;
+using AutomaticTelephoneStation.Enums;
 
-namespace Call
+namespace AutomaticTelephoneStation.ATS
 {
     public class ActiveCall
     {
@@ -33,6 +33,7 @@ namespace Call
             }
             else
             {
+                CallState = CallState.Rejected;
                 CallTime = TimeSpan.Zero;
             }
         }

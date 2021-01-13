@@ -1,6 +1,6 @@
-﻿using ATS.EventArgs;
+﻿using AutomaticTelephoneStation.EventArgs;
 
-namespace ATS
+namespace AutomaticTelephoneStation.ATS
 {
     public delegate void CallHandler(object sender, CallEventArgs e);
     public delegate void AnswerHandler(object sender, AnswerEventArgs e);

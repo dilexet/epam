@@ -1,4 +1,4 @@
-﻿namespace Call.Enums
+﻿namespace AutomaticTelephoneStation.Enums
 {
     public enum CallState
     {

@@ -1,7 +1,9 @@
-﻿using System.Threading;
-using ATS;
-using ATS.Enums;
-using BillingSystem;
+﻿using System;
+using System.Threading;
+using AutomaticTelephoneStation.ATS;
+using AutomaticTelephoneStation.BillingSystem;
+using AutomaticTelephoneStation.BillingSystem.Report;
+using AutomaticTelephoneStation.Enums;
 
 namespace Test
 {
@@ -11,15 +13,15 @@ namespace Test
         {
             Billing billing = new Billing();
             
-            Station station = new Station();
+            Station station = new Station(billing);
             
             Client client1 = new Client("Пётр Первый");
             Client client2 = new Client("Иван Грозный");
             Client client3 = new Client("Екатерина Вторая");
 
-            Contract contract1 = station.ConcludeContract(client1, TariffType.Standart);
-            Contract contract2 = station.ConcludeContract(client2, TariffType.Standart);
-            Contract contract3 = station.ConcludeContract(client3, TariffType.Standart);
+            Contract contract1 = station.ConcludeContract(client1, new Tariff(TariffType.Standart));
+            Contract contract2 = station.ConcludeContract(client2, new Tariff(TariffType.Standart));
+            Contract contract3 = station.ConcludeContract(client3, new Tariff(TariffType.Standart));
 
             Terminal terminal1 = contract1.Terminal;
             Terminal terminal2 = contract2.Terminal;
@@ -30,16 +32,23 @@ namespace Test
             terminal3.ConnectToPort();
 
             terminal1.CallTo(terminal3.TerminalNumber);
-            terminal2.CallTo(terminal3.TerminalNumber);
-            terminal1.AnswerToCall();
+            // terminal2.CallTo(terminal3.TerminalNumber);
+            terminal3.AnswerToCall();
             Thread.Sleep(2000);
             terminal1.DropCall();
-            
-            
+
+            terminal2.CallTo(terminal1.TerminalNumber);
+            terminal1.AnswerToCall();
             Thread.Sleep(3000);
             terminal2.DropCall();
             
             terminal2.DisconnectFromPort();
+
+            Console.WriteLine("\n");
+            foreach (var call in ReportRender.FilterTerminalNumber(billing.GetReport(), terminal1.TerminalNumber))
+            {
+                Console.WriteLine($"{call}\n");
+            }
         }
     }
 }

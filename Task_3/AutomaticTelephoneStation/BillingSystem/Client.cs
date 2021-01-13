@@ -1,5 +1,5 @@
 ﻿
-namespace ATS
+namespace AutomaticTelephoneStation.BillingSystem
 {
     public class Client
     {

@@ -1,4 +1,4 @@
-﻿namespace ATS.EventArgs
+﻿namespace AutomaticTelephoneStation.EventArgs
 {
     public class DropEventArgs : System.EventArgs
     {

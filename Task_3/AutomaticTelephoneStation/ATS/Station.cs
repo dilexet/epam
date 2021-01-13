@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ATS.Enums;
-using ATS.EventArgs;
-using BillingSystem;
-using Call;
-using Call.Enums;
+using AutomaticTelephoneStation.BillingSystem;
+using AutomaticTelephoneStation.Enums;
+using AutomaticTelephoneStation.EventArgs;
 
-namespace ATS
+namespace AutomaticTelephoneStation.ATS
 {
     public class Station
     {
         private readonly ICollection<Contract> _contracts;
         private readonly ICollection<ActiveCall> _activeCalls;
-        public Station()
+        public event CallReportHandler CallReportEvent;
+        public Station(Billing billing)
         {
+            CallReportEvent += billing.CallReportHandler;
             _contracts = new List<Contract>();
             _activeCalls = new List<ActiveCall>();
         }
 
-        public Contract ConcludeContract(Client client, TariffType tariffType)
+        public Contract ConcludeContract(Client client, Tariff tariff)
         {
-            var contract = new Contract(client, tariffType);
+            var contract = new Contract(client, tariff);
             contract.Terminal = GetNewTerminal();
             _contracts.Add(contract);
             return contract;
@@ -54,7 +53,6 @@ namespace ATS
             return number;
         }
         
-        // TODO: додумать как использовать состояние звонка ОЖИДАНИЕ, если звонок на ожидании то ни caller-у ни target-у никто не сможет довзониться
         private void CallHandler(object sender, CallEventArgs e)
         {
             var caller = _contracts.First(contract => 
@@ -75,9 +73,7 @@ namespace ATS
                     Console.WriteLine(
                         $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
                     target.Terminal.IncomingCall();
-                  
-                    // TODO: стоимость звонка расчитывать иходя из тарифа
-                    _activeCalls.Add(new ActiveCall(e.CallerNumberTerminal, e.TargetNumberTerminal, 3));
+                    _activeCalls.Add(new ActiveCall(e.CallerNumberTerminal, e.TargetNumberTerminal, caller.Tariff.CostPerMinute));
                 }
             }
         }
@@ -86,7 +82,7 @@ namespace ATS
         {
             var activeCall = _activeCalls.FirstOrDefault(call =>
                 call.CallerNumber == e.TargetNumberTerminal || call.TargetNumber == e.TargetNumberTerminal);
-            if (activeCall != null)
+            if (activeCall != null && activeCall.TargetNumber == e.TargetNumberTerminal) 
             {
                 activeCall.CallState = CallState.Answered;
                 Console.WriteLine($"Абонент {activeCall.TargetNumber} ответил на звонок от {activeCall.CallerNumber}");
@@ -100,14 +96,22 @@ namespace ATS
 
             if (activeCall != null)
             {
-                string callerNumber = activeCall.CallerNumber;
-                string targetNumber = activeCall.TargetNumber;
-
-                var caller = _contracts.First(contract => contract.Terminal.TerminalNumber == callerNumber);
-                var target = _contracts.First(contract => contract.Terminal.TerminalNumber == targetNumber);
-               
-                caller.Terminal.EndCall();
-                //TODO: куда-то должны передаваться два контракта, активный звонок, и CallType
+                
+                if (activeCall.CallerNumber == e.CallerNumberTerminal)
+                {
+                    var target = _contracts.First(contract => contract.Terminal.TerminalNumber == activeCall.TargetNumber);
+                    target.Terminal.EndCall();
+                }
+                else if (activeCall.TargetNumber == e.CallerNumberTerminal)
+                {
+                    var caller = _contracts.First(contract => contract.Terminal.TerminalNumber == activeCall.CallerNumber);
+                    caller.Terminal.EndCall();
+                }
+                
+                activeCall.End();
+                Console.WriteLine($"Звонок между {activeCall.CallerNumber} и {activeCall.TargetNumber} завершён");
+                CallReportEvent?.Invoke(activeCall, CallType.Incoming);
+                CallReportEvent?.Invoke(activeCall, CallType.Outgoing);
                 _activeCalls.Remove(activeCall);
             }
         }

@@ -42,13 +42,9 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\ATS\ATS.csproj">
-        <Project>{8a071467-636d-459f-baf0-44619fdb923c}</Project>
-        <Name>ATS</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\BillingSystem\BillingSystem.csproj">
-        <Project>{042d7950-90c4-4697-9e0b-74b079aed927}</Project>
-        <Name>BillingSystem</Name>
+      <ProjectReference Include="..\AutomaticTelephoneStation\AutomaticTelephoneStation.csproj">
+        <Project>{9049742d-82a1-4da3-a265-cb571733aa14}</Project>
+        <Name>AutomaticTelephoneStation</Name>
       </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

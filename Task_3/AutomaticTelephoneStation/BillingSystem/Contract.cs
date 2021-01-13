@@ -1,19 +1,19 @@
 ﻿using System;
-using ATS.Enums;
+using AutomaticTelephoneStation.ATS;
 
-namespace ATS
+namespace AutomaticTelephoneStation.BillingSystem
 {
     public class Contract
     {
         public Client Client { get; }
-        public TariffType TariffType { get; }
+        public Tariff Tariff { get; }
         public DateTime ContractStartDate { get; }
         public Terminal Terminal { get; set; }
 
-        public Contract(Client client, TariffType tariffType)
+        public Contract(Client client, Tariff tariff)
         {
             Client = client;
-            TariffType = tariffType;
+            Tariff = tariff;
             ContractStartDate = DateTime.Now;
         }
     }

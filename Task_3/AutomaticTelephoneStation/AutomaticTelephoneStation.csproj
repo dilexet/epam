@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{155106D8-8210-4ED6-BA45-7A0B23C5E89C}</ProjectGuid>
+        <ProjectGuid>{9049742D-82A1-4DA3-A265-CB571733AA14}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Call</RootNamespace>
-        <AssemblyName>Call</AssemblyName>
+        <RootNamespace>AutomaticTelephoneStation</RootNamespace>
+        <AssemblyName>AutomaticTelephoneStation</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -32,10 +32,28 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-      <Compile Include="ActiveCall.cs" />
-      <Compile Include="CallRecord.cs" />
-      <Compile Include="Enums\CallState.cs" />
+      <Folder Include="Interfaces" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="ATS\ActiveCall.cs" />
+      <Compile Include="ATS\Enums\CallState.cs" />
+      <Compile Include="ATS\Enums\PortState.cs" />
+      <Compile Include="ATS\EventArgs\AnswerEventArgs.cs" />
+      <Compile Include="ATS\EventArgs\CallEventArgs.cs" />
+      <Compile Include="ATS\EventArgs\DropEventArgs.cs" />
+      <Compile Include="ATS\Port.cs" />
+      <Compile Include="ATS\Station.cs" />
+      <Compile Include="ATS\Terminal.cs" />
+      <Compile Include="BillingSystem\Billing.cs" />
+      <Compile Include="BillingSystem\Client.cs" />
+      <Compile Include="BillingSystem\Contract.cs" />
+      <Compile Include="BillingSystem\Report\CallRecord.cs" />
+      <Compile Include="BillingSystem\Report\CallReport.cs" />
+      <Compile Include="BillingSystem\Report\ReportRender.cs" />
+      <Compile Include="BillingSystem\Tariff.cs" />
       <Compile Include="Enums\CallType.cs" />
+      <Compile Include="Enums\FiltrationTypes.cs" />
+      <Compile Include="Enums\TariffType.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

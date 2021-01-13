@@ -1,6 +1,6 @@
-﻿using ATS.Enums;
+﻿using AutomaticTelephoneStation.Enums;
 
-namespace ATS
+namespace AutomaticTelephoneStation.ATS
 {
     public delegate void ConnectHandler();
     public delegate void DisconnectHandler();

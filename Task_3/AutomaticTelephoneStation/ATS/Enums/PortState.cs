@@ -1,4 +1,4 @@
-﻿namespace ATS.Enums
+﻿namespace AutomaticTelephoneStation.Enums
 {
     public enum PortState
     {
