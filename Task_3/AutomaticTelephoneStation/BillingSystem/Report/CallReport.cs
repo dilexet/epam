@@ -5,6 +5,7 @@ namespace AutomaticTelephoneStation.BillingSystem.Report
     public class CallReport
     {
         private ICollection<CallRecord> _records;
+        
         public CallReport()
         {
             _records = new List<CallRecord>();
@@ -14,6 +15,7 @@ namespace AutomaticTelephoneStation.BillingSystem.Report
         {
             _records.Add(record);
         }
+        
         public ICollection<CallRecord> GetRecords()
         {
             return _records;

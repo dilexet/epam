@@ -2,9 +2,6 @@
 
 namespace AutomaticTelephoneStation.ATS
 {
-    public delegate void ConnectHandler();
-    public delegate void DisconnectHandler();
-    
     public class Port
     {
         public PortState State { get; private set; }
@@ -14,7 +11,7 @@ namespace AutomaticTelephoneStation.ATS
             State = PortState.Off;
         }
 
-        public void Connect()
+        public void с_Connect()
         {
             if (State == PortState.Off)
             {
@@ -22,7 +19,7 @@ namespace AutomaticTelephoneStation.ATS
             }
         }
 
-        public void Disconnect()
+        public void с_Disconnect()
         {
             if (State == PortState.Free)
             {

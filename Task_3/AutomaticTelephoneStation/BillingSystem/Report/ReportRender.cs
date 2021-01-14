@@ -9,10 +9,12 @@ namespace AutomaticTelephoneStation.BillingSystem.Report
         {
             return callReport.GetRecords().Where(call => call.TerminalNumber == terminalNumber);
         }
+        
         public static IEnumerable<CallRecord> FilterCallDate(CallReport callReport)
         {
             return callReport.GetRecords().OrderBy(call => call.Date);
         }
+        
         public static IEnumerable<CallRecord> FilterCallCost(CallReport callReport)
         {
             return callReport.GetRecords().OrderBy(call => call.CostCall);

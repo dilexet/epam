@@ -1,4 +1,4 @@
-﻿namespace AutomaticTelephoneStation.Enums
+﻿namespace AutomaticTelephoneStation.BillingSystem.Enums
 {
     public enum CallType
     {

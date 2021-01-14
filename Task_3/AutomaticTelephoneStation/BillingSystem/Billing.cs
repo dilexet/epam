@@ -1,10 +1,7 @@
-﻿using AutomaticTelephoneStation.ATS;
-using AutomaticTelephoneStation.BillingSystem.Report;
-using AutomaticTelephoneStation.Enums;
+﻿using AutomaticTelephoneStation.BillingSystem.Report;
 
 namespace AutomaticTelephoneStation.BillingSystem
 {
-    public delegate void CallReportHandler(ActiveCall activeCall, CallType callType);
     public class Billing
     {
         private readonly CallReport _callReport;
@@ -14,9 +11,9 @@ namespace AutomaticTelephoneStation.BillingSystem
             _callReport = new CallReport();
         }
 
-        public void CallReportHandler(ActiveCall activeCall, CallType callType)
+        public void c_CallReport(object sender, CallRecord callRecord)
         {
-            _callReport.AddRecords(new CallRecord(activeCall, callType));
+            _callReport.AddRecords(callRecord);
         }
 
         public CallReport GetReport()

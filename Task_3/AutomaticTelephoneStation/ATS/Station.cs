@@ -4,7 +4,8 @@ using System.Linq;
 using AutomaticTelephoneStation.ATS.Enums;
 using AutomaticTelephoneStation.ATS.EventArgs;
 using AutomaticTelephoneStation.BillingSystem;
-using AutomaticTelephoneStation.Enums;
+using AutomaticTelephoneStation.BillingSystem.Enums;
+using AutomaticTelephoneStation.BillingSystem.Report;
 
 namespace AutomaticTelephoneStation.ATS
 {
@@ -12,10 +13,10 @@ namespace AutomaticTelephoneStation.ATS
     {
         private readonly ICollection<Contract> _contracts;
         private readonly ICollection<ActiveCall> _activeCalls;
-        public event CallReportHandler CallReportEvent;
-        public Station(Billing billing)
+        public event EventHandler<CallRecord> CallReportEvent;
+        
+        public Station()
         {
-            CallReportEvent += billing.CallReportHandler;
             _contracts = new List<Contract>();
             _activeCalls = new List<ActiveCall>();
         }
@@ -34,12 +35,9 @@ namespace AutomaticTelephoneStation.ATS
             string terminalNumber = GetTerminalNumber();
             Terminal terminal = new Terminal(terminalNumber, port);
             
-            terminal.CallEvent += CallHandler;
-            terminal.AnswerEvent += AnswerHandler;
-            terminal.DropEvent += DropHandler;
-
-            terminal.ConnectEvent += terminal.TerminalPort.Connect;
-            terminal.DisconnectEvent += terminal.TerminalPort.Disconnect;
+            terminal.CallEvent += Call;
+            terminal.AnswerEvent += Answer;
+            terminal.DropEvent += Drop;
             return terminal;
         }
         
@@ -54,7 +52,7 @@ namespace AutomaticTelephoneStation.ATS
             return number;
         }
         
-        private void CallHandler(object sender, CallEventArgs e)
+        private void Call(object sender, CallEventArgs e)
         {
             var caller = _contracts.First(contract => 
                 contract.Terminal.TerminalNumber == e.CallerNumberTerminal);
@@ -63,23 +61,26 @@ namespace AutomaticTelephoneStation.ATS
 
             if (caller != null && target != null)
             {
-                if (target.Terminal.TerminalPort.State != PortState.Free)
+                if (caller.Client.Money <= 0)
+                {
+                    Console.WriteLine("На вашем счёте недостаточно средств");
+                }
+                else if (target.Terminal.TerminalPort.State != PortState.Free)
                 {
                     Console.WriteLine("Вызываемый абонент занят или отключен");
                     caller.Terminal.DropCall();
-                    //TODO: куда-то должны передаваться два контракта, активный звонок, и CallType
                 }
                 else
                 {
                     Console.WriteLine(
                         $"Входящий вызов на номер {e.TargetNumberTerminal} с терминала с номером {e.CallerNumberTerminal}");
                     target.Terminal.IncomingCall();
-                    _activeCalls.Add(new ActiveCall(e.CallerNumberTerminal, e.TargetNumberTerminal, caller.Tariff.CostPerMinute));
+                    _activeCalls.Add(new ActiveCall(caller.Client, e.CallerNumberTerminal, e.TargetNumberTerminal, caller.Tariff.CostPerMinute));
                 }
             }
         }
 
-        private void AnswerHandler(object sender, AnswerEventArgs e)
+        private void Answer(object sender, AnswerEventArgs e)
         {
             var activeCall = _activeCalls.FirstOrDefault(call =>
                 call.CallerNumber == e.TargetNumberTerminal || call.TargetNumber == e.TargetNumberTerminal);
@@ -90,14 +91,13 @@ namespace AutomaticTelephoneStation.ATS
             }
         }
         
-        private void DropHandler(object sender, DropEventArgs e)
+        private void Drop(object sender, DropEventArgs e)
         {
             var activeCall = _activeCalls.FirstOrDefault(call =>
                 call.CallerNumber == e.CallerNumberTerminal || call.TargetNumber == e.CallerNumberTerminal);
 
             if (activeCall != null)
             {
-                
                 if (activeCall.CallerNumber == e.CallerNumberTerminal)
                 {
                     var target = _contracts.First(contract => contract.Terminal.TerminalNumber == activeCall.TargetNumber);
@@ -108,13 +108,19 @@ namespace AutomaticTelephoneStation.ATS
                     var caller = _contracts.First(contract => contract.Terminal.TerminalNumber == activeCall.CallerNumber);
                     caller.Terminal.EndCall();
                 }
-                
+                // TODO: допилить списание средств
                 activeCall.End();
                 Console.WriteLine($"Звонок между {activeCall.CallerNumber} и {activeCall.TargetNumber} завершён");
-                CallReportEvent?.Invoke(activeCall, CallType.Incoming);
-                CallReportEvent?.Invoke(activeCall, CallType.Outgoing);
+                
+                OnCallReport(this, new CallRecord(activeCall, CallType.Incoming));
+                OnCallReport(this, new CallRecord(activeCall, CallType.Outgoing));
                 _activeCalls.Remove(activeCall);
             }
+        }
+
+        protected virtual void OnCallReport(object sender, CallRecord callRecord)
+        {
+            CallReportEvent?.Invoke(sender, callRecord);
         }
     }
 }

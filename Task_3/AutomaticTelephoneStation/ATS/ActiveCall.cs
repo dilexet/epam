@@ -1,10 +1,12 @@
 ﻿using System;
 using AutomaticTelephoneStation.ATS.Enums;
+using AutomaticTelephoneStation.BillingSystem;
 
 namespace AutomaticTelephoneStation.ATS
 {
     public class ActiveCall
     {
+        private readonly Client _caller;
         public string CallerNumber { get; }
         public string TargetNumber { get; }
         public DateTime StartTime { get; }
@@ -14,8 +16,9 @@ namespace AutomaticTelephoneStation.ATS
         public double Cost { get; private set; }
         public double CostPerMinute { get; }
         
-        public ActiveCall(string callerNumber, string targetNumber, double costPerMinute)
+        public ActiveCall(Client caller, string callerNumber, string targetNumber, double costPerMinute)
         {
+            _caller = caller;
             CallerNumber = callerNumber;
             TargetNumber = targetNumber;
             CostPerMinute = costPerMinute;
@@ -30,6 +33,7 @@ namespace AutomaticTelephoneStation.ATS
             {
                 CallTime = FinishTime - StartTime;
                 Cost = (CallTime.Minutes + 1) * CostPerMinute;
+                _caller.RemoveMoney(Cost);
             }
             else
             {

@@ -32,9 +32,6 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-      <Folder Include="Interfaces" />
-    </ItemGroup>
-    <ItemGroup>
       <Compile Include="ATS\ActiveCall.cs" />
       <Compile Include="ATS\Enums\CallState.cs" />
       <Compile Include="ATS\Enums\PortState.cs" />
@@ -47,13 +44,12 @@
       <Compile Include="BillingSystem\Billing.cs" />
       <Compile Include="BillingSystem\Client.cs" />
       <Compile Include="BillingSystem\Contract.cs" />
+      <Compile Include="BillingSystem\Enums\CallType.cs" />
+      <Compile Include="BillingSystem\Enums\TariffType.cs" />
       <Compile Include="BillingSystem\Report\CallRecord.cs" />
       <Compile Include="BillingSystem\Report\CallReport.cs" />
       <Compile Include="BillingSystem\Report\ReportRender.cs" />
       <Compile Include="BillingSystem\Tariff.cs" />
-      <Compile Include="Enums\CallType.cs" />
-      <Compile Include="Enums\FiltrationTypes.cs" />
-      <Compile Include="Enums\TariffType.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

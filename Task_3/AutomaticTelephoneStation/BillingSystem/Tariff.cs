@@ -1,4 +1,4 @@
-﻿using AutomaticTelephoneStation.Enums;
+﻿using AutomaticTelephoneStation.BillingSystem.Enums;
 
 namespace AutomaticTelephoneStation.BillingSystem
 {
