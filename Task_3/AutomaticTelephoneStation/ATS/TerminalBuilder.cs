@@ -15,6 +15,5 @@
             Terminal terminal = new Terminal(port);
             return terminal;
         }
-        
     }
 }

@@ -19,15 +19,15 @@ namespace Test
 
             Contract contract1 = company.ConcludeContract(
                 new Client("Пётр Первый"), 
-                new Tariff(TariffType.Standart), 
+                new Tariff(TariffType.Standard), 
                 "228");
             Contract contract2 = company.ConcludeContract(
                 new Client("Иван Грозный"),
-                new Tariff(TariffType.Standart), 
+                new Tariff(TariffType.Standard), 
                 "77 88");
             Contract contract3 = company.ConcludeContract(
                 new Client("Екатерина Вторая"),
-                new Tariff(TariffType.Standart), 
+                new Tariff(TariffType.Standard), 
                 "8 800 555 35 35");
             
             ITelephoneStation telephoneStation = new TelephoneStation(company);

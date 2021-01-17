@@ -30,8 +30,6 @@ namespace AutomaticTelephoneStation.ATS
                 var target = _company.GetPorts().FirstOrDefault(port => 
                     port.Number == args.TargetNumberTerminal);
 
-                // TODO: обработка исключений
-                
                 if (caller != null && target != null)
                 {
                     if (target.State != PortState.Free)
@@ -48,6 +46,10 @@ namespace AutomaticTelephoneStation.ATS
                         _activeCalls.Add(new ActiveCall(args.CallerNumberTerminal, args.TargetNumberTerminal)); 
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Порт не найден");
+                }
             }
         }
 
@@ -62,6 +64,10 @@ namespace AutomaticTelephoneStation.ATS
                     activeCall.CallState = CallState.Answered;
                     Console.WriteLine(
                         $"Абонент {activeCall.TargetNumber} ответил на звонок от {activeCall.CallerNumber}");
+                }
+                else
+                {
+                    Console.WriteLine("Порт не найден");
                 }
             }
         }
@@ -92,10 +98,14 @@ namespace AutomaticTelephoneStation.ATS
                     OnCallReport(this, new CallRecord(activeCall, CallType.Outgoing));
                     _activeCalls.Remove(activeCall);
                 }
+                else
+                {
+                    Console.WriteLine("Порт не найден");
+                }
             }
         }
 
-        protected virtual void OnCallReport(object sender, CallRecord callRecord)
+        private void OnCallReport(object sender, CallRecord callRecord)
         {
             CallEndedEvent?.Invoke(sender, callRecord);
         }

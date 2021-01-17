@@ -9,9 +9,9 @@ namespace AutomaticTelephoneStation.BillingSystem
     {
         public string Number { get; }
         public CallType CallType { get; }
-        public CallState CallState { get; }
+        private CallState CallState { get; }
         public DateTime Date { get; }
-        public DateTime FinishTime { get; }
+        private DateTime FinishTime { get; }
         public TimeSpan CallDuration { get; }
         public double CostCall { get; set; }
 
@@ -32,7 +32,6 @@ namespace AutomaticTelephoneStation.BillingSystem
                 CallState = CallState.Rejected;
                 CallDuration = TimeSpan.Zero;
             }
-            
         }
 
         public override string ToString()

@@ -15,7 +15,7 @@ namespace AutomaticTelephoneStation.BillingSystem
                     CostPerMinute = 2.5;
                     break;
                 }
-                case TariffType.Standart :
+                case TariffType.Standard :
                 {
                     CostPerMinute = 3.5;
                     break;

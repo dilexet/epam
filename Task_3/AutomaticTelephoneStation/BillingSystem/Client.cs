@@ -3,7 +3,7 @@
     public class Client
     {
         private readonly string _fullName;
-        public double Money { get; private set; }
+        private double _money;
         
         public Client(string fullName)
         {
@@ -17,12 +17,12 @@
         
         public void AddMoney(double money)
         {
-            Money += money;
+            _money += money;
         }
 
         public void RemoveMoney(double money)
         {
-            Money -= money;
+            _money -= money;
         }
     }
 }

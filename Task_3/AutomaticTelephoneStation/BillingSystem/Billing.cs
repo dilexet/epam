@@ -23,6 +23,7 @@ namespace AutomaticTelephoneStation.BillingSystem
                 callRecord.CostCall = callRecord.CallType == CallType.Outgoing
                     ? (callRecord.CallDuration.Minutes + 1) * contract.Tariff.CostPerMinute
                     : 0;
+                contract.Client.RemoveMoney(callRecord.CostCall);
             }
             _records.Add(callRecord);
         }
@@ -31,6 +32,7 @@ namespace AutomaticTelephoneStation.BillingSystem
         {
             _contracts.Add(contract);
         }
+        
         public IEnumerable<CallRecord> FilterNumber(string number)
         {
             return _records.Where(call => call.Number == number);

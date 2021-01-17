@@ -3,7 +3,7 @@
     public enum TariffType
     {
         Light,
-        Standart,
+        Standard,
         Pro
     }
 }
