@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutomaticTelephoneStation.BillingSystem.Enums;
 
 namespace AutomaticTelephoneStation.BillingSystem
 {
-    // TODO:  // билинг подписывается на нужные ивенты Station-a,
-    // регистрирует звонки, подсчитывает стоимость и сохраняет "в базу"
     public class Billing
     {
         private readonly ICollection<CallRecord> _records;

@@ -43,10 +43,7 @@ namespace AutomaticTelephoneStation.ATS
                     {
                         Console.WriteLine(
                             $"Входящий вызов на номер {args.TargetNumberTerminal} с терминала с номером {args.CallerNumberTerminal}");
-                        target.Call(); 
-                        
-                        // TODO: в active calls слишком много инфы, которая нужа билингу но про которую не должна париться станция
-                        // caller number, target number и duration, этого должно быть достаточно для билинга
+                        target.Call();
 
                         _activeCalls.Add(new ActiveCall(args.CallerNumberTerminal, args.TargetNumberTerminal)); 
                     }
