@@ -1,17 +1,20 @@
 ﻿using AutomaticTelephoneStation.ATS.Enums;
+using AutomaticTelephoneStation.ATS.Interfaces;
 
 namespace AutomaticTelephoneStation.ATS
 {
-    public class Port
+    public class Port : IPort
     {
+        public string Number { get; }
         public PortState State { get; private set; }
-        
-        public Port()
+
+        public Port(string number)
         {
             State = PortState.Off;
+            Number = number;
         }
 
-        public void с_Connect()
+        public void Connect()
         {
             if (State == PortState.Off)
             {
@@ -19,7 +22,7 @@ namespace AutomaticTelephoneStation.ATS
             }
         }
 
-        public void с_Disconnect()
+        public void Disconnect()
         {
             if (State == PortState.Free)
             {

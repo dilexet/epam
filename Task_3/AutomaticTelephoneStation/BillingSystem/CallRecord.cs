@@ -3,38 +3,41 @@ using AutomaticTelephoneStation.ATS;
 using AutomaticTelephoneStation.ATS.Enums;
 using AutomaticTelephoneStation.BillingSystem.Enums;
 
-namespace AutomaticTelephoneStation.BillingSystem.Report
+namespace AutomaticTelephoneStation.BillingSystem
 {
     public class CallRecord
     {
-        public string TerminalNumber { get; }
-        private CallType CallType { get; }
-        private CallState CallState { get; }
+        public string Number { get; }
+        public CallType CallType { get; }
+        public CallState CallState { get; }
         public DateTime Date { get; }
-        private TimeSpan CallDuration { get; }
-        public double CostCall { get; }
+        public DateTime FinishTime { get; }
+        public TimeSpan CallDuration { get; }
+        public double CostCall { get; set; }
 
         public CallRecord(ActiveCall activeCall, CallType callType)
         {
             CallType = callType;
             CallState = activeCall.CallState;
             Date = activeCall.StartTime;
-            CallDuration = activeCall.CallTime;
-            if (callType == CallType.Incoming)
+            FinishTime = DateTime.Now;
+            Number = callType == CallType.Incoming ? activeCall.TargetNumber : activeCall.CallerNumber;
+            
+            if (CallState == CallState.Answered)
             {
-                TerminalNumber = activeCall.TargetNumber;
-                CostCall = 0;
+                CallDuration = FinishTime - Date;
             }
             else
             {
-                TerminalNumber = activeCall.CallerNumber;
-                CostCall = activeCall.Cost;
+                CallState = CallState.Rejected;
+                CallDuration = TimeSpan.Zero;
             }
+            
         }
 
         public override string ToString()
         {
-            return $"Terminal number: {TerminalNumber}|\n" +
+            return $"Terminal number: {Number}|\n" +
                    $"Call type: {CallType}|\n" +
                    $"CallState: {CallState}|\n" +
                    $"Date: {Date}|\n" +

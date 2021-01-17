@@ -33,22 +33,24 @@
     </PropertyGroup>
     <ItemGroup>
       <Compile Include="ATS\ActiveCall.cs" />
+      <Compile Include="ATS\Company.cs" />
       <Compile Include="ATS\Enums\CallState.cs" />
       <Compile Include="ATS\Enums\PortState.cs" />
       <Compile Include="ATS\EventArgs\AnswerEventArgs.cs" />
       <Compile Include="ATS\EventArgs\CallEventArgs.cs" />
       <Compile Include="ATS\EventArgs\DropEventArgs.cs" />
+      <Compile Include="ATS\Interfaces\IPort.cs" />
+      <Compile Include="ATS\Interfaces\ITelephoneStation.cs" />
       <Compile Include="ATS\Port.cs" />
-      <Compile Include="ATS\Station.cs" />
+      <Compile Include="ATS\TelephoneStation.cs" />
       <Compile Include="ATS\Terminal.cs" />
+      <Compile Include="ATS\TerminalBuilder.cs" />
       <Compile Include="BillingSystem\Billing.cs" />
+      <Compile Include="BillingSystem\CallRecord.cs" />
       <Compile Include="BillingSystem\Client.cs" />
       <Compile Include="BillingSystem\Contract.cs" />
       <Compile Include="BillingSystem\Enums\CallType.cs" />
       <Compile Include="BillingSystem\Enums\TariffType.cs" />
-      <Compile Include="BillingSystem\Report\CallRecord.cs" />
-      <Compile Include="BillingSystem\Report\CallReport.cs" />
-      <Compile Include="BillingSystem\Report\ReportRender.cs" />
       <Compile Include="BillingSystem\Tariff.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

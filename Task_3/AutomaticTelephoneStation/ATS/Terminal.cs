@@ -1,34 +1,35 @@
 ﻿using System;
 using AutomaticTelephoneStation.ATS.EventArgs;
+using AutomaticTelephoneStation.ATS.Interfaces;
 
 namespace AutomaticTelephoneStation.ATS
 {
     public class Terminal
     {
-        public string TerminalNumber { get; }
-        public Port TerminalPort { get; }
+        public IPort TerminalPort { get; }
         public event EventHandler<CallEventArgs> CallEvent;
         public event EventHandler<AnswerEventArgs> AnswerEvent;
         public event EventHandler<DropEventArgs> DropEvent;
         public event Action ConnectEvent;
         public event Action DisconnectEvent;
         
-        public Terminal(string terminalNumber, Port port)
+        public Terminal(IPort port)
         {
-            TerminalNumber = terminalNumber;
             TerminalPort = port;
-            ConnectEvent += TerminalPort.с_Connect;
-            DisconnectEvent += TerminalPort.с_Disconnect;
         }
 
         public void ConnectToPort()
         {
+            ConnectEvent += TerminalPort.Connect;
+            DisconnectEvent += TerminalPort.Disconnect;
             OnConnectToPort();
         }
         
         public void DisconnectFromPort()
         {
             OnDisconnectFromPort();
+            ConnectEvent -= TerminalPort.Connect;
+            DisconnectEvent -= TerminalPort.Disconnect;
         }
         
         public void CallTo(string targetNumberTerminal)
@@ -61,27 +62,17 @@ namespace AutomaticTelephoneStation.ATS
 
         protected virtual void OnMakeCall(string targetNumberTerminal)
         {
-            CallEvent?.Invoke(this, new CallEventArgs(TerminalNumber, targetNumberTerminal));
+            CallEvent?.Invoke(this, new CallEventArgs(TerminalPort.Number, targetNumberTerminal));
         }
         
         protected virtual void OnAnswerCall()
         {
-            AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalNumber));
+            AnswerEvent?.Invoke(this, new AnswerEventArgs(TerminalPort.Number));
         }
 
         protected virtual void OnDropCall()
         {
-            DropEvent?.Invoke(this, new DropEventArgs(TerminalNumber));
-        }
-
-        public void IncomingCall()
-        {
-            TerminalPort.Call();
-        }
-        
-        public void EndCall()
-        {
-            TerminalPort.EndCall();
+            DropEvent?.Invoke(this, new DropEventArgs(TerminalPort.Number));
         }
     }
 }

@@ -1,24 +1,53 @@
-﻿using AutomaticTelephoneStation.BillingSystem.Report;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using AutomaticTelephoneStation.BillingSystem.Enums;
 
 namespace AutomaticTelephoneStation.BillingSystem
 {
+    // TODO:  // билинг подписывается на нужные ивенты Station-a,
+    // регистрирует звонки, подсчитывает стоимость и сохраняет "в базу"
     public class Billing
     {
-        private readonly CallReport _callReport;
-
+        private readonly ICollection<CallRecord> _records;
+        private readonly ICollection<Contract> _contracts;
+        
         public Billing()
         {
-            _callReport = new CallReport();
+            _records = new List<CallRecord>();
+            _contracts = new List<Contract>();
         }
 
-        public void c_CallReport(object sender, CallRecord callRecord)
+        public void CallEndedHandler(object sender, CallRecord callRecord)
         {
-            _callReport.AddRecords(callRecord);
+            var contract = _contracts.FirstOrDefault(c => c.Terminal.TerminalPort.Number == callRecord.Number);
+            if (contract != null)
+            {
+                callRecord.CostCall = callRecord.CallType == CallType.Outgoing
+                    ? (callRecord.CallDuration.Minutes + 1) * contract.Tariff.CostPerMinute
+                    : 0;
+            }
+            _records.Add(callRecord);
         }
 
-        public CallReport GetReport()
+        public void ConcludeContractHandler(object sender, Contract contract)
         {
-            return _callReport;
+            _contracts.Add(contract);
         }
+        public IEnumerable<CallRecord> FilterNumber(string number)
+        {
+            return _records.Where(call => call.Number == number);
+        }
+        
+        public IEnumerable<CallRecord> FilterCallDate(string number)
+        {
+            return FilterNumber(number).OrderBy(call => call.Date);
+        }
+        
+        public IEnumerable<CallRecord> FilterCallCost(string number)
+        {
+            return FilterNumber(number).OrderBy(call => call.CostCall);
+        }
+        
     }
 }
