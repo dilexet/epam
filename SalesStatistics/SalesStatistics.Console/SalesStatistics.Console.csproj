@@ -82,9 +82,9 @@
         <Project>{b498c847-8de0-4f90-bb35-cc0ca0a6e8e5}</Project>
         <Name>SalesStatistics.DataAccessLayer</Name>
       </ProjectReference>
-      <ProjectReference Include="..\SalesStatistics.Model\SalesStatistics.Model.csproj">
+      <ProjectReference Include="..\SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj">
         <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
-        <Name>SalesStatistics.Model</Name>
+        <Name>SalesStatistics.ModelLayer</Name>
       </ProjectReference>
       <ProjectReference Include="..\SalesStatistics.Repository\SalesStatistics.Repository.csproj">
         <Project>{3f42bfdf-6474-4fb4-b2c6-833a17d6bd4e}</Project>

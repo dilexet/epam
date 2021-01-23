@@ -33,7 +33,8 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-      <Compile Include="Contexts\SalesInformationContext.cs" />
+      <Compile Include="EntityFraimworkContext\SalesInformationContext.cs" />
+      <Compile Include="IRepository.cs" />
       <Compile Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.cs" />
       <Compile Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.Designer.cs">
         <DependentUpon>202101221611051_InitialTestXerZnaetKakoi.cs</DependentUpon>
@@ -43,6 +44,7 @@
         <DependentUpon>202101231346350_AddSales.cs</DependentUpon>
       </Compile>
       <Compile Include="Migrations\Configuration.cs" />
+      <Compile Include="Repository\GenericRepository.cs" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -63,18 +65,21 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\SalesStatistics.Model\SalesStatistics.Model.csproj">
-        <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
-        <Name>SalesStatistics.Model</Name>
-      </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.resx">
         <DependentUpon>202101221611051_InitialTestXerZnaetKakoi.cs</DependentUpon>
       </EmbeddedResource>
       <EmbeddedResource Include="Migrations\202101231346350_AddSales.resx">
         <DependentUpon>202101231346350_AddSales.cs</DependentUpon>
       </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="UnitOfWork" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj">
+        <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
+        <Name>SalesStatistics.ModelLayer</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

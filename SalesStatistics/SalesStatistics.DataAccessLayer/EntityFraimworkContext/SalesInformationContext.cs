@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using SalesStatistics.Model.Models;
+using SalesStatistics.ModelLayer.Models;
 
-namespace SalesStatistics.DataAccessLayer.Contexts
+namespace SalesStatistics.DataAccessLayer.EntityFraimworkContext
 {
     public class SalesInformationContext: DbContext
     {

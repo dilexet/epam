@@ -1,6 +1,7 @@
 ﻿using System;
-using SalesStatistics.DataAccessLayer.Contexts;
-using SalesStatistics.Model.Models;
+using SalesStatistics.DataAccessLayer.EntityFraimworkContext;
+using SalesStatistics.DataAccessLayer.Repository;
+using SalesStatistics.ModelLayer.Models;
 
 namespace SalesStatistics.Console
 {
@@ -8,22 +9,24 @@ namespace SalesStatistics.Console
     {
         public static void Main()
         {
-            
-            using (SalesInformationContext db = new SalesInformationContext())
+            using (var context = new SalesInformationContext())
             {
-                Manager manager1 = new Manager {Surname = "oooo"};
-                Client client1 = new Client {FirstName = "aaaa", Surname = "bbbb"};
-                Product product1 = new Product {Name = "iiii"};
-                Sale sale1 = new Sale {
-                    Client = client1, 
-                    Manager = manager1, 
-                    Product = product1,
-                    Cost = 228,
-                    Date = DateTime.Now
-                };
-
-                db.Sales.Add(sale1);
-                db.SaveChanges();
+                using (var ctx = new GenericRepository<Sale>(context))
+                {
+                    Manager manager1 = new Manager {Surname = "Gg"};
+                    Client client1 = new Client {FirstName = "Nick", Surname = ")))"};
+                    Product product1 = new Product {Name = "qqq"};
+                    Sale sale1 = new Sale
+                    {
+                        Client = client1,
+                        Manager = manager1,
+                        Product = product1,
+                        Cost = 666,
+                        Date = DateTime.Now
+                    };
+                    // ctx.Add(sale1);
+                    // ctx.Save();
+                }
             }
         }
     }

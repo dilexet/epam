@@ -1,4 +1,4 @@
-﻿namespace SalesStatistics.Model.Models
+﻿namespace SalesStatistics.ModelLayer.Models
 {
     public class Sale
     {

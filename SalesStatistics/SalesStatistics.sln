@@ -6,9 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Console", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Controllers", "SalesStatistics.Controllers\SalesStatistics.Controllers.csproj", "{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Model", "SalesStatistics.Model\SalesStatistics.Model.csproj", "{364A78AB-871B-4D66-AA35-B2E0D02776AE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Repository", "SalesStatistics.Repository\SalesStatistics.Repository.csproj", "{3F42BFDF-6474-4FB4-B2C6-833A17D6BD4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.ModelLayer", "SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj", "{364A78AB-871B-4D66-AA35-B2E0D02776AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.WindowsService", "SalesStatistics.WindowsService\SalesStatistics.WindowsService.csproj", "{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}"
 EndProject
@@ -34,10 +32,6 @@ Global
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F42BFDF-6474-4FB4-B2C6-833A17D6BD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F42BFDF-6474-4FB4-B2C6-833A17D6BD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F42BFDF-6474-4FB4-B2C6-833A17D6BD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F42BFDF-6474-4FB4-B2C6-833A17D6BD4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Release|Any CPU.ActiveCfg = Release|Any CPU

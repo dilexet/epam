@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace SalesStatistics.Model.Models
+namespace SalesStatistics.ModelLayer.Models
 {
-    public sealed class Client
+    public sealed class Product
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string Surname { get; set; }
+        public string Name { get; set; }
         
         public ICollection<Sale> Sales { get; set; }
-
-        public Client()
+        
+        public Product()
         {
             Sales = new HashSet<Sale>();
         }
