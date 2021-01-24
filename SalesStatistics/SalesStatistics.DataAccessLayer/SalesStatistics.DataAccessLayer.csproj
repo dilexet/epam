@@ -35,13 +35,9 @@
     <ItemGroup>
       <Compile Include="EntityFraimworkContext\SalesInformationContext.cs" />
       <Compile Include="IRepository.cs" />
-      <Compile Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.cs" />
-      <Compile Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.Designer.cs">
-        <DependentUpon>202101221611051_InitialTestXerZnaetKakoi.cs</DependentUpon>
-      </Compile>
-      <Compile Include="Migrations\202101231346350_AddSales.cs" />
-      <Compile Include="Migrations\202101231346350_AddSales.Designer.cs">
-        <DependentUpon>202101231346350_AddSales.cs</DependentUpon>
+      <Compile Include="Migrations\202101241606236_Initial.cs" />
+      <Compile Include="Migrations\202101241606236_Initial.Designer.cs">
+        <DependentUpon>202101241606236_Initial.cs</DependentUpon>
       </Compile>
       <Compile Include="Migrations\Configuration.cs" />
       <Compile Include="Repository\GenericRepository.cs" />
@@ -97,11 +93,8 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="Migrations\202101221611051_InitialTestXerZnaetKakoi.resx">
-        <DependentUpon>202101221611051_InitialTestXerZnaetKakoi.cs</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Include="Migrations\202101231346350_AddSales.resx">
-        <DependentUpon>202101231346350_AddSales.cs</DependentUpon>
+      <EmbeddedResource Include="Migrations\202101241606236_Initial.resx">
+        <DependentUpon>202101241606236_Initial.cs</DependentUpon>
       </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
