@@ -1,7 +1,4 @@
-﻿using System;
-using SalesStatistics.DataAccessLayer.EntityFraimworkContext;
-using SalesStatistics.DataAccessLayer.Repository;
-using SalesStatistics.ModelLayer.Models;
+﻿using SalesStatistics.Controller.FileProcess;
 
 namespace SalesStatistics.Console
 {
@@ -9,7 +6,13 @@ namespace SalesStatistics.Console
     {
         public static void Main()
         {
-            using (var context = new SalesInformationContext())
+            
+            const string path = @"C:\Users\dilexet\Documents\epam\SalesStatistics\SalesStatistics.Controller\Files\Morozov_26012021.csv";
+
+            Parser parser = new Parser(path);
+            var item = parser.Parse();
+
+            /*using (var context = new SalesInformationContext())
             {
                 using (var ctx = new GenericRepository<Sale>(context))
                 {
@@ -24,10 +27,14 @@ namespace SalesStatistics.Console
                         Cost = 666,
                         Date = DateTime.Now
                     };
+                    // sale1 = null;
+                    // sale1 = ctx.Get().FirstOrDefault();
+                    // if (sale1 != null) sale1.Cost = 999333;
+                    // ctx.Save();
                     // ctx.Add(sale1);
                     // ctx.Save();
                 }
-            }
+            }*/
         }
     }
 }

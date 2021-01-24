@@ -4,11 +4,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.DataAccessL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Console", "SalesStatistics.Console\SalesStatistics.Console.csproj", "{1A99E197-4FB0-48EB-BD84-D60CC636E917}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Controllers", "SalesStatistics.Controllers\SalesStatistics.Controllers.csproj", "{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.ModelLayer", "SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj", "{364A78AB-871B-4D66-AA35-B2E0D02776AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.WindowsService", "SalesStatistics.WindowsService\SalesStatistics.WindowsService.csproj", "{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Controller", "SalesStatistics.Controller\SalesStatistics.Controller.csproj", "{F8006A09-C956-4E6A-8544-995D640F1EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,6 @@ Global
 		{1A99E197-4FB0-48EB-BD84-D60CC636E917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A99E197-4FB0-48EB-BD84-D60CC636E917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A99E197-4FB0-48EB-BD84-D60CC636E917}.Release|Any CPU.Build.0 = Release|Any CPU
-		{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{465D5D47-7F3F-4491-9B58-C9B86DAFEEFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{364A78AB-871B-4D66-AA35-B2E0D02776AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +32,9 @@ Global
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8006A09-C956-4E6A-8544-995D640F1EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8006A09-C956-4E6A-8544-995D640F1EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8006A09-C956-4E6A-8544-995D640F1EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8006A09-C956-4E6A-8544-995D640F1EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
