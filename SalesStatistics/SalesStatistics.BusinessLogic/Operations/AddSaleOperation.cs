@@ -5,11 +5,11 @@ namespace SalesStatistics.BusinessLogic.Operations
 {
     public class AddSaleOperation : IUnitOfWork
     {
-        private IRepository<Sale> _sales;
-        
+        public IRepository<Sale> Sales { get; set; }
+
         public AddSaleOperation(IRepository<Sale> sales)
         {
-            _sales = sales;
+            Sales = sales;
         }
         public void Commit()
         {

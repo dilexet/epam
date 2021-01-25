@@ -7,7 +7,7 @@ namespace SalesStatistics.WindowsService
 
         public StatisticsService()
         {
-           
+            throw new System.NotImplementedException();
         }
 
         protected override void OnStart(string[] args)

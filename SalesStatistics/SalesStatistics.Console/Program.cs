@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using SalesStatistics.BusinessLogic.FileProcess;
 using SalesStatistics.DataAccessLayer.EntityFraimworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
 using SalesStatistics.ModelLayer.Models;
