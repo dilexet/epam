@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using CsvHelper;
 
-namespace SalesStatistics.Controller.FileProcess
+namespace SalesStatistics.BusinessLogic.FileProcess
 {
     public class Parser
     {

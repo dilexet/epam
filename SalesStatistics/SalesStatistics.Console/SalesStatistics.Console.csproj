@@ -88,13 +88,13 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\SalesStatistics.BusinessLogic\SalesStatistics.BusinessLogic.csproj">
+        <Project>{f8006a09-c956-4e6a-8544-995d640f1ebc}</Project>
+        <Name>SalesStatistics.BusinessLogic</Name>
+      </ProjectReference>
       <ProjectReference Include="..\SalesStatistics.Controllers\SalesStatistics.Controllers.csproj">
         <Project>{465d5d47-7f3f-4491-9b58-c9b86dafeefc}</Project>
         <Name>SalesStatistics.Controllers</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\SalesStatistics.Controller\SalesStatistics.Controller.csproj">
-        <Project>{f8006a09-c956-4e6a-8544-995d640f1ebc}</Project>
-        <Name>SalesStatistics.Controller</Name>
       </ProjectReference>
       <ProjectReference Include="..\SalesStatistics.DataAccessLayer\SalesStatistics.DataAccessLayer.csproj">
         <Project>{b498c847-8de0-4f90-bb35-cc0ca0a6e8e5}</Project>

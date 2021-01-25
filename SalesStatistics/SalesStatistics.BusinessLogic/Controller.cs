@@ -1,4 +1,4 @@
-﻿namespace SalesStatistics.Controller
+﻿namespace SalesStatistics.BusinessLogic
 {
     public class Controller
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,22 +16,22 @@ namespace SalesStatistics.DataAccessLayer.Repository
             Context = context;
             EntitySet = context.Set<TEntity>();
         }
-        
-        public IQueryable<TEntity> Get()
+
+        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
         {
-            return EntitySet;
+            return predicate != null ? EntitySet.Where(predicate).AsEnumerable() : EntitySet.AsEnumerable();
         }
 
-        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return EntitySet.Where(predicate);
+            return EntitySet.Where(predicate).SingleOrDefault();
         }
 
         public void Add(TEntity entity)
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
             }
             EntitySet.Add(entity);
         }
@@ -39,7 +40,7 @@ namespace SalesStatistics.DataAccessLayer.Repository
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
             }
             EntitySet.Remove(entity);
         }
@@ -48,18 +49,9 @@ namespace SalesStatistics.DataAccessLayer.Repository
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
             }
             EntitySet.Attach(entity);
-        }
-
-        public void Reload(TEntity entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("entity");
-            }
-            Context.Entry(entity).Reload();
         }
 
         public void Save()

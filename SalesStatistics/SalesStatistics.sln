@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.ModelLayer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.WindowsService", "SalesStatistics.WindowsService\SalesStatistics.WindowsService.csproj", "{74DC0C18-B8D7-41AF-AFC3-6559C90DB088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.Controller", "SalesStatistics.Controller\SalesStatistics.Controller.csproj", "{F8006A09-C956-4E6A-8544-995D640F1EBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesStatistics.BusinessLogic", "SalesStatistics.BusinessLogic\SalesStatistics.BusinessLogic.csproj", "{F8006A09-C956-4E6A-8544-995D640F1EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

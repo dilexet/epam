@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using SalesStatistics.Controller.FileProcess;
+using SalesStatistics.BusinessLogic.FileProcess;
 using SalesStatistics.DataAccessLayer.EntityFraimworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
 using SalesStatistics.ModelLayer.Models;
@@ -12,7 +12,7 @@ namespace SalesStatistics.Console
         public static void Main()
         {
             
-            // const string path = @"C:\Users\dilexet\Documents\epam\SalesStatistics\SalesStatistics.Controller\Files\Morozov_26012021.csv";
+            // const string path = @"C:\Users\dilexet\Documents\epam\SalesStatistics\SalesStatistics.BusinessLogic\Files\Morozov_26012021.csv";
             //
             // Parser parser = new Parser(path);
             // var item = parser.Parse();
