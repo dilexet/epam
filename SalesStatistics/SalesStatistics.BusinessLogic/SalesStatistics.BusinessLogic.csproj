@@ -79,16 +79,14 @@
         <Compile Include="CsvParsing\Parser.cs" />
         <Compile Include="FileManager\FileHandler.cs" />
         <Compile Include="FileManager\WatcherSourceFileManager.cs" />
+        <Compile Include="IController.cs" />
+        <Compile Include="IDirectoryWatcher.cs" />
         <Compile Include="IUnitOfWork.cs" />
         <Compile Include="Operations\AddSaleOperation.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="FileCatalog\Morozov_26012021.csv" />
-      <Content Include="FileCatalog\Nikolaev_25012021.csv" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\SalesStatistics.DataAccessLayer\SalesStatistics.DataAccessLayer.csproj">

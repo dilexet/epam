@@ -4,8 +4,11 @@ using System.Configuration.Install;
 namespace SalesStatistics.WindowsService
 {
     [RunInstaller(true)]
-    public class StatisticsProcessInstaller : Installer
+    public partial class StatisticsProcessInstaller : Installer
     {
-        
+        public StatisticsProcessInstaller()
+        {
+            InitializeComponent();
+        }
     }
 }

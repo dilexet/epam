@@ -1,20 +1,44 @@
-﻿namespace SalesStatistics.BusinessLogic
+﻿using System;
+using SalesStatistics.BusinessLogic.FileManager;
+
+namespace SalesStatistics.BusinessLogic
 {
-    public class Controller
+    public class Controller: IController
     {
-        public Controller()
+        private IDirectoryWatcher _watcher;
+        public Controller(string directoryPath, string filesFilter)
         {
-            throw new System.NotImplementedException();
+            _watcher = new WatcherSourceFileManager(directoryPath, filesFilter);
         }
 
-        public void Run()
+        public void Start()
         {
-            throw new System.NotImplementedException();
+            _watcher.Start();
         }
 
         public void Stop()
         {
-            throw new System.NotImplementedException();
+            _watcher.Stop();
+        }
+        
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _watcher.Dispose();
+                }
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

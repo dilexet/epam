@@ -1,7 +1,6 @@
-﻿using System;
-using SalesStatistics.DataAccessLayer.EntityFraimworkContext;
-using SalesStatistics.DataAccessLayer.Repository;
-using SalesStatistics.ModelLayer.Models;
+﻿using System.Configuration;
+using System.IO;
+using SalesStatistics.BusinessLogic;
 
 namespace SalesStatistics.Console
 {
@@ -9,19 +8,31 @@ namespace SalesStatistics.Console
     {
         public static void Main()
         {
-            
+            var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
+            var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
+
+            DirectoryInfo info = new DirectoryInfo(directoryPath);
+            var files = info.GetFiles();
+            var name = files[0].Name;
+
+            using (IController controller = new Controller(directoryPath, filesFilter))
+            {
+                controller.Start();
+                System.Console.ReadKey();
+                controller.Stop();
+            }
             // const string path = @"C:\Users\dilexet\Documents\epam\SalesStatistics\SalesStatistics.BusinessLogic\Files\Morozov_26012021.csv";
             //
             // Parser parser = new Parser(path);
             // var item = parser.Parse();
 
-            using (var context = new SalesInformationContext())
+            /*using (var context = new SalesInformationContext())
             {
-                using (var ctx = new GenericRepository<Sale>(context))
+                using (IRepository<Sale> ctx = new GenericRepository<Sale>(context))
                 {
-                    Manager manager1 = new Manager {Surname = "Gg"};
-                    Client client1 = new Client {FirstName = "Nick", Surname = ")))"};
-                    Product product1 = new Product {Name = "qqq", Cost = 666};
+                    Manager manager1 = new Manager {Surname = "Pp"};
+                    Client client1 = new Client {FirstName = "Mike", Surname = "(("};
+                    Product product1 = new Product {Name = "Ooo", Cost = 333};
                     Sale sale1 = new Sale
                     {
                         Client = client1,
@@ -30,10 +41,10 @@ namespace SalesStatistics.Console
                         Date = DateTime.Now,
                         PurchaseDate = DateTime.Now
                     };
-                    ctx.Add(sale1);
-                    ctx.Save();
+                    var data = ctx.SingleOrDefault(sale => sale.Manager.Surname == "Pp");
                 }
-            }
+            }*/
+
         }
     }
 }
