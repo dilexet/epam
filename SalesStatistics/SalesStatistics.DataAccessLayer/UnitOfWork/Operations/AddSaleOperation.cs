@@ -46,7 +46,7 @@ namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
 
         public DbTransaction CreateTransaction()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void SaveChange()

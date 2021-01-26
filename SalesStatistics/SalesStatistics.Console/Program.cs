@@ -1,8 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.Entity;
-using System.IO;
-using System.Runtime.Remoting.Contexts;
 using SalesStatistics.BusinessLogic;
 using SalesStatistics.BusinessLogic.Controller;
 using SalesStatistics.BusinessLogic.CsvParsing;
