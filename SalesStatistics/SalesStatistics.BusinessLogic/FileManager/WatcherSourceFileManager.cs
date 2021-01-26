@@ -3,13 +3,14 @@ using System.IO;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
-    public class WatcherSourceFileManager: IDirectoryWatcher
+    public sealed class WatcherSourceFileManager: IDirectoryWatcher
     {
-        private FileSystemWatcher _watcher;
+        private FileSystemWatcher _fileSystemWatcher;
+        
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter)
         {
-            _watcher = new FileSystemWatcher
+            _fileSystemWatcher = new FileSystemWatcher
             {
                 Path = directoryPath,
                 Filter = filesFilter,
@@ -19,26 +20,39 @@ namespace SalesStatistics.BusinessLogic.FileManager
                                        | NotifyFilters.DirectoryName
             };
         }
-
-        public void Start()
+        
+        public void Start(IFileHandler fileHandler)
         {
-            
+            try
+            {
+                _fileSystemWatcher.Created += fileHandler.ProcessFileHandler;
+                _fileSystemWatcher.EnableRaisingEvents = true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
-        public void Stop()
+        public void Stop(IFileHandler fileHandler)
         {
-            
+            _fileSystemWatcher.Created -= fileHandler.ProcessFileHandler;
+            _fileSystemWatcher.EnableRaisingEvents = false;
         }
         
         private bool _disposed;
 
-        protected virtual void Dispose(bool disposing)
+        ~WatcherSourceFileManager()
+        {
+            Dispose();
+        }
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {
                 if (disposing)
                 {
-                    _watcher.Dispose();
+                    _fileSystemWatcher.Dispose();
                 }
             }
             _disposed = true;

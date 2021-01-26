@@ -4,7 +4,7 @@ namespace SalesStatistics.BusinessLogic
 {
     public interface IDirectoryWatcher: IDisposable
     {
-        void Start();
-        void Stop();
+        void Start(IFileHandler fileHandler);
+        void Stop(IFileHandler fileHandler);
     }
 }

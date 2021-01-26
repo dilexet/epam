@@ -2,6 +2,7 @@
 using System.IO;
 using SalesStatistics.BusinessLogic;
 using SalesStatistics.BusinessLogic.CsvParsing;
+using SalesStatistics.BusinessLogic.FileManager;
 
 namespace SalesStatistics.Console
 {
@@ -15,11 +16,14 @@ namespace SalesStatistics.Console
             DirectoryInfo info = new DirectoryInfo(directoryPath);
             var files = info.GetFiles();
 
-            var parser = new Parser($@"{files[0].DirectoryName}\{files[0].Name}");
+           // var parser = new Parser($@"{files[0].DirectoryName}\{files[0].Name}");
 
-            var data = parser.Parse();
+            // var data = parser.NameFileParse();
+
+            IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter);
+            IFileHandler fileHandler = new FileHandler(new Parser());
             
-            using (IController controller = new Controller(directoryPath, filesFilter))
+            using (IController controller = new SalesController(watcher,fileHandler))
             {
                 controller.Start();
                 System.Console.ReadKey();

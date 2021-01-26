@@ -1,9 +1,13 @@
-﻿namespace SalesStatistics.DataAccessLayer
+﻿using System.Data.Common;
+using SalesStatistics.ModelLayer.Models;
+
+namespace SalesStatistics.DataAccessLayer
 {
     public interface IUnitOfWork
     {
-        void Commit();
-        void Execute();
-        void Rollback();
+        IRepository<Sale> SaleRepository { get; }
+        void Commit(Sale sale);
+        DbTransaction CreateTransaction();
+        void SaveChange();
     }
 }

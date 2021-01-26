@@ -8,18 +8,11 @@ using SalesStatistics.BusinessLogic.DTO;
 
 namespace SalesStatistics.BusinessLogic.CsvParsing
 {
-    public class Parser
+    public class Parser: IParser
     {
-        private string _path;
-
-        public Parser(string filePath)
+        public IEnumerable<SaleDto> FileParse(string filePath)
         {
-            _path = filePath;
-        }
-        
-        private IEnumerable<SaleDto> FileParse()
-        {
-            using (var streamReader = new StreamReader(_path))
+            using (var streamReader = new StreamReader(filePath))
             {
                 using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
                 {
@@ -29,10 +22,10 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             }
         }
 
-        public CsvFileContent Parse()
+        public ManagerDto NameFileParse(string filePath)
         {
-            CsvFileContent content = new CsvFileContent();
-            FileInfo fileInfo = new FileInfo(_path);
+            ManagerDto managerDto = new ManagerDto();
+            FileInfo fileInfo = new FileInfo(filePath);
             string name = fileInfo.Name;
             StringBuilder stringBuilder = new StringBuilder(100);
             stringBuilder.Clear();
@@ -40,12 +33,12 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             {
                 if (symbol == '_')
                 {
-                    content.ManagerSurname = stringBuilder.ToString();
+                    managerDto.ManagerSurname = stringBuilder.ToString();
                     stringBuilder.Clear();
                 }
                 else if (symbol == '.')
                 {
-                    content.Date = stringBuilder.ToString();
+                    managerDto.Date = stringBuilder.ToString();
                     stringBuilder.Clear();
                 }
                 else
@@ -53,9 +46,7 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                     stringBuilder.Append(symbol);
                 }
             }
-
-            content.FileContents = FileParse();
-            return content;
+            return managerDto;
         }
     }
 }

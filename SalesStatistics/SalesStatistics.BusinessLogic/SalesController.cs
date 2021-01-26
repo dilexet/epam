@@ -1,29 +1,35 @@
 ﻿using System;
-using SalesStatistics.BusinessLogic.FileManager;
 
 namespace SalesStatistics.BusinessLogic
 {
-    public class Controller: IController
+    public sealed class SalesController: IController
     {
         private IDirectoryWatcher _watcher;
-        public Controller(string directoryPath, string filesFilter)
+        private IFileHandler _fileHandler;
+        public SalesController(IDirectoryWatcher watcher, IFileHandler fileHandler)
         {
-            _watcher = new WatcherSourceFileManager(directoryPath, filesFilter);
+            _watcher = watcher;
+            _fileHandler = fileHandler;
         }
 
         public void Start()
         {
-            _watcher.Start();
+            _watcher.Start(_fileHandler);
         }
 
         public void Stop()
         {
-            _watcher.Stop();
+            _watcher.Stop(_fileHandler);
         }
         
         private bool _disposed;
 
-        protected virtual void Dispose(bool disposing)
+        ~SalesController()
+        {
+            Dispose();
+        }
+        
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {
