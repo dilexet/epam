@@ -13,7 +13,7 @@ namespace SalesStatistics.DataAccessLayer.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202101241606236_Initial"; }
+            get { return "202101260945340_Initial"; }
         }
         
         string IMigrationMetadata.Source

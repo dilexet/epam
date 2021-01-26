@@ -33,13 +33,15 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-      <Compile Include="EntityFraimworkContext\SalesInformationContext.cs" />
+      <Compile Include="EntityFrameworkContext\SalesInformationContext.cs" />
       <Compile Include="IRepository.cs" />
-      <Compile Include="Migrations\202101241606236_Initial.cs" />
-      <Compile Include="Migrations\202101241606236_Initial.Designer.cs">
-        <DependentUpon>202101241606236_Initial.cs</DependentUpon>
+      <Compile Include="IUnitOfWork.cs" />
+      <Compile Include="Migrations\202101260945340_Initial.cs" />
+      <Compile Include="Migrations\202101260945340_Initial.Designer.cs">
+        <DependentUpon>202101260945340_Initial.cs</DependentUpon>
       </Compile>
       <Compile Include="Migrations\Configuration.cs" />
+      <Compile Include="Operations\AddSaleOperation.cs" />
       <Compile Include="Repository\GenericRepository.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -89,13 +91,7 @@
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <None Include="App.config" />
       <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Include="Migrations\202101241606236_Initial.resx">
-        <DependentUpon>202101241606236_Initial.cs</DependentUpon>
-      </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="UnitOfWork" />
@@ -105,6 +101,11 @@
         <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
         <Name>SalesStatistics.ModelLayer</Name>
       </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Migrations\202101260945340_Initial.resx">
+        <DependentUpon>202101260945340_Initial.cs</DependentUpon>
+      </EmbeddedResource>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

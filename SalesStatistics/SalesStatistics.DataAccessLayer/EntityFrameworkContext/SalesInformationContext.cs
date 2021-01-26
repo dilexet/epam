@@ -2,7 +2,7 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
 using SalesStatistics.ModelLayer.Models;
 
-namespace SalesStatistics.DataAccessLayer.EntityFraimworkContext
+namespace SalesStatistics.DataAccessLayer.EntityFrameworkContext
 {
     public class SalesInformationContext: DbContext
     {

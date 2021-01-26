@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CsvHelper;
+using SalesStatistics.BusinessLogic.DTO;
 
 namespace SalesStatistics.BusinessLogic.CsvParsing
 {
@@ -16,21 +17,21 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             _path = filePath;
         }
         
-        private IEnumerable<FileContent> FileParse()
+        private IEnumerable<SaleDto> FileParse()
         {
-            
             using (var streamReader = new StreamReader(_path))
             {
                 using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
                 {
-                    return csvReader.GetRecords<FileContent>().ToList();
+                    csvReader.Context.RegisterClassMap<SaleDtoMap>();
+                    return csvReader.GetRecords<SaleDto>().ToList();
                 }
             }
         }
 
-        public Content Parse()
+        public CsvFileContent Parse()
         {
-            Content content = new Content();
+            CsvFileContent content = new CsvFileContent();
             FileInfo fileInfo = new FileInfo(_path);
             string name = fileInfo.Name;
             StringBuilder stringBuilder = new StringBuilder(100);

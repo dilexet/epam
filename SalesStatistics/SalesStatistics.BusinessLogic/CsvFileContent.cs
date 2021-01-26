@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using SalesStatistics.BusinessLogic.DTO;
 
 namespace SalesStatistics.BusinessLogic
 {
-    public class Content
+    public class CsvFileContent
     {
-        public IEnumerable<FileContent> FileContents { get; set; }
+        public IEnumerable<SaleDto> FileContents { get; set; }
         public string Date { get; set; }
         public string ManagerSurname { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿namespace SalesStatistics.BusinessLogic
+﻿namespace SalesStatistics.DataAccessLayer
 {
     public interface IUnitOfWork
     {

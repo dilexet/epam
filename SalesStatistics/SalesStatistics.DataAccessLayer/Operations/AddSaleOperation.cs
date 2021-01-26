@@ -1,7 +1,6 @@
-﻿using SalesStatistics.DataAccessLayer;
-using SalesStatistics.ModelLayer.Models;
+﻿using SalesStatistics.ModelLayer.Models;
 
-namespace SalesStatistics.BusinessLogic.Operations
+namespace SalesStatistics.DataAccessLayer.Operations
 {
     public class AddSaleOperation : IUnitOfWork
     {

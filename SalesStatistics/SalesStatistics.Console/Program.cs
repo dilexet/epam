@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.IO;
 using SalesStatistics.BusinessLogic;
+using SalesStatistics.BusinessLogic.CsvParsing;
 
 namespace SalesStatistics.Console
 {
@@ -13,8 +14,11 @@ namespace SalesStatistics.Console
 
             DirectoryInfo info = new DirectoryInfo(directoryPath);
             var files = info.GetFiles();
-            var name = files[0].Name;
 
+            var parser = new Parser($@"{files[0].DirectoryName}\{files[0].Name}");
+
+            var data = parser.Parse();
+            
             using (IController controller = new Controller(directoryPath, filesFilter))
             {
                 controller.Start();
