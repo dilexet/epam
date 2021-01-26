@@ -1,25 +1,24 @@
 ﻿using System;
 
-namespace SalesStatistics.BusinessLogic
+namespace SalesStatistics.BusinessLogic.Controller
 {
     public sealed class SalesController: IController
     {
         private IDirectoryWatcher _watcher;
-        private IFileHandler _fileHandler;
-        public SalesController(IDirectoryWatcher watcher, IFileHandler fileHandler)
+        public SalesController(IDirectoryWatcher watcher)
         {
             _watcher = watcher;
-            _fileHandler = fileHandler;
+          
         }
 
         public void Start()
         {
-            _watcher.Start(_fileHandler);
+            _watcher.Start();
         }
 
         public void Stop()
         {
-            _watcher.Stop(_fileHandler);
+            _watcher.Stop();
         }
         
         private bool _disposed;

@@ -73,9 +73,8 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="SalesController.cs" />
+        <Compile Include="Controller\SalesController.cs" />
         <Compile Include="CsvParsing\Parser.cs" />
-        <Compile Include="DTO\ManagerDTO.cs" />
         <Compile Include="DTO\SaleDTO.cs" />
         <Compile Include="DTO\SaleDTOMap.cs" />
         <Compile Include="FileManager\FileHandler.cs" />

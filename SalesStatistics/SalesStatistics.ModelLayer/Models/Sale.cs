@@ -9,8 +9,7 @@ namespace SalesStatistics.ModelLayer.Models
         public int ClientId { get; set; }
         public int ManagerId { get; set; }
         public int ProductId { get; set; }
-        public DateTime? PurchaseDate { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public virtual Client Client { get; set; }
         public virtual Manager Manager { get; set; }

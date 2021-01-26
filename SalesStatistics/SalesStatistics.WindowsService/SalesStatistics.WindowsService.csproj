@@ -98,6 +98,14 @@
         <Project>{f8006a09-c956-4e6a-8544-995d640f1ebc}</Project>
         <Name>SalesStatistics.BusinessLogic</Name>
       </ProjectReference>
+      <ProjectReference Include="..\SalesStatistics.DataAccessLayer\SalesStatistics.DataAccessLayer.csproj">
+        <Project>{b498c847-8de0-4f90-bb35-cc0ca0a6e8e5}</Project>
+        <Name>SalesStatistics.DataAccessLayer</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj">
+        <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
+        <Name>SalesStatistics.ModelLayer</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

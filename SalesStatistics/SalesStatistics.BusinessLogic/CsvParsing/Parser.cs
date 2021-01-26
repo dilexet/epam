@@ -22,9 +22,10 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             }
         }
 
-        public ManagerDto NameFileParse(string filePath)
+        public string NameFileParse(string filePath)
         {
-            ManagerDto managerDto = new ManagerDto();
+            string managerSurname = null;
+            
             FileInfo fileInfo = new FileInfo(filePath);
             string name = fileInfo.Name;
             StringBuilder stringBuilder = new StringBuilder(100);
@@ -33,12 +34,7 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             {
                 if (symbol == '_')
                 {
-                    managerDto.ManagerSurname = stringBuilder.ToString();
-                    stringBuilder.Clear();
-                }
-                else if (symbol == '.')
-                {
-                    managerDto.Date = stringBuilder.ToString();
+                    managerSurname = stringBuilder.ToString();
                     stringBuilder.Clear();
                 }
                 else
@@ -46,7 +42,7 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                     stringBuilder.Append(symbol);
                 }
             }
-            return managerDto;
+            return managerSurname;
         }
     }
 }

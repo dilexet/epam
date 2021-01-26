@@ -1,12 +1,14 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using SalesStatistics.ModelLayer.Models;
 
 namespace SalesStatistics.DataAccessLayer
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
         IRepository<Sale> SaleRepository { get; }
-        void Commit(Sale sale);
+        void Commit(IEnumerable<Sale> sales);
         DbTransaction CreateTransaction();
         void SaveChange();
     }

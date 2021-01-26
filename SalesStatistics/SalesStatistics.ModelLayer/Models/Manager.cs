@@ -2,7 +2,7 @@
 
 namespace SalesStatistics.ModelLayer.Models
 {
-    public sealed class Manager
+    public class Manager
     {
         public int Id { get; set; }
         public string Surname { get; set; }

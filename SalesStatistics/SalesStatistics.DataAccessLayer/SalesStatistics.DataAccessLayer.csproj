@@ -36,9 +36,9 @@
       <Compile Include="EntityFrameworkContext\SalesInformationContext.cs" />
       <Compile Include="IRepository.cs" />
       <Compile Include="IUnitOfWork.cs" />
-      <Compile Include="Migrations\202101260945340_Initial.cs" />
-      <Compile Include="Migrations\202101260945340_Initial.Designer.cs">
-        <DependentUpon>202101260945340_Initial.cs</DependentUpon>
+      <Compile Include="Migrations\202101261804571_Initial.cs" />
+      <Compile Include="Migrations\202101261804571_Initial.Designer.cs">
+        <DependentUpon>202101261804571_Initial.cs</DependentUpon>
       </Compile>
       <Compile Include="Migrations\Configuration.cs" />
       <Compile Include="Repository\GenericRepository.cs" />
@@ -101,12 +101,12 @@
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="Migrations\202101260945340_Initial.resx">
-        <DependentUpon>202101260945340_Initial.cs</DependentUpon>
-      </EmbeddedResource>
+      <Folder Include="UnitOfWork" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="UnitOfWork" />
+      <EmbeddedResource Include="Migrations\202101261804571_Initial.resx">
+        <DependentUpon>202101261804571_Initial.cs</DependentUpon>
+      </EmbeddedResource>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

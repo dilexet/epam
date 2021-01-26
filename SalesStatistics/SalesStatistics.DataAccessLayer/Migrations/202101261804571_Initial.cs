@@ -1,5 +1,6 @@
 ﻿namespace SalesStatistics.DataAccessLayer.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class Initial : DbMigration
@@ -24,8 +25,7 @@
                         ClientId = c.Int(nullable: false),
                         ManagerId = c.Int(nullable: false),
                         ProductId = c.Int(nullable: false),
-                        PurchaseDate = c.DateTime(),
-                        Date = c.DateTime(nullable: false),
+                        Date = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Client", t => t.ClientId, cascadeDelete: true)
