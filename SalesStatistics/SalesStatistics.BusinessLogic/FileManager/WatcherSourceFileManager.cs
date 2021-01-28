@@ -6,11 +6,11 @@ namespace SalesStatistics.BusinessLogic.FileManager
     public sealed class WatcherSourceFileManager: IDirectoryWatcher
     {
         private FileSystemWatcher _fileSystemWatcher;
-        private IFileHandler _fileHandler;
+        public IFileHandler FileHandler { get; }
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
         {
-            _fileHandler = fileHandler;
+            FileHandler = fileHandler;
             _fileSystemWatcher = new FileSystemWatcher
             {
                 Path = directoryPath,
@@ -26,7 +26,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
         {
             try
             {
-                _fileSystemWatcher.Created += _fileHandler.ProcessFileHandler;
+                _fileSystemWatcher.Created += FileHandler.ProcessFileHandler;
                 _fileSystemWatcher.EnableRaisingEvents = true;
             }
             catch (Exception e)
@@ -37,7 +37,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
         public void Stop()
         {
-            _fileSystemWatcher.Created -= _fileHandler.ProcessFileHandler;
+            _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
             _fileSystemWatcher.EnableRaisingEvents = false;
         }
         
@@ -54,7 +54,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 if (disposing)
                 {
                     _fileSystemWatcher.Dispose();
-                    _fileHandler.Dispose();
+                    // FileHandler.Dispose();
                 }
             }
             _disposed = true;

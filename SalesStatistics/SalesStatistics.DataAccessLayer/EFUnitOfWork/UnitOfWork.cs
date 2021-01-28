@@ -1,27 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using System.Threading;
+using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
+using SalesStatistics.DataAccessLayer.Repository;
 using SalesStatistics.ModelLayer.Models;
 
-namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
+namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 {
-    public class AddSaleOperation : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        public IRepository<Sale> SaleRepository { get; }
-        public IRepository<Manager> ManagerRepository { get; }
+        private readonly SalesInformationContext _db = new SalesInformationContext();
+        private IRepository<Sale> _saleRepository;
+        private IRepository<Manager> _managerRepository;
         
+        public IRepository<Sale> SaleRepository
+        {
+            get
+            {
+                if (_saleRepository == null)
+                {
+                    _saleRepository = new GenericRepository<Sale>(_db);
+                }
+                return _saleRepository;
+            }
+        }
+
+        public IRepository<Manager> ManagerRepository
+        {
+            get
+            {
+                if (_managerRepository == null)
+                {
+                    _managerRepository = new GenericRepository<Manager>(_db);
+                }
+                return _managerRepository;
+            }
+        }
+
         private ReaderWriterLockSlim Locker { get; }
        
-        public AddSaleOperation(IRepository<Sale> saleRepository, IRepository<Manager> managerRepository)
+        public UnitOfWork()
         {
-            SaleRepository = saleRepository;
-            ManagerRepository = managerRepository;
             Locker = new ReaderWriterLockSlim();
         }
 
-        public void Commit(IEnumerable<Sale> sales)
+        /*public void Commit(IEnumerable<Sale> sales)
         {
             Locker.EnterWriteLock();
             try
@@ -32,9 +55,6 @@ namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
                     {
                         SaleRepository.Add(sale);
                     }
-                    
-                    // TODO: сделать сохрание в другом классе, к тому же с проверками
-                    SaveChange();
                 }
             }
             finally
@@ -42,7 +62,7 @@ namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
                 Locker.ExitWriteLock();
             }
             
-        }
+        }*/
 
         public DbTransaction CreateTransaction()
         {
@@ -51,12 +71,12 @@ namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
 
         public void SaveChange()
         {
-            SaleRepository.Save();
+            _db.SaveChanges();
         }
         
         private bool _disposed;
 
-        ~AddSaleOperation()
+        ~UnitOfWork()
         {
             Dispose();
         }
@@ -67,6 +87,7 @@ namespace SalesStatistics.DataAccessLayer.UnitOfWork.Operations
             {
                 if (disposing)
                 {
+                    _db.Dispose();
                     SaleRepository.Dispose();
                     ManagerRepository.Dispose();
                     Locker.Dispose();

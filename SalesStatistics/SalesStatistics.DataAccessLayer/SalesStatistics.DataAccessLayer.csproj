@@ -42,7 +42,7 @@
       </Compile>
       <Compile Include="Migrations\Configuration.cs" />
       <Compile Include="Repository\GenericRepository.cs" />
-      <Compile Include="UnitOfWork\Operations\AddSaleOperation.cs" />
+      <Compile Include="EFUnitOfWork\UnitOfWork.cs" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="CsvHelper, Version=21.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823">
@@ -99,9 +99,6 @@
         <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
         <Name>SalesStatistics.ModelLayer</Name>
       </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="UnitOfWork" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Migrations\202101261804571_Initial.resx">

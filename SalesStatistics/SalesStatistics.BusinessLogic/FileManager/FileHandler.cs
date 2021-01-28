@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using SalesStatistics.BusinessLogic.DTO;
-using SalesStatistics.DataAccessLayer;
 using SalesStatistics.ModelLayer.Models;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
+    
     public class FileHandler: IFileHandler
     {
         private IParser _parser;
-        private IUnitOfWork _unitOfWork;
-        public FileHandler(IParser parser, IUnitOfWork unitOfWork)
+        public delegate void AddDbHandler(IEnumerable<Sale> sales, Manager manager);
+        public event AddDbHandler AddItemsDbEvent;
+            
+        public FileHandler(IParser parser)
         {
             _parser = parser;
-            _unitOfWork = unitOfWork;
         }
 
         public void ProcessFileHandler(object sender, FileSystemEventArgs e)
@@ -29,11 +30,11 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
         private void WriteToDataBase(IEnumerable<SaleDto> sales, string managerSurname)
         {
-            var data = CreateModels(sales, managerSurname);
-            _unitOfWork.Commit(data);
+            var data = CreateModels(sales);
+            AddItemsDbEvent?.Invoke(data, new Manager{ Surname = managerSurname});
         }
 
-        private IEnumerable<Sale> CreateModels(IEnumerable<SaleDto> salesDto, string managerSurname)
+        private IEnumerable<Sale> CreateModels(IEnumerable<SaleDto> salesDto)
         {
             ICollection<Sale> sales = new List<Sale>();
             foreach (var item in salesDto)
@@ -52,23 +53,19 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 product.Cost = Convert.ToDecimal(item.ProductCost);
                 sale.Product = product;
 
-                Manager manager = new Manager();
-                manager.Surname = managerSurname;
-                sale.Manager = manager;
-                
                 sales.Add(sale);
             }
             return sales; 
         }
         
         
-        private bool _disposed;
+        // private bool _disposed;
 
-        ~FileHandler()
+        /*~FileHandler()
         {
             Dispose();
         }
-        
+
         private void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -78,6 +75,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
                     _unitOfWork.Dispose();
                 }
             }
+
             _disposed = true;
         }
 
@@ -85,6 +83,6 @@ namespace SalesStatistics.BusinessLogic.FileManager
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
+        }*/
     }
 }
