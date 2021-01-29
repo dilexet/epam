@@ -1,27 +1,35 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
     public sealed class WatcherSourceFileManager: IDirectoryWatcher
     {
-        private FileSystemWatcher _fileSystemWatcher;
+        private readonly FileSystemWatcher _fileSystemWatcher;
         public IFileHandler FileHandler { get; }
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
         {
-            FileHandler = fileHandler;
-            _fileSystemWatcher = new FileSystemWatcher
+            try
             {
-                Path = directoryPath,
-                Filter = filesFilter,
-                NotifyFilter = NotifyFilters.LastAccess
-                                       | NotifyFilters.LastWrite
-                                       | NotifyFilters.FileName
-                                       | NotifyFilters.DirectoryName
-            };
+                FileHandler = fileHandler;
+                _fileSystemWatcher = new FileSystemWatcher
+                {
+                    Path = directoryPath,
+                    Filter = filesFilter,
+                    NotifyFilter = NotifyFilters.LastAccess
+                                   | NotifyFilters.LastWrite
+                                   | NotifyFilters.FileName
+                                   | NotifyFilters.DirectoryName
+                };
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException("Check out Path to Directory to Track in AppConfig file.");
+            }
         }
-        
+
         public void Start()
         {
             try
@@ -37,10 +45,18 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
         public void Stop()
         {
-            _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
-            _fileSystemWatcher.EnableRaisingEvents = false;
+            try
+            {
+                Task.WaitAll();
+                _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
+                _fileSystemWatcher.EnableRaisingEvents = false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
-        
+
         private bool _disposed;
 
         ~WatcherSourceFileManager()

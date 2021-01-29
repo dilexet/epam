@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,37 +13,61 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
     {
         public IEnumerable<SaleDto> FileParse(string filePath)
         {
-            using (var streamReader = new StreamReader(filePath))
+            try
             {
-                using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+                using (var streamReader = new StreamReader(filePath))
                 {
-                    csvReader.Context.RegisterClassMap<SaleDtoMap>();
-                    return csvReader.GetRecords<SaleDto>().ToList();
+                    using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+                    {
+                        csvReader.Context.RegisterClassMap<SaleDtoMap>();
+                        var data = csvReader.GetRecords<SaleDto>().ToList();
+                        if (data == null)
+                        {
+                            throw new FormatException("File is empty");
+                        }
+                        return data;
+                    }
                 }
+            }
+            catch (ArgumentNullException)
+            {
+                throw new ArgumentNullException(nameof(filePath));
             }
         }
 
         public string NameFileParse(string filePath)
         {
-            string managerSurname = null;
-            
-            FileInfo fileInfo = new FileInfo(filePath);
-            string name = fileInfo.Name;
-            StringBuilder stringBuilder = new StringBuilder(100);
-            stringBuilder.Clear();
-            foreach (var symbol in name)
+            try
             {
-                if (symbol == '_')
+                string managerSurname = null;
+
+                FileInfo fileInfo = new FileInfo(filePath);
+                string name = fileInfo.Name;
+                StringBuilder stringBuilder = new StringBuilder(100);
+                stringBuilder.Clear();
+                foreach (var symbol in name)
                 {
-                    managerSurname = stringBuilder.ToString();
-                    stringBuilder.Clear();
+                    if (symbol == '_')
+                    {
+                        managerSurname = stringBuilder.ToString();
+                        stringBuilder.Clear();
+                    }
+                    else
+                    {
+                        stringBuilder.Append(symbol);
+                    }
                 }
-                else
+
+                if (string.IsNullOrEmpty(managerSurname))
                 {
-                    stringBuilder.Append(symbol);
+                    throw new FormatException("File name error");
                 }
+                return managerSurname;
             }
-            return managerSurname;
+            catch (ArgumentNullException)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
         }
     }
 }
