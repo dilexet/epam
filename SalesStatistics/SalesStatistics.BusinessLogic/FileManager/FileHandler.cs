@@ -90,30 +90,4 @@ namespace SalesStatistics.BusinessLogic.FileManager
             }
         }
     }
-}
-// private bool _disposed;
-
-        /*~FileHandler()
-        {
-            Dispose();
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _unitOfWork.Dispose();
-                }
-            }
-
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }*/
-    
+}    

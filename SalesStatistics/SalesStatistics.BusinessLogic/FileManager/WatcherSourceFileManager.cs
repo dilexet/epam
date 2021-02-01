@@ -63,6 +63,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
         {
             Dispose();
         }
+        
         private void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -70,7 +71,6 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 if (disposing)
                 {
                     _fileSystemWatcher.Dispose();
-                    // FileHandler.Dispose();
                 }
             }
             _disposed = true;

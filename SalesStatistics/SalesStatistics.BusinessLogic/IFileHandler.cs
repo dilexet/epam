@@ -3,7 +3,7 @@ using SalesStatistics.BusinessLogic.FileManager;
 
 namespace SalesStatistics.BusinessLogic
 {
-    public interface IFileHandler// : IDisposable
+    public interface IFileHandler
     {
         event FileHandler.AddDbHandler AddItemsDbEvent;
         void ProcessFileHandler(object sender, FileSystemEventArgs e);

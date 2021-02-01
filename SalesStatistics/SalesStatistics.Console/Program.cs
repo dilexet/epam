@@ -11,6 +11,7 @@ namespace SalesStatistics.Console
     {
         public static void Main()
         {
+            // TODO: БАГ: при запуске без отладки, читается только один файл, файлы добавленые после него, не читаются, но при отладке всё работает
             var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
             var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
 
@@ -28,14 +29,11 @@ namespace SalesStatistics.Console
 
             
             
-            // const string path = @"C:\Users\dilexet\Documents\epam\SalesStatistics\SalesStatistics.BusinessLogic\Files\Morozov_26012021.csv";
-            //
-            // Parser parser = new Parser(path);
-            // var item = parser.Parse();
+         
 
             /*using (var context = new SalesInformationContext())
             {
-                using (IRepository<Client> ctx = new GenericRepository<Client>(context))
+                using (IRepository<Product> ctx = new GenericRepository<Product>(context))
                 {
                     var sales = ctx.Get();
 

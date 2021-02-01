@@ -20,8 +20,6 @@ namespace SalesStatistics.DataAccessLayer.EntityFrameworkContext
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            // modelBuilder.Entity<Manager>().HasKey(x => x.Id);
-            // base.OnModelCreating(modelBuilder);
         }
     }
 }
