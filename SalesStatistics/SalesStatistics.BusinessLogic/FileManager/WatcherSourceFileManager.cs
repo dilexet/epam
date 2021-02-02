@@ -37,9 +37,9 @@ namespace SalesStatistics.BusinessLogic.FileManager
                                    | NotifyFilters.DirectoryName
                 };
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                Log.Error("Check out Path to Directory to Track in AppConfig file");
+                Log.Error("Check out Path to Directory to Track in AppConfig file: {Source}; {Message}", e.Source, e.Message);
             }
         }
 
