@@ -45,39 +45,9 @@ namespace SalesStatistics.DataAccessLayer.Repository
             EntitySet.Remove(entity);
         }
 
-        public void Attach(TEntity entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-            EntitySet.Attach(entity);
-        }
-
         public void Save()
         {
             Context.SaveChanges();
-        }
-
-        
-        private bool _disposed;
-
-        private void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    Context.Dispose();
-                }
-            }
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

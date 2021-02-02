@@ -4,13 +4,12 @@ using System.Linq.Expressions;
 
 namespace SalesStatistics.DataAccessLayer
 {
-    public interface IRepository<TEntity>: IDisposable where TEntity: class
+    public interface IRepository<TEntity> where TEntity: class
     {
         IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate = null);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
         void Add(TEntity entity);
         void Remove(TEntity entity);
-        void Attach(TEntity entity);
         void Save();
     }
 }

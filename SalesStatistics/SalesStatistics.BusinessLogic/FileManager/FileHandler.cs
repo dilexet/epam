@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using CsvHelper;
 using SalesStatistics.BusinessLogic.DTO;
 using SalesStatistics.ModelLayer.Models;
+using Serilog;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
@@ -28,30 +30,45 @@ namespace SalesStatistics.BusinessLogic.FileManager
             {
                 try
                 {
+                    while (IsFileLocked(new FileInfo(e.FullPath)))
+                    {
+                        
+                    }
+                    
                     WriteToDataBase(
                         _parser.FileParse(e.FullPath),
                         _parser.NameFileParse(e.FullPath));
                 }
                 catch (HeaderValidationException)
                 {
-                    throw new Exception($"{e.Name} First Line Must Match Template => Date | Client | Product | Cost");
+                    Log.Error("{Name} First Line Must Match Template => Date | Client | Product | Cost", e.Name);
                 }
                 catch (FormatException exception)
                 {
-                    throw new FormatException($"{e.Name} {exception.Message}");
-                }
-                catch (ArgumentNullException)
-                {
-                    throw new ArgumentNullException(nameof(e));
-                }
-                catch (Exception)
-                {
-                    throw new Exception($"{e.Name} Information is not Added to Database");
+                    Log.Error("{Name} {Message}", e.Name, exception.Message);
                 }
             });
-            
         }
 
+        private bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                stream?.Close();
+            }
+            return false;
+        }
+        
         private void WriteToDataBase(IEnumerable<SaleDto> sales, string managerSurname)
         {
             var data = CreateModels(sales);
@@ -67,7 +84,10 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 {
                     Sale sale = new Sale();
 
-                    sale.Date = Convert.ToDateTime(item.Date);
+                    sale.Date = DateTime.ParseExact(
+                        item.Date, 
+                        "dd.MM.yyyy",
+                        CultureInfo.InvariantCulture);
 
                     Client client = new Client();
                     client.Surname = item.ClientSurname;
@@ -81,7 +101,6 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
                     sales.Add(sale);
                 }
-
                 return sales;
             }
             catch (ArgumentOutOfRangeException)

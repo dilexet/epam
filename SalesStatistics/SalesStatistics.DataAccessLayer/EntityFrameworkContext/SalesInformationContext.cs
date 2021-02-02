@@ -11,8 +11,8 @@ namespace SalesStatistics.DataAccessLayer.EntityFrameworkContext
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
         
-        public SalesInformationContext(): 
-            base("ManagerContext")
+        public SalesInformationContext(string connectionString): 
+            base(connectionString)
         {
             
         }

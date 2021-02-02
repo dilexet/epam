@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SalesStatistics.ModelLayer.Models;
 
 namespace SalesStatistics.DataAccessLayer
@@ -7,6 +8,7 @@ namespace SalesStatistics.DataAccessLayer
     {
         IRepository<Sale> SaleRepository { get; }
         IRepository<Manager> ManagerRepository { get; }
-        void SaveChange();
+        void Add(IEnumerable<Sale> sales, Manager manager);
+        void SaveChanges();
     }
 }

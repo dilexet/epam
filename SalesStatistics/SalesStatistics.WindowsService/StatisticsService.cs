@@ -5,6 +5,7 @@ using SalesStatistics.BusinessLogic.Controller;
 using SalesStatistics.BusinessLogic.CsvParsing;
 using SalesStatistics.BusinessLogic.FileManager;
 using SalesStatistics.DataAccessLayer.EFUnitOfWork;
+using Serilog;
 
 namespace SalesStatistics.WindowsService
 {
@@ -14,18 +15,31 @@ namespace SalesStatistics.WindowsService
         public StatisticsService()
         {
             InitializeComponent();
+            CanStop = true;
         }
 
+        public void OnDebug()
+        {
+            OnStart(null);
+        }
+        
         protected override void OnStart(string[] args)
         {
-            string directoryPath = ConfigurationManager.AppSettings["directoryPath"];
-            string filesFilter = ConfigurationManager.AppSettings["filesFilter"];
+            var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
+            var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
+            var logPath = ConfigurationManager.AppSettings["logPah"];
+            var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
             
-                IFileHandler fileHandler = new FileHandler(new Parser());
-                IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File(logPath)
+                .CreateLogger();
+            
+            IFileHandler fileHandler = new FileHandler(new Parser());
+            IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
 
-                _controller = new SalesController(watcher, new UnitOfWork());
-                _controller.Start();
+            _controller = new SalesController(watcher, new UnitOfWork(connectionString));
+            _controller.Start();
         }
 
         protected override void OnStop()

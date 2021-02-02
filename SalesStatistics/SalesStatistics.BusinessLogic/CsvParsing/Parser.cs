@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CsvHelper;
 using SalesStatistics.BusinessLogic.DTO;
+using Serilog;
 
 namespace SalesStatistics.BusinessLogic.CsvParsing
 {
@@ -21,9 +22,9 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                     {
                         csvReader.Context.RegisterClassMap<SaleDtoMap>();
                         var data = csvReader.GetRecords<SaleDto>().ToList();
-                        if (data == null)
+                        if (data.Count == 0) 
                         {
-                            throw new FormatException("File is empty");
+                            Log.Error("File is empty");
                         }
                         return data;
                     }
@@ -31,7 +32,8 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
             }
             catch (ArgumentNullException)
             {
-                throw new ArgumentNullException(nameof(filePath));
+                Log.Error("FilePath is empty");
+                return null;
             }
         }
 
@@ -57,16 +59,16 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                         stringBuilder.Append(symbol);
                     }
                 }
-
                 if (string.IsNullOrEmpty(managerSurname))
                 {
-                    throw new FormatException("File name error");
+                    Log.Error("File name error");
                 }
                 return managerSurname;
             }
             catch (ArgumentNullException)
             {
-                throw new ArgumentNullException(nameof(filePath));
+                Log.Error("FilePath is empty");
+                return null;
             }
         }
     }

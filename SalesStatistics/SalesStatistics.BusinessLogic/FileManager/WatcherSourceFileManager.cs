@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
@@ -13,6 +14,18 @@ namespace SalesStatistics.BusinessLogic.FileManager
         {
             try
             {
+                if (directoryPath == null)
+                {
+                    Log.Error("DirectoryPath is null");
+                }
+                if (filesFilter == null)
+                {
+                    Log.Error("FilesFilter is null");
+                }
+                if (fileHandler == null)
+                {
+                    Log.Error("FileHandler is null");
+                }
                 FileHandler = fileHandler;
                 _fileSystemWatcher = new FileSystemWatcher
                 {
@@ -26,35 +39,21 @@ namespace SalesStatistics.BusinessLogic.FileManager
             }
             catch (ArgumentException)
             {
-                throw new ArgumentException("Check out Path to Directory to Track in AppConfig file.");
+                Log.Error("Check out Path to Directory to Track in AppConfig file");
             }
         }
 
         public void Start()
         {
-            try
-            {
-                _fileSystemWatcher.Created += FileHandler.ProcessFileHandler;
-                _fileSystemWatcher.EnableRaisingEvents = true;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            _fileSystemWatcher.Created += FileHandler.ProcessFileHandler;
+            _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
         public void Stop()
         {
-            try
-            {
-                Task.WaitAll();
-                _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
-                _fileSystemWatcher.EnableRaisingEvents = false;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            Task.WaitAll();
+            _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
+            _fileSystemWatcher.EnableRaisingEvents = false;
         }
 
         private bool _disposed;

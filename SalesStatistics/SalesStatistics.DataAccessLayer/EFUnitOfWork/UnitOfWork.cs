@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
 using SalesStatistics.ModelLayer.Models;
+using Serilog;
 
 namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly SalesInformationContext _db = new SalesInformationContext();
+        static readonly object Locker = new object();
+
+        private readonly SalesInformationContext _db;
         private IRepository<Sale> _saleRepository;
         private IRepository<Manager> _managerRepository;
         
@@ -15,7 +20,39 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 
         public IRepository<Manager> ManagerRepository => _managerRepository ?? (_managerRepository = new GenericRepository<Manager>(_db));
 
-        public void SaveChange()
+        public UnitOfWork(string connectionString)
+        {
+            _db = new SalesInformationContext(connectionString);
+        }
+        
+        public void Add(IEnumerable<Sale> sales, Manager manager)
+        {
+            bool acquiredLock = false;
+            try
+            {
+                Monitor.Enter(Locker, ref acquiredLock);
+                foreach (var sale in sales)
+                {
+                    SaleRepository.Add(sale);
+                }
+
+                ManagerRepository.Add(manager);
+                SaveChanges();
+            }
+            catch (Exception)
+            {
+                Log.Error("Information is not Added to Database");
+            }
+            finally
+            {
+                if (acquiredLock)
+                {
+                    Monitor.Exit(Locker);
+                }
+            }
+        }
+
+        public void SaveChanges()
         {
             _db.SaveChanges();
         }
@@ -34,8 +71,6 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
                 if (disposing)
                 {
                     _db.Dispose();
-                    SaleRepository.Dispose();
-                    ManagerRepository.Dispose();
                 }
             }
             _disposed = true;
