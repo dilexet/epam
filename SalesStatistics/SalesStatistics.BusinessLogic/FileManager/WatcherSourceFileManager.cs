@@ -12,20 +12,20 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
         {
+            if (directoryPath == null)
+            {
+                Log.Error("DirectoryPath is null");
+            }
+            if (filesFilter == null)
+            {
+                Log.Error("FilesFilter is null");
+            }
+            if (fileHandler == null)
+            {
+                Log.Error("FileHandler is null");
+            }
             try
             {
-                if (directoryPath == null)
-                {
-                    Log.Error("DirectoryPath is null");
-                }
-                if (filesFilter == null)
-                {
-                    Log.Error("FilesFilter is null");
-                }
-                if (fileHandler == null)
-                {
-                    Log.Error("FileHandler is null");
-                }
                 FileHandler = fileHandler;
                 _fileSystemWatcher = new FileSystemWatcher
                 {
@@ -39,7 +39,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
             }
             catch (ArgumentException e)
             {
-                Log.Error("Check out Path to Directory to Track in AppConfig file: {Source}; {Message}", e.Source, e.Message);
+                Log.Error("Check out Path to Directory to Track in AppConfig file: {Message}", e.Message);
             }
         }
 

@@ -26,8 +26,13 @@ namespace SalesStatistics.WindowsService
                 _logger = new Logger();
                 Thread loggerThread = new Thread(_logger.Start);
                 loggerThread.Start();
+                Log.Information("service started successfully");
             }
             catch (NullReferenceException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
+            catch (Exception e)
             {
                 Log.Error("{Message}", e.Message);
             }
@@ -35,8 +40,16 @@ namespace SalesStatistics.WindowsService
 
         protected override void OnStop()
         {
-            _logger.Stop();
-            Thread.Sleep(1000);
+            try
+            {
+                _logger.Stop();
+                Thread.Sleep(1000);
+                Log.Information("service stoped successfully");
+            }
+            catch (Exception e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
         }
     }
 }

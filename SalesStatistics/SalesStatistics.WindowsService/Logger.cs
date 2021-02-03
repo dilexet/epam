@@ -34,7 +34,7 @@ namespace SalesStatistics.WindowsService
         public void Stop()
         {
             _controller.Stop();
-            _controller.Dispose();
+            _controller?.Dispose();
         }
     }
 }

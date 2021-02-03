@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
+using System.Data.SqlClient;
 using System.Threading;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
@@ -39,9 +41,25 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
                 ManagerRepository.Add(manager);
                 SaveChanges();
             }
-            catch (Exception)
+            catch (EntitySqlException e)
             {
-                Log.Error("Information is not Added to Database");
+                Log.Error("{Message}", e.Message);
+            }
+            catch (SqlException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
+            catch (EntityException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Information is not Added to Database: {Message}", e.Message);
             }
             finally
             {
