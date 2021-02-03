@@ -34,6 +34,7 @@
     </PropertyGroup>
     <ItemGroup>
       <Compile Include="EntityFrameworkContext\SalesInformationContext.cs" />
+      <Compile Include="EntityFrameworkContext\SampleContextFactory.cs" />
       <Compile Include="IRepository.cs" />
       <Compile Include="IUnitOfWork.cs" />
       <Compile Include="Migrations\202101261804571_Initial.cs" />

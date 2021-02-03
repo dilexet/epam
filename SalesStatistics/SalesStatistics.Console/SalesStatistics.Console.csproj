@@ -105,10 +105,6 @@
         <Project>{f8006a09-c956-4e6a-8544-995d640f1ebc}</Project>
         <Name>SalesStatistics.BusinessLogic</Name>
       </ProjectReference>
-      <ProjectReference Include="..\SalesStatistics.Controllers\SalesStatistics.Controllers.csproj">
-        <Project>{465d5d47-7f3f-4491-9b58-c9b86dafeefc}</Project>
-        <Name>SalesStatistics.Controllers</Name>
-      </ProjectReference>
       <ProjectReference Include="..\SalesStatistics.DataAccessLayer\SalesStatistics.DataAccessLayer.csproj">
         <Project>{b498c847-8de0-4f90-bb35-cc0ca0a6e8e5}</Project>
         <Name>SalesStatistics.DataAccessLayer</Name>
@@ -116,10 +112,6 @@
       <ProjectReference Include="..\SalesStatistics.ModelLayer\SalesStatistics.ModelLayer.csproj">
         <Project>{364a78ab-871b-4d66-aa35-b2e0d02776ae}</Project>
         <Name>SalesStatistics.ModelLayer</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\SalesStatistics.Repository\SalesStatistics.Repository.csproj">
-        <Project>{3f42bfdf-6474-4fb4-b2c6-833a17d6bd4e}</Project>
-        <Name>SalesStatistics.Repository</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>

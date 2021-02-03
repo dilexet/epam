@@ -4,6 +4,7 @@ using SalesStatistics.BusinessLogic.Controller;
 using SalesStatistics.BusinessLogic.CsvParsing;
 using SalesStatistics.BusinessLogic.FileManager;
 using SalesStatistics.DataAccessLayer.EFUnitOfWork;
+using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using Serilog;
 
 namespace SalesStatistics.WindowsService
@@ -17,8 +18,7 @@ namespace SalesStatistics.WindowsService
             var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
             var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
             var logPath = ConfigurationManager.AppSettings["logPah"];
-            var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
-            
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.File(logPath)
@@ -27,7 +27,7 @@ namespace SalesStatistics.WindowsService
             IFileHandler fileHandler = new FileHandler(new Parser());
             IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
 
-            _controller = new SalesController(watcher, new UnitOfWork(connectionString));
+            _controller = new SalesController(watcher, new UnitOfWork(new SampleContextFactory()));
             _controller.Start();
         }
 

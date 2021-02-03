@@ -22,9 +22,9 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 
         public IRepository<Manager> ManagerRepository => _managerRepository ?? (_managerRepository = new GenericRepository<Manager>(_db));
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(SampleContextFactory contextFactory)
         {
-            _db = new SalesInformationContext(connectionString);
+            _db = contextFactory.Create();
         }
         
         public void Add(IEnumerable<Sale> sales, Manager manager)

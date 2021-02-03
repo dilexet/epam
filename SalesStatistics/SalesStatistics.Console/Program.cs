@@ -4,6 +4,7 @@ using SalesStatistics.BusinessLogic.Controller;
 using SalesStatistics.BusinessLogic.CsvParsing;
 using SalesStatistics.BusinessLogic.FileManager;
 using SalesStatistics.DataAccessLayer.EFUnitOfWork;
+using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using Serilog;
 
 namespace SalesStatistics.Console
@@ -12,11 +13,10 @@ namespace SalesStatistics.Console
     {
         public static void Main()
         {
-            
             var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
             var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
             var logPath = ConfigurationManager.AppSettings["logPah"];
-            var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+            // var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
             
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
@@ -26,8 +26,8 @@ namespace SalesStatistics.Console
             
             IFileHandler fileHandler = new FileHandler(new Parser());
             IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
-            
-            using (IController controller = new SalesController(watcher, new UnitOfWork(connectionString)))
+
+            using (IController controller = new SalesController(watcher, new UnitOfWork(new SampleContextFactory())))
             {
                 controller.Start();
                 System.Console.ReadKey();
@@ -35,10 +35,7 @@ namespace SalesStatistics.Console
                 controller.Stop();
             }
 
-
-
-
-
+            
 
             /*using (var context = new SalesInformationContext())
             {
