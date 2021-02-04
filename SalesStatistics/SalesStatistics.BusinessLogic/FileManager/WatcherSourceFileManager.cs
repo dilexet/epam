@@ -8,6 +8,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
     public sealed class WatcherSourceFileManager: IDirectoryWatcher
     {
         private readonly FileSystemWatcher _fileSystemWatcher;
+        
         public IFileHandler FileHandler { get; }
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
@@ -39,6 +40,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
         {
             _fileSystemWatcher.Created += FileHandler.ProcessFileHandler;
             _fileSystemWatcher.EnableRaisingEvents = true;
+            Log.Information("FileWatcher started successfully");
         }
 
         public void Stop()
@@ -46,6 +48,7 @@ namespace SalesStatistics.BusinessLogic.FileManager
             Task.WaitAll();
             _fileSystemWatcher.Created -= FileHandler.ProcessFileHandler;
             _fileSystemWatcher.EnableRaisingEvents = false;
+            Log.Information("FileWatcher stopped successfully");
         }
 
         private bool _disposed;

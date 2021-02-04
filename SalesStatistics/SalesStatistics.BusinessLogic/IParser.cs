@@ -6,6 +6,7 @@ namespace SalesStatistics.BusinessLogic
     public interface IParser
     {
         IEnumerable<SaleDto> FileParse(string filePath);
+        
         string NameFileParse(string filePath);
     }
 }

@@ -10,7 +10,7 @@ using Serilog;
 
 namespace SalesStatistics.Console
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main()
         {

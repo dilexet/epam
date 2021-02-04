@@ -13,11 +13,9 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
     public class FileHandler : IFileHandler
     {
-        private IParser _parser;
-
-        public delegate void AddDbHandler(IEnumerable<Sale> sales, Manager manager);
-
-        public event AddDbHandler AddItemsDbEvent;
+        private readonly IParser _parser;
+        
+        public event Action<IEnumerable<Sale>, Manager> AddItemsDbEvent;
 
         public FileHandler(IParser parser)
         {
@@ -41,7 +39,15 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 }
                 catch (HeaderValidationException)
                 {
-                    Log.Error("{Name} First Line Must Match Template => Date | Client | Product | Cost", e.Name);
+                    Log.Error("{Name} First Line Must Match Template => ID | Date | Client | Product | Cost", e.Name);
+                }
+                catch (TypeLoadException exception)
+                {
+                    Log.Error("{Message}", exception.Message);
+                }
+                catch (ArgumentOutOfRangeException exception)
+                {
+                    Log.Error("Invalid file name: {Message}", exception.Message);
                 }
                 catch (FormatException exception)
                 {
@@ -71,8 +77,15 @@ namespace SalesStatistics.BusinessLogic.FileManager
         
         private void WriteToDataBase(IEnumerable<SaleDto> sales, string managerSurname)
         {
-            var data = CreateModels(sales);
-            AddItemsDbEvent?.Invoke(data, new Manager {Surname = managerSurname});
+            try
+            {
+                var data = CreateModels(sales);
+                AddItemsDbEvent?.Invoke(data, new Manager {Surname = managerSurname});
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
         }
 
         private IEnumerable<Sale> CreateModels(IEnumerable<SaleDto> salesDto)
@@ -82,31 +95,35 @@ namespace SalesStatistics.BusinessLogic.FileManager
                 ICollection<Sale> sales = new List<Sale>();
                 foreach (var item in salesDto)
                 {
-                    Sale sale = new Sale();
+                    Sale sale = new Sale
+                    {
+                        Date = DateTime.ParseExact(
+                            item.Date,
+                            "dd.MM.yyyy",
+                            CultureInfo.InvariantCulture).Date
+                    };
 
-                    sale.Date = DateTime.ParseExact(
-                        item.Date, 
-                        "dd.MM.yyyy",
-                        CultureInfo.InvariantCulture);
-
-                    Client client = new Client();
-                    client.Surname = item.ClientSurname;
-                    client.FirstName = item.ClientFirstName;
+                    Client client = new Client {Surname = item.ClientSurname, FirstName = item.ClientFirstName};
                     sale.Client = client;
 
-                    Product product = new Product();
-                    product.Name = item.ProductName;
-                    product.Cost = Convert.ToDecimal(item.ProductCost);
+                    Product product = new Product {Name = item.ProductName, Cost = Convert.ToDecimal(item.ProductCost)};
                     sale.Product = product;
 
                     sales.Add(sale);
                 }
+
                 return sales;
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentNullException e)
             {
-                throw new ArgumentNullException(salesDto.ToString());
+                Log.Error("{Message}", e.Message);
             }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
+
+            return null;
         }
     }
 }    

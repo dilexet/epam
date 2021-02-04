@@ -72,16 +72,19 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
         
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            try
+            {
+                _db.SaveChanges();
+                Log.Information("Ыaving to database completed successfully");
+            }
+            catch (Exception e)
+            {
+                Log.Error("{Message}", e.Message);
+            }
         }
         
         private bool _disposed;
 
-        ~UnitOfWork()
-        {
-            Dispose();
-        }
-        
         private void Dispose(bool disposing)
         {
             if (!_disposed)

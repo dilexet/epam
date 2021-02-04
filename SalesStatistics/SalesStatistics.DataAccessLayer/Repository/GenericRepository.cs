@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using Serilog;
 
 namespace SalesStatistics.DataAccessLayer.Repository
 {
@@ -31,7 +32,8 @@ namespace SalesStatistics.DataAccessLayer.Repository
         {
             if (entity == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                Log.Error("Attempt to add invalid data");
+                return;
             }
             EntitySet.Add(entity);
         }
@@ -40,7 +42,8 @@ namespace SalesStatistics.DataAccessLayer.Repository
         {
             if (entity == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                Log.Error("Attempt to remove invalid data");
+                return;
             }
             EntitySet.Remove(entity);
         }

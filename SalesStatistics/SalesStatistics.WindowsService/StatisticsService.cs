@@ -16,6 +16,7 @@ namespace SalesStatistics.WindowsService
     public partial class StatisticsService: ServiceBase
     {
         private IController _controller;
+        
         public StatisticsService()
         {
             InitializeComponent();

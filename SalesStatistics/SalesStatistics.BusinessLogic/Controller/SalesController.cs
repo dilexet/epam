@@ -5,8 +5,8 @@ namespace SalesStatistics.BusinessLogic.Controller
 {
     public sealed class SalesController: IController
     {
-        private IUnitOfWork _unitOfWork;
-        private IDirectoryWatcher _watcher;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDirectoryWatcher _watcher;
 
         public SalesController(IDirectoryWatcher watcher, IUnitOfWork unitOfWork)
         {

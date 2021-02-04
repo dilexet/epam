@@ -10,12 +10,17 @@ namespace SalesStatistics.WindowsService
         public StatisticsProcessInstaller()
         {
             InitializeComponent();
-            var serviceInstaller = new ServiceInstaller();
-            var processInstaller = new ServiceProcessInstaller();
+            var serviceInstaller = new ServiceInstaller
+            {
+                StartType = ServiceStartMode.Manual, 
+                ServiceName = "***SalesStatistics***"
+            };
             
-            processInstaller.Account = ServiceAccount.LocalSystem;
-            serviceInstaller.StartType = ServiceStartMode.Manual;
-            serviceInstaller.ServiceName = "***SalesStatistics***";
+            var processInstaller = new ServiceProcessInstaller
+            {
+                Account = ServiceAccount.LocalSystem
+            };
+
             Installers.Add(processInstaller);
             Installers.Add(serviceInstaller);
         }
