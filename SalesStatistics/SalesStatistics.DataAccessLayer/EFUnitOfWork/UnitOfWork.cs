@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core;
-using System.Data.SqlClient;
 using System.Threading;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
@@ -33,25 +31,21 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
             try
             {
                 Monitor.Enter(Locker, ref acquiredLock);
+                if (IsManagerInDb(manager))
+                {
+                    Log.Information("The manager is already in the database");
+                    if (acquiredLock)
+                    {
+                        Monitor.Exit(Locker);
+                    }
+                    return;
+                }
                 foreach (var sale in sales)
                 {
                     SaleRepository.Add(sale);
                 }
-
                 ManagerRepository.Add(manager);
                 SaveChanges();
-            }
-            catch (EntitySqlException e)
-            {
-                Log.Error("{Message}", e.Message);
-            }
-            catch (SqlException e)
-            {
-                Log.Error("{Message}", e.Message);
-            }
-            catch (EntityException e)
-            {
-                Log.Error("{Message}", e.Message);
             }
             catch (ArgumentNullException e)
             {
@@ -70,6 +64,12 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
             }
         }
 
+        private bool IsManagerInDb(Manager manager)
+        {
+            var item = ManagerRepository.SingleOrDefault(x => x.Surname == manager.Surname);
+            return item != null;
+        }
+        
         public void SaveChanges()
         {
             _db.SaveChanges();

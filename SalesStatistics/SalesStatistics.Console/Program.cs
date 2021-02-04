@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using SalesStatistics.BusinessLogic;
 using SalesStatistics.BusinessLogic.Controller;
 using SalesStatistics.BusinessLogic.CsvParsing;
@@ -15,29 +16,37 @@ namespace SalesStatistics.Console
         {
             var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
             var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
-            var logPath = ConfigurationManager.AppSettings["logPah"];
-            // var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+            var logPath = ConfigurationManager.AppSettings["logPath"];
+            
             
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Console()
                 .WriteTo.File(logPath)
                 .CreateLogger();
-            
-            IFileHandler fileHandler = new FileHandler(new Parser());
-            IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
 
-            using (IController controller = new SalesController(watcher, new UnitOfWork(new SampleContextFactory())))
+            try
             {
-                controller.Start();
-                System.Console.ReadKey();
-                Log.CloseAndFlush();
-                controller.Stop();
+                IFileHandler fileHandler = new FileHandler(new Parser());
+                IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
+
+                using (IController controller =
+                    new SalesController(watcher, new UnitOfWork(new SampleContextFactory())))
+                {
+                    controller.Start();
+                    System.Console.ReadKey();
+                    Log.CloseAndFlush();
+                    controller.Stop();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("{Message}", e.Message);
             }
 
-            
 
-            /*using (var context = new SalesInformationContext())
+            /*var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+            using (var context = new SalesInformationContext(connectionString))
             {
                 IRepository<Manager> ctxM = new GenericRepository<Manager>(context);
                 IRepository<Product> ctxP = new GenericRepository<Product>(context);

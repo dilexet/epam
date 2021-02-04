@@ -12,18 +12,6 @@ namespace SalesStatistics.BusinessLogic.FileManager
 
         public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
         {
-            if (directoryPath == null)
-            {
-                Log.Error("DirectoryPath is null");
-            }
-            if (filesFilter == null)
-            {
-                Log.Error("FilesFilter is null");
-            }
-            if (fileHandler == null)
-            {
-                Log.Error("FileHandler is null");
-            }
             try
             {
                 FileHandler = fileHandler;
@@ -36,6 +24,10 @@ namespace SalesStatistics.BusinessLogic.FileManager
                                    | NotifyFilters.FileName
                                    | NotifyFilters.DirectoryName
                 };
+            }
+            catch (ArgumentNullException e)
+            {
+                Log.Error("{Message}", e.Message);
             }
             catch (ArgumentException e)
             {

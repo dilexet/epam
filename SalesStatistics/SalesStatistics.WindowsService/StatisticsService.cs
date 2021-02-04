@@ -1,32 +1,49 @@
 ﻿using System;
+using System.Configuration;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
+using SalesStatistics.BusinessLogic;
+using SalesStatistics.BusinessLogic.Controller;
+using SalesStatistics.BusinessLogic.CsvParsing;
+using SalesStatistics.BusinessLogic.FileManager;
+using SalesStatistics.DataAccessLayer.EFUnitOfWork;
+using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using Serilog;
 
 namespace SalesStatistics.WindowsService
 {
     public partial class StatisticsService: ServiceBase
     {
-        private  Logger _logger;
+        private IController _controller;
         public StatisticsService()
         {
             InitializeComponent();
             CanStop = true;
-        }
-
-        public void OnDebug()
-        {
-            OnStart(null);
         }
         
         protected override void OnStart(string[] args)
         {
             try
             {
-                _logger = new Logger();
-                Thread loggerThread = new Thread(_logger.Start);
-                loggerThread.Start();
-                Log.Information("service started successfully");
+                Task.Factory.StartNew(() =>
+                {
+                    var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
+                    var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
+                    var logPath = ConfigurationManager.AppSettings["logPath"];
+
+                    Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Information()
+                        .WriteTo.File(logPath)
+                        .CreateLogger();
+
+                    IFileHandler fileHandler = new FileHandler(new Parser());
+                    IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
+
+                    _controller = new SalesController(watcher, new UnitOfWork(new SampleContextFactory()));
+                    _controller.Start();
+                    Log.Information("Service started successfully");
+                });
             }
             catch (NullReferenceException e)
             {
@@ -42,9 +59,10 @@ namespace SalesStatistics.WindowsService
         {
             try
             {
-                _logger.Stop();
+                _controller.Stop();
+                _controller?.Dispose();
                 Thread.Sleep(1000);
-                Log.Information("service stoped successfully");
+                Log.Information("Service stopped successfully");
             }
             catch (Exception e)
             {
