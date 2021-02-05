@@ -9,9 +9,9 @@ namespace SalesStatistics.BusinessLogic.FileManager
     {
         private readonly FileSystemWatcher _fileSystemWatcher;
         
-        public IFileHandler FileHandler { get; }
+        public FileHandler FileHandler { get; }
 
-        public WatcherSourceFileManager(string directoryPath, string filesFilter, IFileHandler fileHandler)
+        public WatcherSourceFileManager(string directoryPath, string filesFilter, FileHandler fileHandler)
         {
             try
             {

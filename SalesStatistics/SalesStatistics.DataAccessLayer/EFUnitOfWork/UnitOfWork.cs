@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
@@ -15,9 +14,7 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
         private readonly SalesInformationContext _db;
         private IRepository<Sale> _saleRepository;
         private IRepository<Manager> _managerRepository;
-        
         public IRepository<Sale> SaleRepository => _saleRepository ?? (_saleRepository = new GenericRepository<Sale>(_db));
-
         public IRepository<Manager> ManagerRepository => _managerRepository ?? (_managerRepository = new GenericRepository<Manager>(_db));
 
         public UnitOfWork(SampleContextFactory contextFactory)
@@ -25,7 +22,7 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
             _db = contextFactory.Create();
         }
         
-        public void Add(IEnumerable<Sale> sales, Manager manager)
+        public void Add(Manager manager)
         {
             bool acquiredLock = false;
             try
@@ -40,11 +37,11 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
                     }
                     return;
                 }
-                foreach (var sale in sales)
+                ManagerRepository.Add(manager);
+                foreach (var sale in manager.Sales)
                 {
                     SaleRepository.Add(sale);
                 }
-                ManagerRepository.Add(manager);
                 SaveChanges();
             }
             catch (ArgumentNullException e)
@@ -75,7 +72,7 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
             try
             {
                 _db.SaveChanges();
-                Log.Information("Ыaving to database completed successfully");
+                Log.Information("Saving to database completed successfully");
             }
             catch (Exception e)
             {

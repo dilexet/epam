@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using SalesStatistics.BusinessLogic.DTO;
-using SalesStatistics.ModelLayer.Models;
 using Serilog;
 
 namespace SalesStatistics.BusinessLogic.FileManager
 {
 
-    public class FileHandler : IFileHandler
+    public class FileHandler
     {
         private readonly IParser _parser;
         
-        public event Action<IEnumerable<Sale>, Manager> AddItemsDbEvent;
+        public event Action<IEnumerable<SaleDto>, ManagerDto> MakeManagerEvent;
 
         public FileHandler(IParser parser)
         {
@@ -28,14 +27,23 @@ namespace SalesStatistics.BusinessLogic.FileManager
             {
                 try
                 {
-                    while (IsFileLocked(new FileInfo(e.FullPath)))
+                    var fullPath = e.FullPath;
+                    int count = 3;
+                    while (IsFileLocked(new FileInfo(fullPath)))
                     {
-                        
+                        count--;
+                        Thread.Sleep(100);
+                        if (count <= 0)
+                        {
+                            Log.Error("File access error: the file is in use by another process");
+                            return;
+                        }
                     }
                     
-                    WriteToDataBase(
-                        _parser.FileParse(e.FullPath),
-                        _parser.NameFileParse(e.FullPath));
+                    var salesDto = _parser.FileParse(fullPath);
+                    var managerDto = _parser.NameFileParse(fullPath);
+                    
+                    OnMakeManager(salesDto, managerDto);
                 }
                 catch (HeaderValidationException)
                 {
@@ -75,12 +83,11 @@ namespace SalesStatistics.BusinessLogic.FileManager
             return false;
         }
         
-        private void WriteToDataBase(IEnumerable<SaleDto> sales, string managerSurname)
+        private void OnMakeManager(IEnumerable<SaleDto> salesDto, ManagerDto managerDto)
         {
             try
             {
-                var data = CreateModels(sales);
-                AddItemsDbEvent?.Invoke(data, new Manager {Surname = managerSurname});
+                MakeManagerEvent?.Invoke(salesDto, managerDto);
             }
             catch (ArgumentNullException e)
             {
@@ -88,42 +95,5 @@ namespace SalesStatistics.BusinessLogic.FileManager
             }
         }
 
-        private IEnumerable<Sale> CreateModels(IEnumerable<SaleDto> salesDto)
-        {
-            try
-            {
-                ICollection<Sale> sales = new List<Sale>();
-                foreach (var item in salesDto)
-                {
-                    Sale sale = new Sale
-                    {
-                        Date = DateTime.ParseExact(
-                            item.Date,
-                            "dd.MM.yyyy",
-                            CultureInfo.InvariantCulture).Date
-                    };
-
-                    Client client = new Client {Surname = item.ClientSurname, FirstName = item.ClientFirstName};
-                    sale.Client = client;
-
-                    Product product = new Product {Name = item.ProductName, Cost = Convert.ToDecimal(item.ProductCost)};
-                    sale.Product = product;
-
-                    sales.Add(sale);
-                }
-
-                return sales;
-            }
-            catch (ArgumentNullException e)
-            {
-                Log.Error("{Message}", e.Message);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Log.Error("{Message}", e.Message);
-            }
-
-            return null;
-        }
     }
 }    

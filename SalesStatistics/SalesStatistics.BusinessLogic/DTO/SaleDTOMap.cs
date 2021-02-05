@@ -6,12 +6,12 @@ namespace SalesStatistics.BusinessLogic.DTO
     {
         public SaleDtoMap()
         {
-            Map(m => m.Id).Name("Column1");
-            Map(m => m.Date).Name("Column2");
-            Map(m => m.ClientSurname).Name("Column3");
-            Map(m => m.ClientFirstName).Name("Column4");
-            Map(m => m.ProductName).Name("Column5");
-            Map(m => m.ProductCost).Name("Column6");
+            Map(saleDto => saleDto.Id).Name("Column1");
+            Map(saleDto => saleDto.Date).Name("Column2");
+            Map(saleDto => saleDto.Client.Surname).Name("Column3");
+            Map(saleDto => saleDto.Client.FirstName).Name("Column4");
+            Map(saleDto => saleDto.Product.Name).Name("Column5");
+            Map(saleDto => saleDto.Product.Cost).Name("Column6");
         }
     }
 }

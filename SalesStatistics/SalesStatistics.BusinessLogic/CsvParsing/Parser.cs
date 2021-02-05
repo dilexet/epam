@@ -14,6 +14,7 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
     {
         public IEnumerable<SaleDto> FileParse(string filePath)
         {
+            ICollection<SaleDto> salesDto = new List<SaleDto>();
             try
             {
                 using (var streamReader = new StreamReader(filePath))
@@ -21,28 +22,30 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                     using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
                     {
                         csvReader.Context.RegisterClassMap<SaleDtoMap>();
-                        var data = csvReader.GetRecords<SaleDto>().ToList();
-                        if (data.Count == 0) 
+                        salesDto = csvReader.GetRecords<SaleDto>().ToList();
+                        if (salesDto.Count == 0)
                         {
                             Log.Error("File is empty");
                         }
-                        return data;
                     }
                 }
             }
             catch (ArgumentNullException)
             {
                 Log.Error("FilePath is empty");
-                return null;
             }
+            catch (Exception exception)
+            {
+                Log.Error("{Message}", exception.Message);
+            }
+            return salesDto;
         }
 
-        public string NameFileParse(string filePath)
+        public ManagerDto NameFileParse(string filePath)
         {
+            ManagerDto managerDto = new ManagerDto();
             try
             {
-                string managerSurname = null;
-
                 FileInfo fileInfo = new FileInfo(filePath);
                 string name = fileInfo.Name;
                 StringBuilder stringBuilder = new StringBuilder(100);
@@ -51,7 +54,7 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                 {
                     if (symbol == '_')
                     {
-                        managerSurname = stringBuilder.ToString();
+                        managerDto.Surname = stringBuilder.ToString();
                         stringBuilder.Clear();
                     }
                     else
@@ -59,17 +62,20 @@ namespace SalesStatistics.BusinessLogic.CsvParsing
                         stringBuilder.Append(symbol);
                     }
                 }
-                if (string.IsNullOrEmpty(managerSurname))
+                if (string.IsNullOrEmpty(managerDto.Surname))
                 {
                     Log.Error("File name error");
                 }
-                return managerSurname;
             }
             catch (ArgumentNullException)
             {
                 Log.Error("FilePath is empty");
-                return null;
             }
+            catch (Exception exception)
+            {
+                Log.Error("{Message}", exception.Message);
+            }
+            return managerDto;
         }
     }
 }

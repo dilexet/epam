@@ -16,19 +16,15 @@ namespace SalesStatistics.Console
         {
             var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
             var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
-            var logPath = ConfigurationManager.AppSettings["logPath"];
-            
-            
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Console()
-                .WriteTo.File(logPath)
-                .CreateLogger();
 
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.AppSettings()
+                .MinimumLevel.Information()
+                .CreateLogger();
             try
             {
-                IFileHandler fileHandler = new FileHandler(new Parser());
-                IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
+                var fileHandler = new FileHandler(new Parser());
+                var watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
 
                 using (IController controller =
                     new SalesController(watcher, new UnitOfWork(new SampleContextFactory())))
@@ -43,41 +39,6 @@ namespace SalesStatistics.Console
             {
                 Log.Error("{Message}", e.Message);
             }
-
-
-            /*var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
-            using (var context = new SalesInformationContext(connectionString))
-            {
-                IRepository<Manager> ctxM = new GenericRepository<Manager>(context);
-                IRepository<Product> ctxP = new GenericRepository<Product>(context);
-                IRepository<Client> ctxC = new GenericRepository<Client>(context);
-                IRepository<Sale> ctxS = new GenericRepository<Sale>(context);
-
-                var managers = ctxM.Get();
-                var products = ctxP.Get();
-                var clients = ctxC.Get();
-                var sales = ctxS.Get();
-                
-                foreach (var sale in managers)
-                {
-                    ctxM.Remove(sale);
-                }
-                foreach (var sale in products)
-                {
-                    ctxP.Remove(sale);
-                }
-                foreach (var sale in clients)
-                {
-                    ctxC.Remove(sale);
-                }
-                foreach (var sale in sales)
-                {
-                    ctxS.Remove(sale);
-                }
-                
-                context.SaveChanges();
-            }*/
-            
         }
     }
 }

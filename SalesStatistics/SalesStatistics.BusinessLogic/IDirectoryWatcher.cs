@@ -1,10 +1,11 @@
 ﻿using System;
+using SalesStatistics.BusinessLogic.FileManager;
 
 namespace SalesStatistics.BusinessLogic
 {
     public interface IDirectoryWatcher: IDisposable
     {
-        IFileHandler FileHandler { get; }
+        FileHandler FileHandler { get; }
         
         void Start();
         

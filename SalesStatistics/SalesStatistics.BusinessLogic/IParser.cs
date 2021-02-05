@@ -7,6 +7,6 @@ namespace SalesStatistics.BusinessLogic
     {
         IEnumerable<SaleDto> FileParse(string filePath);
         
-        string NameFileParse(string filePath);
+        ManagerDto NameFileParse(string filePath);
     }
 }

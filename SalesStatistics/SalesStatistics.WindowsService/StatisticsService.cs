@@ -31,15 +31,15 @@ namespace SalesStatistics.WindowsService
                 {
                     var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
                     var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
-                    var logPath = ConfigurationManager.AppSettings["logPath"];
+                    
 
                     Log.Logger = new LoggerConfiguration()
+                        .ReadFrom.AppSettings()
                         .MinimumLevel.Information()
-                        .WriteTo.File(logPath)
                         .CreateLogger();
 
-                    IFileHandler fileHandler = new FileHandler(new Parser());
-                    IDirectoryWatcher watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
+                    var fileHandler = new FileHandler(new Parser());
+                    var watcher = new WatcherSourceFileManager(directoryPath, filesFilter, fileHandler);
 
                     _controller = new SalesController(watcher, new UnitOfWork(new SampleContextFactory()));
                     _controller.Start();
