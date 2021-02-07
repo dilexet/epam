@@ -18,7 +18,8 @@
 Пример: Nikolaev_25012021.csм
 
 1-ая строка - Column1,Column2,Column3,Column4,Column5,Column6
-следующие строки: id,date,Surname,Name,ProductName,Cost
+Cледующие строки: id,date,Surname,Name,ProductName,Cost
+
 Пример:
 Column1,Column2,Column3,Column4,Column5,Column6
 1,24.01.2021,Ivanov,Nikita,mi 10 lite,700
