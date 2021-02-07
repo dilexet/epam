@@ -31,7 +31,6 @@ namespace SalesStatistics.WindowsService
                 {
                     var directoryPath = ConfigurationManager.AppSettings["directoryPath"];
                     var filesFilter = ConfigurationManager.AppSettings["filesFilter"];
-                    
 
                     Log.Logger = new LoggerConfiguration()
                         .ReadFrom.AppSettings()
