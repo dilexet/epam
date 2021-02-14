@@ -1,0 +1,54 @@
+﻿@model SalesStatistics.ModelLayer.Models.Sale
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Sales</h4>
+    <hr/>
+    <dl class="dl-horizontal">
+        <dt>
+            Client Name:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Client.Surname) 
+            @Html.DisplayFor(model => model.Client.FirstName)
+        </dd>
+
+        <dt>
+            Product Name:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+        
+        <dt>
+            Cost of Product:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Product.Cost)
+        </dd>
+
+        <dt>
+            Manager Surname:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Manager.Surname)
+        </dd>
+
+        <dt>
+           Purchase date:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

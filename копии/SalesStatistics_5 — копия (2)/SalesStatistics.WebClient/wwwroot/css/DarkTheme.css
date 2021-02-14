@@ -1,0 +1,48 @@
+﻿body
+{
+    background: #000000;
+    color: #F5F5F5;
+}
+
+.header
+{
+    background: #414141;
+    color: #F5F5F5;
+}
+
+section{
+    margin: 25px 25px;
+}
+
+.nav_item
+{
+    color: #F5F5F5;
+    background: #373737;
+}
+
+.nav_item_hav:hover
+{
+    background: #444;
+}
+
+.btn{
+    background: #201468;
+    color: #F5F5F5;
+}
+.btn:hover{
+    background: #331CB5;
+    color: #FFFFFF;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: #F5F5F5;
+}
+
+.jumbotron{
+    background: #171717;
+}
+
+.form-control{
+    background: #747474;
+}
+
