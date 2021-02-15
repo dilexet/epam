@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.ComponentModel.DataAnnotations;
 namespace SalesStatistics.ModelLayer.Models
 {
     public class Sale
@@ -9,6 +9,10 @@ namespace SalesStatistics.ModelLayer.Models
         public int ClientId { get; set; }
         public int ManagerId { get; set; }
         public int ProductId { get; set; }
+        
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Purchase date")]
         public DateTime? Date { get; set; }
 
         public virtual Client Client { get; set; }

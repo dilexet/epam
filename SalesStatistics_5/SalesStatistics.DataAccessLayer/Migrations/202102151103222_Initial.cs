@@ -12,8 +12,8 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        FirstName = c.String(),
-                        Surname = c.String(),
+                        FirstName = c.String(nullable: false, maxLength: 50),
+                        Surname = c.String(nullable: false, maxLength: 50),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -40,7 +40,7 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Surname = c.String(),
+                        Surname = c.String(nullable: false, maxLength: 50),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -49,8 +49,8 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        Cost = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Name = c.String(nullable: false, maxLength: 50),
+                        Cost = c.Decimal(nullable: false, storeType: "money"),
                     })
                 .PrimaryKey(t => t.Id);
             
