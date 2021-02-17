@@ -1,7 +1,5 @@
-﻿using Microsoft.Owin;
-using Owin;
+﻿using Owin;
 
-[assembly: OwinStartupAttribute(typeof(SalesStatistics.WebClient.Startup))]
 namespace SalesStatistics.WebClient
 {
     public partial class Startup

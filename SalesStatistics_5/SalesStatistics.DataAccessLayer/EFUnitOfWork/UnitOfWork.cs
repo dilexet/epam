@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Threading;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.DataAccessLayer.Repository;
-using SalesStatistics.ModelLayer.Models;
 using Serilog;
 
 namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        static readonly object Locker = new object();
-
+     
         private readonly SalesInformationContext _db;
         private IRepository _repository;
         public IRepository Repository => _repository ?? (_repository = new GenericRepository(_db));

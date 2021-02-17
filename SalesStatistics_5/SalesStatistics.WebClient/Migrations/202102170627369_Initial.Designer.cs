@@ -7,13 +7,13 @@ namespace SalesStatistics.WebClient.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class Authorization : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Authorization));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202102141203390_Authorization"; }
+            get { return "202102170627369_Initial"; }
         }
         
         string IMigrationMetadata.Source
