@@ -1,0 +1,14 @@
+﻿@model IDictionary<string, uint>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Diagram</h2>
+@{
+    var myChart = new Chart(width: 600, height: 400)
+        .AddTitle("Product Sales")
+        .AddSeries("Default",
+            xValue: Model.Keys.ToArray(), xField: "Date",
+            yValues: Model.Values.ToArray(), yFields: "Number of goods")
+        .Write();
+}

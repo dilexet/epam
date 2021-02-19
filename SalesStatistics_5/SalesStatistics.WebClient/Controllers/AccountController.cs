@@ -12,6 +12,9 @@ namespace SalesStatistics.WebClient.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
         public AccountController()
         {
         }
@@ -22,7 +25,18 @@ namespace SalesStatistics.WebClient.Controllers
             SignInManager = signInManager;
         }
 
-        private ApplicationUserManager _userManager;
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set 
+            { 
+                _signInManager = value; 
+            }
+        }
+
         public ApplicationUserManager UserManager
         {
             get
@@ -37,23 +51,11 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Account/Login
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
-        }
-
-        private ApplicationSignInManager _signInManager;
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set { _signInManager = value; }
         }
 
         //
@@ -68,8 +70,8 @@ namespace SalesStatistics.WebClient.Controllers
                 return View(model);
             }
 
-            // This doen't count login failures towards lockout only two factor authentication
-            // To enable password failures to trigger lockout, change to shouldLockout: true
+            // Сбои при входе не приводят к блокированию учетной записи
+            // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
@@ -81,26 +83,20 @@ namespace SalesStatistics.WebClient.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 // case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", @"Invalid login attempt.");
+                    ModelState.AddModelError("", @"Неудачная попытка входа.");
                     return View(model);
             }
         }
 
         //
         // GET: /Account/VerifyCode
-        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
-            // Require that the user has already logged in via username/password or external login
+            // Требовать предварительный вход пользователя с помощью имени пользователя и пароля или внешнего имени входа
             if (!await SignInManager.HasBeenVerifiedAsync())
             {
                 return View("Error");
-            }
-            var user = await UserManager.FindByIdAsync(await SignInManager.GetVerifiedUserIdAsync());
-            if (user != null)
-            {
-                ViewBag.Status = "For DEMO purposes the current " + provider + " code is: " + await UserManager.GenerateTwoFactorTokenAsync(user.Id, provider);
             }
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
@@ -117,7 +113,11 @@ namespace SalesStatistics.WebClient.Controllers
                 return View(model);
             }
 
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+            // Приведенный ниже код защищает от атак методом подбора, направленных на двухфакторные коды. 
+            // Если пользователь введет неправильные коды за указанное время, его учетная запись 
+            // будет заблокирована на заданный период. 
+            // Параметры блокирования учетных записей можно настроить в IdentityConfig
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -126,14 +126,13 @@ namespace SalesStatistics.WebClient.Controllers
                     return View("Lockout");
                 // case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", @"Invalid code.");
+                    ModelState.AddModelError("", @"Неправильный код.");
                     return View(model);
             }
         }
 
         //
         // GET: /Account/Register
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -149,26 +148,40 @@ namespace SalesStatistics.WebClient.Controllers
         {
             if (ModelState.IsValid)
             {
+                var users = UserManager.Users.ToList();
+                var flag = users.Count == 0;
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    ViewBag.Link = callbackUrl;
-                    return View("DisplayEmail");
+                    if (flag)
+                    {
+                        await UserManager.AddToRoleAsync(user.Id, "Admin");
+                    }
+                    else
+                    {
+                        await UserManager.AddToRoleAsync(user.Id, "User");
+                    }
+                   
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    
+                    // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
+                    // Отправка сообщения электронной почты с этой ссылкой
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
+
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
+            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
             return View(model);
         }
 
         //
         // GET: /Account/ConfirmEmail
-        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -182,7 +195,6 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Account/ForgotPassword
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
@@ -201,24 +213,24 @@ namespace SalesStatistics.WebClient.Controllers
                 var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
+                    // Не показывать, что пользователь не существует или не подтвержден
                     return View("ForgotPasswordConfirmation");
                 }
 
-                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                ViewBag.Link = callbackUrl;
-                return View("ForgotPasswordConfirmation");
+                // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
+                // Отправка сообщения электронной почты с этой ссылкой
+                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // await UserManager.SendEmailAsync(user.Id, "Сброс пароля", "Сбросьте ваш пароль, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
+                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
-            // If we got this far, something failed, redisplay form
+            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
             return View(model);
         }
 
         //
         // GET: /Account/ForgotPasswordConfirmation
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
@@ -227,7 +239,6 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Account/ResetPassword
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
@@ -248,7 +259,7 @@ namespace SalesStatistics.WebClient.Controllers
             var user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
+                // Не показывать, что пользователь не существует
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
@@ -262,7 +273,6 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Account/ResetPasswordConfirmation
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
@@ -276,13 +286,12 @@ namespace SalesStatistics.WebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            // Request a redirect to the external login provider
+            // Запрос перенаправления к внешнему поставщику входа
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
         //
         // GET: /Account/SendCode
-        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
@@ -308,7 +317,7 @@ namespace SalesStatistics.WebClient.Controllers
                 return View();
             }
 
-            // Generate the token and send it
+            // Создание и отправка маркера
             if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
             {
                 return View("Error");
@@ -318,7 +327,6 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
-        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -328,7 +336,7 @@ namespace SalesStatistics.WebClient.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Sign in the user with this external login provider if the user already has a login
+            // Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
             switch (result)
             {
@@ -337,10 +345,10 @@ namespace SalesStatistics.WebClient.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 // case SignInStatus.Failure:
                 default:
-                    // If the user does not have an account, then prompt the user to create an account
+                    // Если у пользователя нет учетной записи, то ему предлагается создать ее
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
@@ -361,7 +369,7 @@ namespace SalesStatistics.WebClient.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get the information about the user from the external login provider
+                // Получение сведений о пользователе от внешнего поставщика входа
                 var info = await AuthenticationManager.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
@@ -391,21 +399,40 @@ namespace SalesStatistics.WebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 
         //
         // GET: /Account/ExternalLoginFailure
-        [HttpGet]
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
 
-        #region Helpers
-        // Used for XSRF protection when adding external logins
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_signInManager != null)
+                {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #region Вспомогательные приложения
+        // Используется для защиты от XSRF-атак при добавлении внешних имен входа
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager

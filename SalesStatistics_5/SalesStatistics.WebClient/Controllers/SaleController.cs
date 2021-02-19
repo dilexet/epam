@@ -17,8 +17,12 @@ namespace SalesStatistics.WebClient.Controllers
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork(new SampleContextFactory());
 
-        public ActionResult Index(int? page)
+        [Authorize]
+        public ActionResult Index(string sortOrder, int? page)
         {
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "clientSurname" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            
             var items = _unitOfWork.Repository.Get<Sale>()
                 .ToList()
                 .Select(x => new Sale()
@@ -33,12 +37,28 @@ namespace SalesStatistics.WebClient.Controllers
                     Product = x.Product
                 });
             IEnumerable<Sale> sales = items.ToList();
-
+            switch (sortOrder)
+            {
+                case "clientSurname":
+                    sales = sales.OrderBy(s => s.Client.Surname);
+                    break;
+                case "Date":
+                    sales = sales.OrderBy(s => s.Date);
+                    break;
+                case "date_desc":
+                    sales = sales.OrderByDescending(s => s.Date);
+                    break;
+                default:
+                    sales = sales.OrderBy(s => s.Manager.Surname);
+                    break;
+            }
+            
             int pageSize = 3;
             int pageNumber = page ?? 1;
             return View(sales.ToPagedList(pageNumber, pageSize));
         }
         
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -68,6 +88,7 @@ namespace SalesStatistics.WebClient.Controllers
         
         // GET: Sale/Edit
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -118,6 +139,7 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         // GET: Sale/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -147,6 +169,7 @@ namespace SalesStatistics.WebClient.Controllers
         
         
         // GET: Sale/Delete
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)

@@ -12,16 +12,31 @@ namespace SalesStatistics.WebClient.Controllers
     [Authorize]
     public class ManageController : Controller
     {
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
         public ManageController()
         {
         }
 
-        public ManageController(ApplicationUserManager userManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
+            SignInManager = signInManager;
         }
 
-        private ApplicationUserManager _userManager;
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set 
+            { 
+                _signInManager = value; 
+            }
+        }
+
         public ApplicationUserManager UserManager
         {
             get
@@ -35,17 +50,16 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         //
-        // GET: /Account/Index
-        [HttpGet]
+        // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two factor provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "The phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Ваш пароль изменен."
+                : message == ManageMessageId.SetPasswordSuccess ? "Пароль задан."
+                : message == ManageMessageId.SetTwoFactorSuccess ? "Настроен поставщик двухфакторной проверки подлинности."
+                : message == ManageMessageId.Error ? "Произошла ошибка."
+                : message == ManageMessageId.AddPhoneSuccess ? "Ваш номер телефона добавлен."
+                : message == ManageMessageId.RemovePhoneSuccess ? "Ваш номер телефона удален."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -61,30 +75,19 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         //
-        // GET: /Account/RemoveLogin
-        // [HttpGet]
-        // public ActionResult RemoveLogin()
-        // {
-        //     var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
-        //     ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
-        //     return View(linkedAccounts);
-        // }
-
-        //
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
             ManageMessageId? message;
-            var userId = User.Identity.GetUserId();
-            var result = await UserManager.RemoveLoginAsync(userId, new UserLoginInfo(loginProvider, providerKey));
+            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(userId);
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
-                    await SignInAsync(user, isPersistent: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 message = ManageMessageId.RemoveLoginSuccess;
             }
@@ -96,15 +99,14 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         //
-        // GET: /Account/AddPhoneNumber
-        [HttpGet]
+        // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
             return View();
         }
 
         //
-        // POST: /Account/AddPhoneNumber
+        // POST: /Manage/AddPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
@@ -113,14 +115,14 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return View(model);
             }
-            // Generate the token and send it
+            // Создание и отправка маркера
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
             if (UserManager.SmsService != null)
             {
                 var message = new IdentityMessage
                 {
                     Destination = model.Number,
-                    Body = "Your security code is: " + code
+                    Body = "Ваш код безопасности: " + code
                 };
                 await UserManager.SmsService.SendAsync(message);
             }
@@ -128,72 +130,46 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         //
-        // POST: /Manage/RememberBrowser
+        // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RememberBrowser()
+        public async Task<ActionResult> EnableTwoFactorAuthentication()
         {
-            var rememberBrowserIdentity = AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(User.Identity.GetUserId());
-            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, rememberBrowserIdentity);
-            return RedirectToAction("Index", "Manage");
-        }
-
-        //
-        // POST: /Manage/ForgetBrowser
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ForgetBrowser()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
-            return RedirectToAction("Index", "Manage");
-        }
-
-        //
-        // POST: /Manage/EnableTFA
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EnableTfa()
-        {
-            var userId = User.Identity.GetUserId();
-            await UserManager.SetTwoFactorEnabledAsync(userId, true);
-            var user = await UserManager.FindByIdAsync(userId);
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
-                await SignInAsync(user, isPersistent: false);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
             return RedirectToAction("Index", "Manage");
         }
 
         //
-        // POST: /Manage/DisableTFA
+        // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DisableTfa()
+        public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
-            var userId = User.Identity.GetUserId();
-            await UserManager.SetTwoFactorEnabledAsync(userId, false);
-            var user = await UserManager.FindByIdAsync(userId);
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
-                await SignInAsync(user, isPersistent: false);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
             return RedirectToAction("Index", "Manage");
         }
 
         //
-        // GET: /Account/VerifyPhoneNumber
-        [HttpGet]
+        // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
-            // This code allows you exercise the flow without actually sending codes
-            // For production use please register a SMS provider in IdentityConfig and generate a code here.
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
-            ViewBag.Status = "For DEMO purposes only, the current code is " + code;
+            /*var code = */await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
+            // Отправка SMS через поставщик SMS для проверки номера телефона
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
 
         //
-        // POST: /Account/VerifyPhoneNumber
+        // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
@@ -202,51 +178,49 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return View(model);
             }
-            var userId = User.Identity.GetUserId();
-            var result = await UserManager.ChangePhoneNumberAsync(userId, model.PhoneNumber, model.Code);
+            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(userId);
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
-                    await SignInAsync(user, isPersistent: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
             }
-            // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", @"Failed to verify phone");
+            // Это сообщение означает наличие ошибки; повторное отображение формы
+            ModelState.AddModelError("", @"Не удалось проверить телефон");
             return View(model);
         }
 
         //
-        // GET: /Account/RemovePhoneNumber
-        [HttpGet]
+        // POST: /Manage/RemovePhoneNumber
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePhoneNumber()
         {
-            var userId = User.Identity.GetUserId();
-            var result = await UserManager.SetPhoneNumberAsync(userId, null);
+            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
             if (!result.Succeeded)
             {
                 return RedirectToAction("Index", new { Message = ManageMessageId.Error });
             }
-            var user = await UserManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
-                await SignInAsync(user, isPersistent: false);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
 
         //
         // GET: /Manage/ChangePassword
-        [HttpGet]
         public ActionResult ChangePassword()
         {
             return View();
         }
 
         //
-        // POST: /Account/Manage
+        // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -255,14 +229,13 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return View(model);
             }
-            var userId = User.Identity.GetUserId();
-            var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(userId);
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
-                    await SignInAsync(user, isPersistent: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
@@ -272,7 +245,6 @@ namespace SalesStatistics.WebClient.Controllers
 
         //
         // GET: /Manage/SetPassword
-        [HttpGet]
         public ActionResult SetPassword()
         {
             return View();
@@ -286,39 +258,37 @@ namespace SalesStatistics.WebClient.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = User.Identity.GetUserId();
-                var result = await UserManager.AddPasswordAsync(userId, model.NewPassword);
+                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
                 if (result.Succeeded)
                 {
-                    var user = await UserManager.FindByIdAsync(userId);
+                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     if (user != null)
                     {
-                        await SignInAsync(user, isPersistent: false);
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     }
                     return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
+            // Это сообщение означает наличие ошибки; повторное отображение формы
             return View(model);
         }
 
         //
-        // GET: /Account/Manage
+        // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
+                message == ManageMessageId.RemoveLoginSuccess ? "Внешнее имя входа удалено."
+                : message == ManageMessageId.Error ? "Произошла ошибка."
                 : "";
-            var userId = User.Identity.GetUserId();
-            var user = await UserManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(userId);
+            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
@@ -334,7 +304,7 @@ namespace SalesStatistics.WebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
         {
-            // Request a redirect to the external login provider to link a login for the current user
+            // Запрос перенаправления к внешнему поставщику входа для связывания имени входа текущего пользователя
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
 
@@ -342,18 +312,28 @@ namespace SalesStatistics.WebClient.Controllers
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
-            var userId = User.Identity.GetUserId();
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, userId);
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {
                 return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
             }
-            var result = await UserManager.AddLoginAsync(userId, loginInfo.Login);
+            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
-        #region Helpers
-        // Used for XSRF protection when adding external logins
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _userManager != null)
+            {
+                _userManager.Dispose();
+                _userManager = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+#region Вспомогательные приложения
+        // Используется для защиты от XSRF-атак при добавлении внешних имен входа
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
@@ -362,12 +342,6 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }
-
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, await user.GenerateUserIdentityAsync(UserManager));
         }
 
         private void AddErrors(IdentityResult result)
@@ -409,6 +383,6 @@ namespace SalesStatistics.WebClient.Controllers
             Error
         }
 
-        #endregion
+#endregion
     }
 }

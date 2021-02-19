@@ -7,7 +7,6 @@ namespace SalesStatistics.DataAccessLayer.EFUnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-     
         private readonly SalesInformationContext _db;
         private IRepository _repository;
         public IRepository Repository => _repository ?? (_repository = new GenericRepository(_db));
