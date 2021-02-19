@@ -107,6 +107,7 @@ namespace SalesStatistics.WebClient.Controllers
         // POST: Sale/Edit
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult EditPost(Sale sale)
         {
             if (sale == null)
@@ -148,6 +149,7 @@ namespace SalesStatistics.WebClient.Controllers
         // POST: Sale/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Sale sale)
         {
             try
@@ -191,6 +193,7 @@ namespace SalesStatistics.WebClient.Controllers
         // POST: Sale/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             try

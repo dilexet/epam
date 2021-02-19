@@ -29,17 +29,20 @@ namespace SalesStatistics.WebClient.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View(RoleManager.Roles.ToList());
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create([Required]string name)
         {
             if (ModelState.IsValid)
@@ -60,6 +63,7 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
             AppRole role = await RoleManager.FindByIdAsync(id);
@@ -89,6 +93,7 @@ namespace SalesStatistics.WebClient.Controllers
             }
         }
         
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
             AppRole role = await RoleManager.FindByIdAsync(id);
@@ -108,6 +113,7 @@ namespace SalesStatistics.WebClient.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(RoleModificationModel model)
         {
             IdentityResult result;
