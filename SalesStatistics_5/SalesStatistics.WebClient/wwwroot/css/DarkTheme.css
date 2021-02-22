@@ -46,3 +46,7 @@ th, td, p{
     color: #ffffff;
     background: #000000;
 }
+
+#SearchStringClient, #SearchStringProduct{
+    color: #0f0f0f;
+}

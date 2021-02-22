@@ -18,11 +18,11 @@ namespace SalesStatistics.WebClient.Controllers
         private readonly UnitOfWork _unitOfWork = new UnitOfWork(new SampleContextFactory());
 
         [Authorize]
-        public ActionResult Index(string sortOrder, int? page)
+        public ActionResult Index(string sortOrder, string searchStringClient,string searchStringProduct, int? page)
         {
             ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "clientSurname" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
-            
+
             var items = _unitOfWork.Repository.Get<Sale>()
                 .ToList()
                 .Select(x => new Sale()
@@ -36,6 +36,16 @@ namespace SalesStatistics.WebClient.Controllers
                     Manager = x.Manager,
                     Product = x.Product
                 });
+            if (!string.IsNullOrEmpty(searchStringClient))
+            {
+                items = items.Where(s => s.Client.Surname.ToUpper().Contains(searchStringClient.ToUpper()) ||
+                                         s.Client.FirstName.ToUpper().Contains(searchStringClient.ToUpper()));
+            }
+
+            if (!string.IsNullOrEmpty(searchStringProduct))
+            {
+                items = items.Where(s => s.Product.Name.ToUpper().Contains(searchStringProduct.ToUpper()));
+            }
             IEnumerable<Sale> sales = items.ToList();
             switch (sortOrder)
             {
@@ -52,12 +62,12 @@ namespace SalesStatistics.WebClient.Controllers
                     sales = sales.OrderBy(s => s.Manager.Surname);
                     break;
             }
-            
+
             int pageSize = 3;
             int pageNumber = page ?? 1;
             return View(sales.ToPagedList(pageNumber, pageSize));
         }
-        
+
         [Authorize]
         public ActionResult Details(int? id)
         {
@@ -85,7 +95,7 @@ namespace SalesStatistics.WebClient.Controllers
 
             return View(sale);
         }
-        
+
         // GET: Sale/Edit
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -101,6 +111,7 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(item);
         }
 
@@ -132,7 +143,8 @@ namespace SalesStatistics.WebClient.Controllers
                 catch (RetryLimitExceededException e)
                 {
                     Log.Error("{Message}", e.ToString());
-                    ModelState.AddModelError("", @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                    ModelState.AddModelError("",
+                        @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
                 }
             }
 
@@ -145,7 +157,7 @@ namespace SalesStatistics.WebClient.Controllers
         {
             return View();
         }
-        
+
         // POST: Sale/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -164,12 +176,14 @@ namespace SalesStatistics.WebClient.Controllers
             catch (DataException e)
             {
                 Log.Error("{Message}", e.ToString());
-                ModelState.AddModelError("", @"Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                ModelState.AddModelError("",
+                    @"Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
+
             return View(sale);
         }
-        
-        
+
+
         // GET: Sale/Delete
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id, bool? saveChangesError = false)
@@ -178,15 +192,19 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             if (saveChangesError.GetValueOrDefault())
             {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+                ViewBag.ErrorMessage =
+                    "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
+
             Sale sale = _unitOfWork.Repository.Find<Sale>(id);
             if (sale == null)
             {
                 return HttpNotFound();
             }
+
             return View(sale);
         }
 
@@ -204,12 +222,13 @@ namespace SalesStatistics.WebClient.Controllers
             }
             catch (RetryLimitExceededException e)
             {
-                Log.Error("{Message}",e.ToString());
-                return RedirectToAction("Delete", new {id, saveChangesError = true });
+                Log.Error("{Message}", e.ToString());
+                return RedirectToAction("Delete", new {id, saveChangesError = true});
             }
+
             return RedirectToAction("Index");
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             _unitOfWork.Dispose();

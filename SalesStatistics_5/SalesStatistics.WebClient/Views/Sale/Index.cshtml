@@ -10,12 +10,24 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
+<div>
+    @using (Html.BeginForm())
+    {
+        <div>
+            <p>Find by client: @Html.TextBox("SearchStringClient")</p>
+            <p>Find by product: @Html.TextBox("SearchStringProduct")</p>
+            <p><input class="btn btn-default" type="submit" value="Search"/></p>
+        </div>
+    }
+</div>
+
+
 <div class="row">
     <div class="col-md-8">
         <table class="table table-bordered text-center">
             <tr>
                 <th class="text-center">
-                    @Html.ActionLink("Client surname", "Index", new { sortOrder = ViewBag.NameSortParm })
+                    @Html.ActionLink("Client surname", "Index", new {sortOrder = ViewBag.NameSortParm})
                 </th>
                 <th class="text-center">
                     Client name
@@ -27,7 +39,7 @@
                     Cost
                 </th>
                 <th class="text-center">
-                    @Html.ActionLink("Purchase date", "Index", new { sortOrder = ViewBag.DateSortParm })
+                    @Html.ActionLink("Purchase date", "Index", new {sortOrder = ViewBag.DateSortParm})
                 </th>
                 <th></th>
             </tr>
@@ -59,7 +71,7 @@
             }
         </table>
         <br/>
-       <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
+        <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</p>
         @Html.PagedListPager(Model, page => Url.Action("Index",
             new {page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter}))
     </div>
