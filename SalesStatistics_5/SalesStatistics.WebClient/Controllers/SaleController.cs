@@ -5,67 +5,83 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using PagedList;
 using SalesStatistics.DataAccessLayer.EFUnitOfWork;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
 using SalesStatistics.ModelLayer.Models;
+using SalesStatistics.WebClient.Filter;
 using Serilog;
 
 namespace SalesStatistics.WebClient.Controllers
 {
     public class SaleController : Controller
     {
-        private readonly UnitOfWork _unitOfWork = new UnitOfWork(new SampleContextFactory());
-
-        [Authorize]
-        public ActionResult Index(string sortOrder, string searchStringClient,string searchStringProduct, int? page)
+       [Authorize]
+        public ActionResult Index(string sortOrder, SalesFilterModel salesFilterModel)
         {
             ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "clientSurname" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            IEnumerable<Sale> sales;
+            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+            {
 
-            var items = _unitOfWork.Repository.Get<Sale>()
-                .ToList()
-                .Select(x => new Sale()
+
+                var items = unitOfWork.Repository.Get<Sale>()
+                    .ToList()
+                    .Select(x => new Sale()
+                    {
+                        Id = x.Id,
+                        ManagerId = x.Id,
+                        ClientId = x.ClientId,
+                        ProductId = x.ProductId,
+                        Date = x.Date,
+                        Client = x.Client,
+                        Manager = x.Manager,
+                        Product = x.Product
+                    });
+
+                if (!string.IsNullOrEmpty(salesFilterModel.ClientName))
                 {
-                    Id = x.Id,
-                    ManagerId = x.Id,
-                    ClientId = x.ClientId,
-                    ProductId = x.ProductId,
-                    Date = x.Date,
-                    Client = x.Client,
-                    Manager = x.Manager,
-                    Product = x.Product
-                });
-            if (!string.IsNullOrEmpty(searchStringClient))
-            {
-                items = items.Where(s => s.Client.Surname.ToUpper().Contains(searchStringClient.ToUpper()) ||
-                                         s.Client.FirstName.ToUpper().Contains(searchStringClient.ToUpper()));
+                    items = items.Where(s =>
+                        s.Client.Surname.ToUpper().Contains(salesFilterModel.ClientName.ToUpper()) ||
+                        s.Client.FirstName.ToUpper().Contains(salesFilterModel.ClientName.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(salesFilterModel.ProductName))
+                {
+                    items = items.Where(s => s.Product.Name.ToUpper().Contains(salesFilterModel.ProductName.ToUpper()));
+                }
+
+                if (salesFilterModel.DateStart != null && salesFilterModel.DateEnd != null)
+                {
+                    items = items.Where(s =>
+                        s.Date >= salesFilterModel.DateStart && s.Date <= salesFilterModel.DateEnd);
+                }
+
+                sales = items.ToList();
+
+
+                switch (sortOrder)
+                {
+                    case "clientSurname":
+                        sales = sales.OrderBy(s => s.Client.Surname);
+                        break;
+                    case "Date":
+                        sales = sales.OrderBy(s => s.Date);
+                        break;
+                    case "date_desc":
+                        sales = sales.OrderByDescending(s => s.Date);
+                        break;
+                    default:
+                        sales = sales.OrderBy(s => s.Manager.Surname);
+                        break;
+                }
             }
 
-            if (!string.IsNullOrEmpty(searchStringProduct))
+            if (!Request.IsAjaxRequest())
             {
-                items = items.Where(s => s.Product.Name.ToUpper().Contains(searchStringProduct.ToUpper()));
+                return View(sales.ToList());
             }
-            IEnumerable<Sale> sales = items.ToList();
-            switch (sortOrder)
-            {
-                case "clientSurname":
-                    sales = sales.OrderBy(s => s.Client.Surname);
-                    break;
-                case "Date":
-                    sales = sales.OrderBy(s => s.Date);
-                    break;
-                case "date_desc":
-                    sales = sales.OrderByDescending(s => s.Date);
-                    break;
-                default:
-                    sales = sales.OrderBy(s => s.Manager.Surname);
-                    break;
-            }
-
-            int pageSize = 3;
-            int pageNumber = page ?? 1;
-            return View(sales.ToPagedList(pageNumber, pageSize));
+            return PartialView("IndexPage",sales.ToList());
         }
 
         [Authorize]
@@ -76,23 +92,27 @@ namespace SalesStatistics.WebClient.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var items = _unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
-
-            if (items == null)
+            Sale sale;
+            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
             {
-                return HttpNotFound();
+                var item = unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
+
+
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
+
+                sale = new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                };
+
             }
-
-            var sale = new Sale()
-            {
-                Id = items.Id,
-                Client = items.Client,
-                Manager = items.Manager,
-                Product = items.Product,
-                Date = items.Date
-            };
-
-
             return View(sale);
         }
 
@@ -106,13 +126,25 @@ namespace SalesStatistics.WebClient.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var item = _unitOfWork.Repository.Find<Sale>(id);
-            if (item == null)
+            Sale sale;
+            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
             {
-                return HttpNotFound();
-            }
+                var item = unitOfWork.Repository.Find<Sale>(id);
 
-            return View(item);
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
+                sale = new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                };
+            }
+            return View(sale);
         }
 
         // POST: Sale/Edit
@@ -126,28 +158,31 @@ namespace SalesStatistics.WebClient.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var saleToUpdate = _unitOfWork.Repository.Find<Sale>(sale.Id);
-            if (TryUpdateModel(saleToUpdate))
+            Sale saleToUpdate;
+            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
             {
-                try
+                saleToUpdate = unitOfWork.Repository.Find<Sale>(sale.Id);
+                if (TryUpdateModel(saleToUpdate))
                 {
-                    saleToUpdate.Client = sale.Client;
-                    saleToUpdate.Product = sale.Product;
-                    saleToUpdate.Date = sale.Date;
+                    try
+                    {
+                        saleToUpdate.Client = sale.Client;
+                        saleToUpdate.Product = sale.Product;
+                        saleToUpdate.Date = sale.Date;
 
-                    _unitOfWork.Repository.Context.Entry(saleToUpdate).State = EntityState.Modified;
-                    _unitOfWork.SaveChanges();
+                        unitOfWork.Repository.Context.Entry(saleToUpdate).State = EntityState.Modified;
+                        unitOfWork.SaveChanges();
 
-                    return RedirectToAction("Index");
-                }
-                catch (RetryLimitExceededException e)
-                {
-                    Log.Error("{Message}", e.ToString());
-                    ModelState.AddModelError("",
-                        @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                        return RedirectToAction("Index");
+                    }
+                    catch (RetryLimitExceededException e)
+                    {
+                        Log.Error("{Message}", e.ToString());
+                        ModelState.AddModelError("",
+                            @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                    }
                 }
             }
-
             return View(saleToUpdate);
         }
 
@@ -168,8 +203,11 @@ namespace SalesStatistics.WebClient.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.Repository.Add(sale);
-                    _unitOfWork.SaveChanges();
+                    using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+                    {
+                        unitOfWork.Repository.Add(sale);
+                        unitOfWork.SaveChanges();
+                    }
                     return RedirectToAction("Index");
                 }
             }
@@ -199,12 +237,23 @@ namespace SalesStatistics.WebClient.Controllers
                     "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
 
-            Sale sale = _unitOfWork.Repository.Find<Sale>(id);
-            if (sale == null)
+            Sale sale;
+            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
             {
-                return HttpNotFound();
+                var item = unitOfWork.Repository.Find<Sale>(id);
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
+                sale = new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                };
             }
-
             return View(sale);
         }
 
@@ -216,9 +265,12 @@ namespace SalesStatistics.WebClient.Controllers
         {
             try
             {
-                Sale student = _unitOfWork.Repository.Find<Sale>(id);
-                _unitOfWork.Repository.Remove(student);
-                _unitOfWork.SaveChanges();
+                using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+                {
+                    Sale student = unitOfWork.Repository.Find<Sale>(id);
+                    unitOfWork.Repository.Remove(student);
+                    unitOfWork.SaveChanges();
+                }
             }
             catch (RetryLimitExceededException e)
             {
@@ -227,12 +279,6 @@ namespace SalesStatistics.WebClient.Controllers
             }
 
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _unitOfWork.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

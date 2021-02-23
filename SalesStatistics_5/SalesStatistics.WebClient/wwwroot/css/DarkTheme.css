@@ -47,6 +47,6 @@ th, td, p{
     background: #000000;
 }
 
-#SearchStringClient, #SearchStringProduct{
+#ClientName, #ProductName, #DateStart, #DateEnd{
     color: #0f0f0f;
 }
