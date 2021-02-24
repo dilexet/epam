@@ -20,7 +20,7 @@ namespace SalesStatistics.WebClient.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("Default_3", throwIfV1Schema: false)
+            : base("Default_9", throwIfV1Schema: false)
         {
         }
 

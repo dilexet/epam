@@ -1,5 +1,6 @@
 ﻿namespace SalesStatistics.DataAccessLayer.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class Initial : DbMigration
@@ -11,8 +12,8 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        FirstName = c.String(nullable: false, maxLength: 50),
-                        Surname = c.String(nullable: false, maxLength: 50),
+                        FirstName = c.String(),
+                        Surname = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -39,7 +40,7 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Surname = c.String(nullable: false, maxLength: 50),
+                        Surname = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -48,8 +49,8 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false, maxLength: 50),
-                        Cost = c.Decimal(nullable: false, storeType: "money"),
+                        Name = c.String(),
+                        Cost = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => t.Id);
             

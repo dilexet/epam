@@ -7,8 +7,9 @@ using System.Net;
 using System.Web.Mvc;
 using SalesStatistics.DataAccessLayer.EFUnitOfWork;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
-using SalesStatistics.ModelLayer.Models;
+using SalesStatistics.DataAccessLayer.Models;
 using SalesStatistics.WebClient.Filter;
+using SalesStatistics.WebClient.Services;
 using Serilog;
 
 namespace SalesStatistics.WebClient.Controllers
@@ -23,8 +24,6 @@ namespace SalesStatistics.WebClient.Controllers
             IEnumerable<Sale> sales;
             using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
             {
-
-
                 var items = unitOfWork.Repository.Get<Sale>()
                     .ToList()
                     .Select(x => new Sale()
@@ -77,11 +76,13 @@ namespace SalesStatistics.WebClient.Controllers
                 }
             }
 
+            MapperConfig mapperConfig = new MapperConfig();
+            var salesView = mapperConfig.MapConfig(sales);
             if (!Request.IsAjaxRequest())
             {
-                return View(sales.ToList());
+                return View(salesView.ToList());
             }
-            return PartialView("IndexPage",sales.ToList());
+            return PartialView("IndexPage",salesView.ToList());
         }
 
         [Authorize]
@@ -113,7 +114,9 @@ namespace SalesStatistics.WebClient.Controllers
                 };
 
             }
-            return View(sale);
+            MapperConfig mapperConfig = new MapperConfig();
+            var saleView = mapperConfig.MapConfig(sale);
+            return View(saleView);
         }
 
         // GET: Sale/Edit
@@ -144,7 +147,9 @@ namespace SalesStatistics.WebClient.Controllers
                     Date = item.Date
                 };
             }
-            return View(sale);
+            MapperConfig mapperConfig = new MapperConfig();
+            var saleView = mapperConfig.MapConfig(sale);
+            return View(saleView);
         }
 
         // POST: Sale/Edit
@@ -183,7 +188,9 @@ namespace SalesStatistics.WebClient.Controllers
                     }
                 }
             }
-            return View(saleToUpdate);
+            MapperConfig mapperConfig = new MapperConfig();
+            var saleView = mapperConfig.MapConfig(saleToUpdate);
+            return View(saleView);
         }
 
         // GET: Sale/Create
@@ -218,7 +225,9 @@ namespace SalesStatistics.WebClient.Controllers
                     @"Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
-            return View(sale);
+            MapperConfig mapperConfig = new MapperConfig();
+            var saleView = mapperConfig.MapConfig(sale);
+            return View(saleView);
         }
 
 
@@ -254,7 +263,9 @@ namespace SalesStatistics.WebClient.Controllers
                     Date = item.Date
                 };
             }
-            return View(sale);
+            MapperConfig mapperConfig = new MapperConfig();
+            var saleView = mapperConfig.MapConfig(sale);
+            return View(saleView);
         }
 
         // POST: Sale/Delete

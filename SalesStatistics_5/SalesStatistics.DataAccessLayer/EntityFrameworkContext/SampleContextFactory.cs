@@ -6,7 +6,7 @@ namespace SalesStatistics.DataAccessLayer.EntityFrameworkContext
     {
         public SalesInformationContext Create()
         {
-            return new SalesInformationContext("Sales");
+            return new SalesInformationContext("Sales3");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using SalesStatistics.ModelLayer.Models;
+using SalesStatistics.DataAccessLayer.Models;
 
 namespace SalesStatistics.DataAccessLayer.EntityFrameworkContext
 {
