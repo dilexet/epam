@@ -1,12 +1,8 @@
-﻿
-using System;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
+﻿using System.Data.Entity.Migrations;
 
 namespace SalesStatistics.DataAccessLayer.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<SalesStatistics.DataAccessLayer.EntityFrameworkContext.SalesInformationContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<EntityFrameworkContext.SalesInformationContext>
     {
         public Configuration()
         {

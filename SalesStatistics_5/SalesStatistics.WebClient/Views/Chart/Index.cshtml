@@ -6,15 +6,14 @@
     <script src="../../Scripts/Chart.min.js"></script>
 </head>  
 <body>  
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="diagrams" width="400" height="400"></canvas>
     <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx = document.getElementById('diagrams').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: @Html.Raw(Json.Encode(Model)),
             datasets: [{
-                label: '# of Votes',
                 data: @Html.Raw(Json.Encode(ViewBag.Counts)),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
