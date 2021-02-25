@@ -19,6 +19,7 @@ namespace SalesStatistics.WebClient.Controllers
        [Authorize]
         public ActionResult Index(string sortOrder, SalesFilterModel salesFilterModel, int? page)
         {
+            Log.Information("test");
             ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "clientSurname" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             IEnumerable<Sale> sales;
