@@ -27,15 +27,21 @@
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("User") || User.IsInRole("Admin"))
                     {
-                        <li>@Html.ActionLink("Sale", "Index", "Sale")</li>
+                        <li>
+                            @Html.ActionLink("Sale", "Index", "Sale", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <li>@Html.ActionLink("Role", "Index", "Role")</li>
+                        <li>
+                            @Html.ActionLink("Role", "Index", "Role", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
                     }
                     @if (User.IsInRole("User") || User.IsInRole("Admin"))
                     {
-                        <li>@Html.ActionLink("Chart", "Index", "Chart")</li>
+                        <li>
+                            @Html.ActionLink("Chart", "Index", "Chart", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
                     }
 
                 </ul>

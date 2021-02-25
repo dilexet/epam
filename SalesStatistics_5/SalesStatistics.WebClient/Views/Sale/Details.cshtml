@@ -14,7 +14,7 @@
             Client Name:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Client.Surname) 
+            @Html.DisplayFor(model => model.Client.Surname)
             @Html.DisplayFor(model => model.Client.FirstName)
         </dd>
 
@@ -24,7 +24,7 @@
         <dd>
             @Html.DisplayFor(model => model.Product.Name)
         </dd>
-        
+
         <dt>
             Cost of Product:
         </dt>
@@ -40,15 +40,15 @@
         </dd>
 
         <dt>
-           Purchase date:
+            Purchase date:
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Date)
         </dd>
-        
+
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}, new {@class = "btn"}) |
     @Html.ActionLink("Back to List", "Index")
 </p>
