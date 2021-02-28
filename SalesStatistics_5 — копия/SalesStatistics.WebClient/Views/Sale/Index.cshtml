@@ -28,8 +28,10 @@
     </p>
 </div>
 
+<div class="row" id="table-container">
+    @Html.Partial("_Table", Model)
+</div>
 
-@Html.Partial("_Table", Model)
 
 
 @section scripts {
@@ -38,6 +40,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     
     <script type="text/javascript">
+    
     $(document).ready(function () {
         
         $('#clients-dropdown-list').change(function (){
@@ -45,16 +48,6 @@
         });
         updateSalesTable();
     });
-    
-    function fromDateChanged()
-    {
-        updateSalesTable();
-    }
-        
-    function toDateChanged()
-    {
-        updateSalesTable();
-    }
     
     function getFilterParameters()
     {
@@ -65,17 +58,14 @@
             };
     }
     
-    
     function updateSalesTable() { 
         const filter = getFilterParameters();
-        console.log("Dates: " + filter.DateStart + " " + filter.DateEnd);
         $.ajax({
             type: 'GET',
             url: '@Url.Action("UpdateTable")',
             data: filter,
-           
             success: function (data) {
-                $('#sales-table-container').html(data);
+                $('#table-container #tableContent').html(data);
                 
             },
                 error: function (jQXHR, textStatus, errorThrown){
