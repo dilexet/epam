@@ -17,15 +17,9 @@ namespace SalesStatistics.WebClient.Controllers
 {
     public class RoleController : Controller
     {
-        private ApplicationUserManager UserManager
-        {
-            get { return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-        }
+        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-        private AppRoleManager RoleManager
-        {
-            get { return HttpContext.GetOwinContext().GetUserManager<AppRoleManager>(); }
-        }
+        private AppRoleManager RoleManager => HttpContext.GetOwinContext().GetUserManager<AppRoleManager>();
 
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
@@ -52,10 +46,7 @@ namespace SalesStatistics.WebClient.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    AddErrorsFromResult(result);
-                }
+                AddErrorsFromResult(result);
             }
 
             return View(name);
@@ -73,15 +64,9 @@ namespace SalesStatistics.WebClient.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    return View("Error");
-                }
-            }
-            else
-            {
                 return View("Error");
             }
+            return View("Error");
         }
 
         private void AddErrorsFromResult(IdentityResult result)

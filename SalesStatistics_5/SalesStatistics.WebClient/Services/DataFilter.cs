@@ -2,13 +2,12 @@
 using System.Linq;
 using SalesStatistics.DataAccessLayer.Models;
 using SalesStatistics.WebClient.Models.Filter;
-using SalesStatistics.WebClient.Models.ViewModels;
 
 namespace SalesStatistics.WebClient.Services
 {
     public static class DataFilter
     {
-        public static IEnumerable<SaleViewModel> Filter(SalesFilterModel salesFilterModel, IEnumerable<Sale> sales)
+        public static IEnumerable<Sale> Filter(SalesFilterModel salesFilterModel, IEnumerable<Sale> sales)
         {
             if (!string.IsNullOrEmpty(salesFilterModel.ClientName)) 
             {
@@ -27,10 +26,8 @@ namespace SalesStatistics.WebClient.Services
                 sales = sales.Where(s =>
                     s.Date >= salesFilterModel.DateStart && s.Date <= salesFilterModel.DateEnd);
             }
-            MapperConfig mapperConfig = new MapperConfig();
-            var salesView = mapperConfig.MapConfig(sales);
             
-            return salesView;
+            return sales.ToList();
         }
     }
 }

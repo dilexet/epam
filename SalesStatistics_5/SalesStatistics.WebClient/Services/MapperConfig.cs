@@ -5,7 +5,7 @@ using SalesStatistics.WebClient.Models.ViewModels;
 
 namespace SalesStatistics.WebClient.Services
 {
-    public class MapperConfig
+    public class MapperConfig: IMapperConfig
     {
         public IEnumerable<SaleViewModel> MapConfig(IEnumerable<Sale> sales)
         {

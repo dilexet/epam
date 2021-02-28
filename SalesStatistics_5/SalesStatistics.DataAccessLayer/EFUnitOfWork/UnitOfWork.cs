@@ -1,5 +1,6 @@
 ﻿using System;
 using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
+using SalesStatistics.DataAccessLayer.Repository;
 using Serilog;
 
 namespace SalesStatistics.DataAccessLayer.EFUnitOfWork

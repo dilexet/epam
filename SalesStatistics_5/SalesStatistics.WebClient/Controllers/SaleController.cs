@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using SalesStatistics.DataAccessLayer.EFUnitOfWork;
-using SalesStatistics.DataAccessLayer.EntityFrameworkContext;
+using SalesStatistics.DataAccessLayer;
 using SalesStatistics.DataAccessLayer.Models;
 using SalesStatistics.WebClient.Models.Filter;
 using SalesStatistics.WebClient.Models.ViewModels;
@@ -17,51 +16,53 @@ namespace SalesStatistics.WebClient.Controllers
 {
     public class SaleController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapperConfig _mapperConfig;
+
+        public SaleController(IUnitOfWork unitOfWork, IMapperConfig mapperConfig)
+        {
+            _unitOfWork = unitOfWork;
+            _mapperConfig = mapperConfig;
+        }
+
         [Authorize]
         public ActionResult Index()
         {
-            IEnumerable<SaleViewModel> salesView;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
-            {
-                var items = unitOfWork.Repository.Get<Sale>()
-                    .ToList()
-                    .Select(x => new Sale()
-                    {
-                        Id = x.Id,
-                        ManagerId = x.Id,
-                        ClientId = x.ClientId,
-                        ProductId = x.ProductId,
-                        Date = x.Date,
-                        Client = x.Client,
-                        Manager = x.Manager,
-                        Product = x.Product
-                    }).ToList();
-                salesView = DataFilter.Filter(new SalesFilterModel(), items);
-            }
+            var items = _unitOfWork.Repository.Get<Sale>()
+                .ToList()
+                .Select(x => new Sale()
+                {
+                    Id = x.Id,
+                    ManagerId = x.Id,
+                    ClientId = x.ClientId,
+                    ProductId = x.ProductId,
+                    Date = x.Date,
+                    Client = x.Client,
+                    Manager = x.Manager,
+                    Product = x.Product
+                }).ToList();
+            var salesView = _mapperConfig.MapConfig(DataFilter.Filter(new SalesFilterModel(), items));
+
             return View(salesView.ToList());
         }
 
         public ActionResult UpdateTable(SalesFilterModel salesFilterModel)
         {
-            IEnumerable<SaleViewModel> salesView;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
-            {
-                var items = unitOfWork.Repository.Get<Sale>()
-                    .ToList()
-                    .Select(x => new Sale()
-                    {
-                        Id = x.Id,
-                        ManagerId = x.Id,
-                        ClientId = x.ClientId,
-                        ProductId = x.ProductId,
-                        Date = x.Date,
-                        Client = x.Client,
-                        Manager = x.Manager,
-                        Product = x.Product
-                    }).ToList();
+            var items = _unitOfWork.Repository.Get<Sale>()
+                .ToList()
+                .Select(x => new Sale()
+                {
+                    Id = x.Id,
+                    ManagerId = x.Id,
+                    ClientId = x.ClientId,
+                    ProductId = x.ProductId,
+                    Date = x.Date,
+                    Client = x.Client,
+                    Manager = x.Manager,
+                    Product = x.Product
+                }).ToList();
 
-                salesView = DataFilter.Filter(salesFilterModel, items);
-            }
+            var salesView = _mapperConfig.MapConfig(DataFilter.Filter(salesFilterModel, items));
             return PartialView("_Table", salesView.ToList());
         }
 
@@ -73,29 +74,23 @@ namespace SalesStatistics.WebClient.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Sale sale;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+            var item = _unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
+
+
+            if (item == null)
             {
-                var item = unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
-
-
-                if (item == null)
-                {
-                    return HttpNotFound();
-                }
-
-                sale = new Sale
-                {
-                    Id = item.Id,
-                    Client = item.Client,
-                    Manager = item.Manager,
-                    Product = item.Product,
-                    Date = item.Date
-                };
+                return HttpNotFound();
             }
 
-            MapperConfig mapperConfig = new MapperConfig();
-            var saleView = mapperConfig.MapConfig(sale);
+
+            var saleView = _mapperConfig.MapConfig(new Sale
+            {
+                Id = item.Id,
+                Client = item.Client,
+                Manager = item.Manager,
+                Product = item.Product,
+                Date = item.Date
+            });
             return View(saleView);
         }
 
@@ -109,28 +104,22 @@ namespace SalesStatistics.WebClient.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Sale sale;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+
+            var item = _unitOfWork.Repository.Find<Sale>(id);
+
+            if (item == null)
             {
-                var item = unitOfWork.Repository.Find<Sale>(id);
-
-                if (item == null)
-                {
-                    return HttpNotFound();
-                }
-
-                sale = new Sale
-                {
-                    Id = item.Id,
-                    Client = item.Client,
-                    Manager = item.Manager,
-                    Product = item.Product,
-                    Date = item.Date
-                };
+                return HttpNotFound();
             }
 
-            MapperConfig mapperConfig = new MapperConfig();
-            var saleView = mapperConfig.MapConfig(sale);
+            var saleView = _mapperConfig.MapConfig(new Sale
+            {
+                Id = item.Id,
+                Client = item.Client,
+                Manager = item.Manager,
+                Product = item.Product,
+                Date = item.Date
+            });
             return View(saleView);
         }
 
@@ -146,29 +135,26 @@ namespace SalesStatistics.WebClient.Controllers
             }
 
             SaleViewModel saleView = null;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
-            {
-                var saleToUpdate = unitOfWork.Repository.Find<Sale>(sale.Id);
-                try
-                {
-                    saleToUpdate.Client.Surname = sale.ClientSurname;
-                    saleToUpdate.Client.FirstName = sale.ClientFirstName;
-                    saleToUpdate.Product.Name = sale.ProductName;
-                    saleToUpdate.Product.Cost = sale.ProductCost;
-                    saleToUpdate.Date = sale.Date;
 
-                    unitOfWork.Repository.Context.Entry(saleToUpdate).State = EntityState.Modified;
-                    unitOfWork.SaveChanges();
-                    MapperConfig mapperConfig = new MapperConfig();
-                    saleView = mapperConfig.MapConfig(saleToUpdate);
-                    return RedirectToAction("Index");
-                }
-                catch (RetryLimitExceededException e)
-                {
-                    Log.Error("{Message}", e.ToString());
-                    ModelState.AddModelError("",
-                        @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-                }
+            var saleToUpdate = _unitOfWork.Repository.Find<Sale>(sale.Id);
+            try
+            {
+                saleToUpdate.Client.Surname = sale.ClientSurname;
+                saleToUpdate.Client.FirstName = sale.ClientFirstName;
+                saleToUpdate.Product.Name = sale.ProductName;
+                saleToUpdate.Product.Cost = sale.ProductCost;
+                saleToUpdate.Date = sale.Date;
+
+                _unitOfWork.Repository.Context.Entry(saleToUpdate).State = EntityState.Modified;
+                _unitOfWork.SaveChanges();
+                saleView = _mapperConfig.MapConfig(saleToUpdate);
+                return RedirectToAction("Index");
+            }
+            catch (RetryLimitExceededException e)
+            {
+                Log.Error("{Message}", e.ToString());
+                ModelState.AddModelError("",
+                    @"Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
             return View(saleView);
@@ -189,15 +175,11 @@ namespace SalesStatistics.WebClient.Controllers
         {
             try
             {
-                MapperConfig mapperConfig = new MapperConfig();
-                var sale = mapperConfig.MapConfig(saleView);
+                var sale = _mapperConfig.MapConfig(saleView);
                 if (ModelState.IsValid)
                 {
-                    using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
-                    {
-                        unitOfWork.Repository.Add(sale);
-                        unitOfWork.SaveChanges();
-                    }
+                    _unitOfWork.Repository.Add(sale);
+                    _unitOfWork.SaveChanges();
 
                     return RedirectToAction("Index");
                 }
@@ -228,27 +210,20 @@ namespace SalesStatistics.WebClient.Controllers
                     "Delete failed. Try again, and if the problem persists see your system administrator");
             }
 
-            Sale sale;
-            using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
+            var item = _unitOfWork.Repository.Find<Sale>(id);
+            if (item == null)
             {
-                var item = unitOfWork.Repository.Find<Sale>(id);
-                if (item == null)
-                {
-                    return HttpNotFound();
-                }
-
-                sale = new Sale
-                {
-                    Id = item.Id,
-                    Client = item.Client,
-                    Manager = item.Manager,
-                    Product = item.Product,
-                    Date = item.Date
-                };
+                return HttpNotFound();
             }
 
-            MapperConfig mapperConfig = new MapperConfig();
-            var saleView = mapperConfig.MapConfig(sale);
+            var saleView = _mapperConfig.MapConfig(new Sale
+            {
+                Id = item.Id,
+                Client = item.Client,
+                Manager = item.Manager,
+                Product = item.Product,
+                Date = item.Date
+            });
             return View(saleView);
         }
 
@@ -260,12 +235,9 @@ namespace SalesStatistics.WebClient.Controllers
         {
             try
             {
-                using (UnitOfWork unitOfWork = new UnitOfWork(new SampleContextFactory()))
-                {
-                    Sale student = unitOfWork.Repository.Find<Sale>(id);
-                    unitOfWork.Repository.Remove(student);
-                    unitOfWork.SaveChanges();
-                }
+                Sale student = _unitOfWork.Repository.Find<Sale>(id);
+                _unitOfWork.Repository.Remove(student);
+                _unitOfWork.SaveChanges();
             }
             catch (RetryLimitExceededException e)
             {
@@ -275,5 +247,31 @@ namespace SalesStatistics.WebClient.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        #region Disposable
+
+        private bool _disposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _unitOfWork.Dispose();
+                }
+            }
+
+            _disposed = true;
+        }
+
+        public new void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }
