@@ -28,70 +28,94 @@ namespace SalesStatistics.WebClient.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            var items = _unitOfWork.Repository.Get<Sale>()
-                .ToList()
-                .Select(x => new Sale()
-                {
-                    Id = x.Id,
-                    ManagerId = x.Id,
-                    ClientId = x.ClientId,
-                    ProductId = x.ProductId,
-                    Date = x.Date,
-                    Client = x.Client,
-                    Manager = x.Manager,
-                    Product = x.Product
-                }).ToList();
-            var salesView = _mapperConfig.MapConfig(DataFilter.Filter(new SalesFilterModel(), items));
+            try
+            {
+                var items = _unitOfWork.Repository.Get<Sale>()
+                    .ToList()
+                    .Select(x => new Sale()
+                    {
+                        Id = x.Id,
+                        ManagerId = x.Id,
+                        ClientId = x.ClientId,
+                        ProductId = x.ProductId,
+                        Date = x.Date,
+                        Client = x.Client,
+                        Manager = x.Manager,
+                        Product = x.Product
+                    }).ToList();
+                var salesView = _mapperConfig.MapConfig(DataFilter.Filter(new SalesFilterModel(), items));
+                return View(salesView.ToList());
+            }
+            catch (Exception e)
+            {
+               Log.Error("{Message}", e.ToString());
 
-            return View(salesView.ToList());
+               return View("Error");
+            }
         }
 
         public ActionResult UpdateTable(SalesFilterModel salesFilterModel)
         {
-            var items = _unitOfWork.Repository.Get<Sale>()
-                .ToList()
-                .Select(x => new Sale()
-                {
-                    Id = x.Id,
-                    ManagerId = x.Id,
-                    ClientId = x.ClientId,
-                    ProductId = x.ProductId,
-                    Date = x.Date,
-                    Client = x.Client,
-                    Manager = x.Manager,
-                    Product = x.Product
-                }).ToList();
+            try
+            {
+                var items = _unitOfWork.Repository.Get<Sale>()
+                    .ToList()
+                    .Select(x => new Sale()
+                    {
+                        Id = x.Id,
+                        ManagerId = x.Id,
+                        ClientId = x.ClientId,
+                        ProductId = x.ProductId,
+                        Date = x.Date,
+                        Client = x.Client,
+                        Manager = x.Manager,
+                        Product = x.Product
+                    }).ToList();
 
-            var salesView = _mapperConfig.MapConfig(DataFilter.Filter(salesFilterModel, items));
-            return PartialView("_Table", salesView.ToList());
+                var salesView = _mapperConfig.MapConfig(DataFilter.Filter(salesFilterModel, items));
+                return PartialView("_Table", salesView.ToList());
+            }
+            catch (Exception e)
+            {
+                Log.Error("{Message}", e.ToString());
+                return View("Error");
+            }
         }
 
         [Authorize]
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var item = _unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
+
+
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
+
+
+                var saleView = _mapperConfig.MapConfig(new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                });
+                return View(saleView);
             }
-
-            var item = _unitOfWork.Repository.SingleOrDefault<Sale>(x => x.Id == id);
-
-
-            if (item == null)
+            catch (Exception e)
             {
-                return HttpNotFound();
+                Log.Error("{Message}", e.ToString());
+                return View("Error");
             }
-
-
-            var saleView = _mapperConfig.MapConfig(new Sale
-            {
-                Id = item.Id,
-                Client = item.Client,
-                Manager = item.Manager,
-                Product = item.Product,
-                Date = item.Date
-            });
-            return View(saleView);
         }
 
         // GET: Sale/Edit
@@ -99,28 +123,36 @@ namespace SalesStatistics.WebClient.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+
+                var item = _unitOfWork.Repository.Find<Sale>(id);
+
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var saleView = _mapperConfig.MapConfig(new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                });
+                return View(saleView);
             }
-
-
-            var item = _unitOfWork.Repository.Find<Sale>(id);
-
-            if (item == null)
+            catch (Exception e)
             {
-                return HttpNotFound();
+                Log.Error("{Message}", e.ToString());
+                return View("Error");
             }
-
-            var saleView = _mapperConfig.MapConfig(new Sale
-            {
-                Id = item.Id,
-                Client = item.Client,
-                Manager = item.Manager,
-                Product = item.Product,
-                Date = item.Date
-            });
-            return View(saleView);
         }
 
         // POST: Sale/Edit
@@ -199,32 +231,40 @@ namespace SalesStatistics.WebClient.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
 
-            if (saveChangesError.GetValueOrDefault())
-            {
-                Log.Error("{Message}",
-                    "Delete failed. Try again, and if the problem persists see your system administrator");
-            }
+                if (saveChangesError.GetValueOrDefault())
+                {
+                    Log.Error("{Message}",
+                        "Delete failed. Try again, and if the problem persists see your system administrator");
+                }
 
-            var item = _unitOfWork.Repository.Find<Sale>(id);
-            if (item == null)
-            {
-                return HttpNotFound();
-            }
+                var item = _unitOfWork.Repository.Find<Sale>(id);
+                if (item == null)
+                {
+                    return HttpNotFound();
+                }
 
-            var saleView = _mapperConfig.MapConfig(new Sale
+                var saleView = _mapperConfig.MapConfig(new Sale
+                {
+                    Id = item.Id,
+                    Client = item.Client,
+                    Manager = item.Manager,
+                    Product = item.Product,
+                    Date = item.Date
+                });
+                return View(saleView);
+            }
+            catch (Exception e)
             {
-                Id = item.Id,
-                Client = item.Client,
-                Manager = item.Manager,
-                Product = item.Product,
-                Date = item.Date
-            });
-            return View(saleView);
+                Log.Error("{Message}", e.ToString());
+                return View("Error");
+            }
         }
 
         // POST: Sale/Delete

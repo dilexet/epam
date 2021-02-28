@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using SalesStatistics.DataAccessLayer;
 using SalesStatistics.DataAccessLayer.Models;
 using SalesStatistics.WebClient.Services;
+using Serilog;
 
 namespace SalesStatistics.WebClient.Controllers
 {
@@ -22,23 +23,31 @@ namespace SalesStatistics.WebClient.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            IDictionary<string, int> data = new Dictionary<string, int>();
-
-            IEnumerable<Sale> sales = _unitOfWork.Repository.Get<Sale>().ToList();
-
-            var salesView = _mapperConfig.MapConfig(sales);
-
-            var dates = salesView.Select(x => x.Date).Distinct().ToList();
-
-            foreach (var item in dates)
+            try
             {
-                if (item != null)
-                {
-                    data.Add(item.Value.ToShortDateString(), sales.Count(x => x.Date == item));
-                }
-            }
+                IDictionary<string, int> data = new Dictionary<string, int>();
 
-            return View(data);
+                IEnumerable<Sale> sales = _unitOfWork.Repository.Get<Sale>().ToList();
+
+                var salesView = _mapperConfig.MapConfig(sales);
+
+                var dates = salesView.Select(x => x.Date).Distinct().ToList();
+
+                foreach (var item in dates)
+                {
+                    if (item != null)
+                    {
+                        data.Add(item.Value.ToShortDateString(), sales.Count(x => x.Date == item));
+                    }
+                }
+
+                return View(data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("{Message}", e.ToString());
+                return View("Error");
+            }
         }
         
         #region Disposable
