@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales statistics</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="../../wwwroot/css/DarkTheme.css">
+    <link rel="shortcut icon" href="../../wwwroot/img/favicon.svg" type="image/svg">
+</head>
+
+<body>
+
+<header>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Sales statistics", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                    {
+                        <li>
+                            @Html.ActionLink("Sale", "Index", "Sale", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            @Html.ActionLink("Role", "Index", "Role", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
+                    }
+                    @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                    {
+                        <li>
+                            @Html.ActionLink("Chart", "Index", "Chart", new {area = ""}, new {@class = "navbar-link"})
+                        </li>
+                    }
+
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+</header>
+
+<section>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <hr/>
+</section>
+
+<footer class="container text-center">
+    <p class="float-right">
+        <a href="#">Back to top</a>
+    </p>
+    <p>© @DateTime.Now.Year Все права защищены · <a href="#">Соглашение</a></p>
+</footer>
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</body>
+</html>

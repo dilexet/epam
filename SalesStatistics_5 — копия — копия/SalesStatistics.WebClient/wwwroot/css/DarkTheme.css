@@ -1,0 +1,75 @@
+﻿body {
+    background: #06090F;
+}
+
+header div.navbar {
+    background: #161B22;
+}
+
+section {
+    margin: 25px 25px;
+}
+
+.btn {
+    margin: 5px 5px;
+}
+
+div.jumbotron h1, h2, h3, h4, h5, h6, label {
+    color: #C9D1D9;
+}
+
+
+dt, dd, th, td, p, li{
+    color: #f0f0f0;
+}
+
+div.jumbotron {
+    background: #0D1117;
+}
+
+.navbar-header a.navbar-brand {
+    color: #F0F6FC;
+}
+
+.nav li a.navbar-link {
+    color: #F0F6FC;
+}
+
+.btn {
+    color: #f0f0f0;
+    background: #21262D;
+    border-color: #30363D;
+}
+
+.btn:hover {
+    color: #f0f0f0;
+    background: #292F38;
+    border-color: #444C56;
+}
+
+input{
+    margin-left: 10px;
+}
+
+input[type=text] {
+    background-color: #0D1117;
+    color: #F0F6FC;
+}
+
+input[type=password] {
+    background-color: #0D1117;
+    color: #F0F6FC;
+}
+
+input[type=date] {
+    background-color: #0D1117;
+    color: #F0F6FC;
+}
+
+input {outline: none;}
+input:-webkit-autofill {
+    -webkit-box-shadow: inset 0 0 0 50px #0D1117 !important;
+    -webkit-text-fill-color: #F0F6FC !important;
+    color: #F0F6FC !important;
+}
+
