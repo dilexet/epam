@@ -1,7 +1,9 @@
+using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-
+using SalesStatistics.WebClient.Identity;
+using SalesStatistics.WebClient.Migrations;
 using Serilog;
 
 namespace SalesStatistics.WebClient
@@ -18,7 +20,7 @@ namespace SalesStatistics.WebClient
                 .Enrich.WithMvcActionName()
                 .CreateLogger();
             
-            
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

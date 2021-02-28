@@ -5,7 +5,7 @@ namespace SalesStatistics.WebClient.Identity
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("Default_10", throwIfV1Schema: false)
+            : base("Default_14", throwIfV1Schema: false)
         {
         }
 
