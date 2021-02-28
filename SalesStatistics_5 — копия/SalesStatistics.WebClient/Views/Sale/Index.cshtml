@@ -12,13 +12,19 @@
 
 <div>
     <p>
-        <input name="clientName" onchange="updateSalesTable();" type="text" id="clientName"/>
+        Find by client: @Html.TextBox("ClientName", "", "", new {id="ClientName", onchange="updateSalesTable();"})
     </p>
+
     <p>
-        <input name="dateStart" onchange="updateSalesTable();" type="date" value="@DateTime.MinValue.ToString("yyyy-MM-dd")" textmode="Date" id="dateStart"/>
+        Find by product: @Html.TextBox("ProductName", "", "", new {id="ProductName", onchange="updateSalesTable();"})
     </p>
+
     <p>
-        <input name="dateEnd" onchange="updateSalesTable();" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" textmode="Date" id="dateEnd"/>
+        Find by DateStart: @Html.TextBox("DateStart", DateTime.MinValue.ToString("yyyy-MM-dd"), "", new {id="DateStart", Type = "date", onchange="updateSalesTable();"})
+    </p>
+
+    <p>
+        Find by DateEnd: @Html.TextBox("DateEnd", DateTime.Now.ToString("yyyy-MM-dd"), "", new {id="DateEnd", Type = "date", onchange="updateSalesTable();"})
     </p>
 </div>
 
@@ -30,8 +36,7 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    @*LIST UPDATE*@
+    
     <script type="text/javascript">
     $(document).ready(function () {
         
@@ -54,9 +59,9 @@
     function getFilterParameters()
     {
             return {
-                ClientName: $('#clientName').val(),
-                DateStart: $('#dateStart').val(),
-                DateEnd: $('#dateEnd').val(),
+                ClientName: $('#ClientName').val(),
+                DateStart: $('#DateStart').val(),
+                DateEnd: $('#DateEnd').val(),
             };
     }
     
