@@ -6,14 +6,6 @@ header div.navbar {
     background: #161B22;
 }
 
-section {
-    margin: 25px 25px;
-}
-
-.btn {
-    margin: 5px 5px;
-}
-
 div.jumbotron h1, h2, h3, h4, h5, h6, label {
     color: #C9D1D9;
 }
@@ -45,10 +37,6 @@ div.jumbotron {
     color: #f0f0f0;
     background: #292F38;
     border-color: #444C56;
-}
-
-input{
-    margin-left: 10px;
 }
 
 input[type=text] {

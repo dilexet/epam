@@ -21,7 +21,7 @@ namespace SalesStatistics.WebClient.Services
                 sales = sales.Where(s => s.Product.Name.ToUpper().Contains(salesFilterModel.ProductName.ToUpper()));
             }
 
-            if (salesFilterModel.DateStart != null && salesFilterModel.DateEnd != null)
+            if (salesFilterModel.DateStart != null && salesFilterModel.DateEnd != null && salesFilterModel.DateStart < salesFilterModel.DateEnd)
             {
                 sales = sales.Where(s =>
                     s.Date >= salesFilterModel.DateStart && s.Date <= salesFilterModel.DateEnd);

@@ -1,12 +1,14 @@
 ﻿@model IDictionary<String, Int32>
-<html lang="en">  
-<head>  
-    <meta name="viewport" content="width=device-width" />  
-    <title>Charts</title>  
+@{
+    ViewBag.Title = "Chart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<canvas id="diagrams">
+    
+</canvas>
+
+@section scripts {
     <script src="../../Scripts/Chart.min.js"></script>
-</head>  
-<body>  
-    <canvas id="diagrams" width="400" height="400"></canvas>
     <script>
     const ctx = document.getElementById('diagrams').getContext('2d');
     const myChart = new Chart(ctx, {
@@ -45,5 +47,4 @@
         }
     });
     </script>
-</body>  
-</html>
+}

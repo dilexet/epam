@@ -357,6 +357,7 @@
     <Content Include="Views\Sale\Edit.cshtml" />
     <Content Include="Views\Sale\_Table.cshtml" />
     <Content Include="wwwroot\css\DarkTheme.css" />
+    <Content Include="wwwroot\css\style.css" />
     <Content Include="wwwroot\img\favicon.png" />
     <Content Include="wwwroot\img\favicon.svg" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
